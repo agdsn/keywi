@@ -1,0 +1,26 @@
+version: '3'
+services:
+  dev-app:
+    build:
+      context: .
+      dockerfile: docker/dev-app.Dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    ports:
+      - "6080:6080"
+    volumes:
+      - ./keywi:/opt/app/
+    depends_on:
+      - dev-db
+    command: python -m keywi
+  dev-db:
+    image: postgres:14
+    ports:
+      - "54326:5432"
+    environment:
+      POSTGRES_USER: keywi
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: keywi
+    volumes:
+      - ./docker/db/init:/docker-entrypoint-initdb.d
