@@ -1,0 +1,48 @@
+= Gruppentreffen 02.11.21 13:00 Uhr
+
+**Was wurde besprochen:** +
+
+* vorgestellt, was bis jetzt gemacht wurde
+- Datenbankmodell
+* grober Aufbau der Anwendung +
+
+**grober Aufbau:** +
+
+benötigt werden folgende Seiten:
+
+* Login und Logout
+* Auflistung aller Schlüssel, die der Nutzer (der eingeloggt ist) ausgliehen hat
+* Übersicht welche Schlüssel ausgeliehen sind
+* Auflistung aller Schlüssel, die existieren
+* Auflistung aller Tresoren und den enthaltenen Schlüsseln
+* Übersicht über Schlösser und passende Schlüssel
+* Liste von allen Nutzern
+
+weitere Anforderungen:
+
+ * es existiert erstmal kein Admin
+ * auf der Übersicht der ausgeliehen Schlüssel soll der Nutzer (der den Schlüsseln
+   ausgliehen hat) verlinkt sein
+ * jeder Schlüssel (in der Übersicht über alle Schlösser und Schlüssel) hat einen
+   Link, wo aufgelistet wird wer und wann sich den Schlüssel ausgeliehen hat
+   (das gleiche bei den Tresoren)
+ * man kann bestimmte Schlüssel suchen
+ * der Status der Schlüssel (ausgeliehen oder frei) ist sichtbar
+
+KANN-Anforderungen:
+
+* Admin Nutzer hinzufügen
+* Bestätigung das Schlüssel ausgeliehen wurde
+
+**weitere Aufgaben**
+
+* Mockups für Webseiten Design
+* Frontend Projekt erstellen
+* LDAP einlesen
+* Backend fixen
+* API Endpunkte
+
+
+**Organisatorisches **
+
+* nächstes Treffen am 16.11.21
