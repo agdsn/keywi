@@ -2,25 +2,39 @@
   "name": "keywi",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode development"
-  },
   "author": "",
-  "license": "ISC",
+  "scripts": {
+    "build": "webpack --mode development",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "main": "index.js",
   "dependencies": {
+    "@mdi/font": "^6.4.95",
     "axios": "^0.24.0",
+    "css-loader": "^6.5.1",
     "lodash": "^4.17.21",
+    "node-sass": "^6.0.1",
+    "openapi-client-axios": "^4.2.0",
+    "roboto-fontface": "^0.10.0",
     "vue": "^2.6.14",
-    "vuetify": "^2.5.13",
+    "vue-loader": "^15.9.8",
+    "vue-router": "^3.5.3",
+    "vuetify": "^2.5.14",
+    "vuetify-loader": "^1.7.3",
     "webpack": "^5.62.1",
     "webpack-cli": "^4.9.1"
   },
   "devDependencies": {
+    "@types/webpack-env": "^1.16.3",
+    "deepmerge": "^4.2.2",
     "eslint": "^8.2.0",
+    "sass": "^1.32.13",
+    "sass-loader": "^10.2.0",
     "ts-loader": "^9.2.6",
     "types": "^0.1.1",
-    "typescript": "^4.4.4"
-  }
+    "typescript": "^4.4.4",
+    "vue-cli-plugin-vuetify": "~2.4.3",
+    "vuetify-loader": "^1.7.0"
+  },
+  "license": "ISC"
 }

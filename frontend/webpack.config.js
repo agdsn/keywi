@@ -5,14 +5,28 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
+        test: [/\.tsx?$/, /\.s(c|a)ss$/],
+        use: [
+            'ts-loader',
+            'vue-style-loader',
+            'css-loader',
+            {
+            loader: 'sass-loader',
+            // Requires >= sass-loader@^8.0.0
+            options: {
+              implementation: require('sass'),
+            },
+          }
+        ],
         exclude: /node_modules/,
       },
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      vue: 'vue/dist/vue.js'
+    }
   },
   output: {
     filename: 'main.js',
