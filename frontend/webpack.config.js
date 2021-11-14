@@ -5,20 +5,20 @@ module.exports = {
   module: {
     rules: [
       {
-        test: [/\.tsx?$/, /\.s(c|a)ss$/],
+        test: /\.(sass|less|css)$/,
         use: [
             'ts-loader',
             'vue-style-loader',
             'css-loader',
             {
-            loader: 'sass-loader',
-            // Requires >= sass-loader@^8.0.0
-            options: {
-              implementation: require('sass'),
-            },
-          }
+                loader: 'sass-loader',
+                // Requires >= sass-loader@^8.0.0
+                options: {
+                  implementation: require('sass'),
+                },
+            }
         ],
-        exclude: /node_modules/,
+        // exclude: /node_modules/,
       },
     ],
   },
