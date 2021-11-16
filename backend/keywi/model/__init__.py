@@ -13,6 +13,7 @@ class User(UUIDModel):
     email = Column(EmailType, nullable=False)
 
 
+
 class Location(UUIDModel):
     __tablename__ = "location"
 
@@ -85,6 +86,7 @@ class LogEntry(UUIDModel):
     user_id = Column(ForeignKey("user.id", ondelete="CASCADE"))
     lock_id = Column(ForeignKey("lock.id", ondelete="CASCADE"))
     safe_id = Column(ForeignKey("safe.id", ondelete="CASCADE"))
+    rental_id = Column(ForeignKey("rental.id", ondelete="CASCADE"))
 
     creator = relationship("User", backref=backref("activity_log_entries"), primaryjoin="LogEntry.creator_id == User.id")
 
@@ -93,3 +95,4 @@ class LogEntry(UUIDModel):
     user = relationship("User", backref=backref("log_entries"), primaryjoin="LogEntry.user_id == User.id")
     lock = relationship("Lock", backref=backref("log_entries"))
     safe = relationship("Safe", backref=backref("log_entries"))
+    rental = relationship("Rental", backref=backref("log_entries"))

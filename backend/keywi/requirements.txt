@@ -4,3 +4,4 @@ FastAPI-SQLAlchemy~=0.2.1
 sqlalchemy~=1.4.26
 psycopg2~=2.9.1
 SQLAlchemy-Utils~=0.37.9
+pydantic[email]
