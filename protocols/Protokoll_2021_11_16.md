@@ -19,3 +19,6 @@
 ## Vue
 - Besprechung über Vue Projekt Struktur
 - __--> Markus baut Frontend Prototypen__
+
+## Nächstes Meeting
+Dienstag, 23.11. Nachmittag
