@@ -6,7 +6,7 @@ from fastapi_sqlalchemy import db
 from model import LogEntry
 from model.pydantic import  LogEntryModel
 
-router = APIRouter(prefix="/logs", tags=["logs"])
+router = APIRouter(prefix="/log", tags=["log"])
 
 
 @router.get("/", response_model=List[LogEntryModel])
