@@ -1,15 +1,20 @@
-from fastapi import APIRouter
+from typing import List
+
+from fastapi import APIRouter, Depends
 from fastapi_sqlalchemy import db
 
+from api.helpers import PathModelGetter
 from model import User
+from model.pydantic import UserModel
 
-router = APIRouter(prefix="/user")
+router = APIRouter(prefix="/user", tags=["user"])
 
-@router.get("/")
-async def root():
-    user = User(login="test", name="Test Hans", email="Test@123.de")
 
-    db.session.add(user)
-    db.session.commit()
+@router.get("/", response_model=List[UserModel])
+def get_users():
+    return db.session.query(User).all()
 
-    return {"message": "Hello World"}
+
+@router.get("/{uuid}", response_model=UserModel)
+def get_user(user: User = Depends(PathModelGetter(User))):
+    return user
