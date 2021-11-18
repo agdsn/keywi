@@ -1,7 +1,5 @@
 <template>
   <v-app>
-    <AppHeader/>
-
     <v-main>
       <router-view/>
     </v-main>
@@ -14,7 +12,6 @@ import AppHeader from "@/components/AppHeader.vue";
 
 export default Vue.extend({
   name: 'App',
-  components: {AppHeader},
   data: () => ({
     //
   }),
@@ -22,6 +19,10 @@ export default Vue.extend({
 </script>
 
 <style type="text/css">
+  :root {
+    --primary-color: #41A6A0;
+  }
+
   span {
     background-color: #000000;
   }

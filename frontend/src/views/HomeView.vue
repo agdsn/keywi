@@ -1,19 +1,21 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <hello-world msg="Welcome to Your Vue.js + TypeScript App"/>
+    <app-title view-title="Meine Schlüssel"></app-title>
+    <app-nav-bar></app-nav-bar>
   </div>
 </template>
 
 <script lang="ts">
   import Vue from 'vue'
-  import HelloWorld from '../components/HelloWorld.vue'
+  import AppTitle from "@/components/AppTitle.vue";
+  import AppNavBar from "@/components/AppNavBar.vue";
 
   export default Vue.extend({
     name: 'HomeView',
 
     components: {
-      HelloWorld,
+      AppNavBar,
+      AppTitle,
     },
   })
 </script>
