@@ -9,6 +9,8 @@
   import Vue from 'vue'
   import AppTitle from "@/components/AppTitle.vue";
   import AppNavBar from "@/components/AppNavBar.vue";
+  import {OpenAPIClientAxios} from "openapi-client-axios";
+  import axios from "axios";
 
   export default Vue.extend({
     name: 'HomeView',
@@ -17,6 +19,12 @@
       AppNavBar,
       AppTitle,
     },
+
+    mounted() {
+      axios.get('http://localhost:6080/key').then(response => console.log(response.data))
+    }
   })
+
+
 </script>
 
