@@ -5,4 +5,4 @@ if __name__ == '__main__':
                 host='0.0.0.0',
                 port=6080,
                 reload=True,
-                workers=2)
+                workers=1)

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi_sqlalchemy import DBSessionMiddleware, db
+from starlette.middleware.cors import CORSMiddleware
 
 import model, model.base
 from api import user, safe, rental, log, lock, location, key
@@ -10,6 +11,15 @@ from lib.app_config import app_config
 
 app = FastAPI(title="Keywi", version="0.0.1")
 app.add_middleware(DBSessionMiddleware, db_url=app_config.get('database', 'url'))
+
+# add cors specification
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True
+)
 
 with db():
     model.base.ModelBase.metadata.create_all(db.session.get_bind())
