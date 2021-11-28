@@ -1,10 +1,10 @@
 <template>
   <div class="nav-bar">
     <ul class="list left">
-      <li><a href="#">Meine Schlüssel</a></li>
-      <li><a href="#">Ausgeliehene Schlüssel</a></li>
-      <li><a href="#">Tresore</a></li>
-      <li><a href="#">Schlösser</a></li>
+      <li><a href="/keys">Meine Schlüssel</a></li>
+      <li><a href="/keys">Ausgeliehene Schlüssel</a></li>
+      <li><a href="/safe">Tresore</a></li>
+      <li><a href="/lock">Schlösser</a></li>
     </ul>
     <ul class="list">
       <li><a href="#">Logout</a></li>

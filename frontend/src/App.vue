@@ -22,8 +22,4 @@ export default Vue.extend({
   :root {
     --primary-color: #41A6A0;
   }
-
-  span {
-    background-color: #000000;
-  }
 </style>

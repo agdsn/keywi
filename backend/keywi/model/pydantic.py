@@ -54,7 +54,7 @@ class LockModelBase(PydModel):
     owner: str = None
 
 
-class LockModel(LocationModelBase):
+class LockModel(LockModelBase):
     id: UUID
     location: LocationModel
 
@@ -90,12 +90,12 @@ class KeyModelBase(PydModel):
     rentable: bool = False
     checked: bool = False
 
-class KeyModel(SafeModelBase):
+class KeyModel(KeyModelBase):
     id: UUID
     lock: LockModel
     safe: SafeModel
 
-class KeyModelCreate(SafeModelBase):
+class KeyModelCreate(KeyModelBase):
     lock_id: UUID
     safe_id: UUID
 
@@ -117,7 +117,7 @@ class RentalModel(RentalModelBase):
     user: UserModel
     issuing_user: UserModel
 
-class RentalModelCreate(SafeModelBase):
+class RentalModelCreate(RentalModelBase):
     begin: datetime = None
     key_id: KeyModel
     user_id: UserModel
