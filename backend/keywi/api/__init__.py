@@ -9,7 +9,8 @@ from api.helpers import use_route_names_as_operation_ids
 from lib.app_config import app_config
 
 
-app = FastAPI(title="Keywi", version="0.0.1")
+app = FastAPI(title="Keywi", version="0.0.1",
+              servers=[{"url": 'http://localhost:6080', "description": "main"}])
 app.add_middleware(DBSessionMiddleware, db_url=app_config.get('database', 'url'))
 
 # add cors specification
@@ -23,6 +24,19 @@ app.add_middleware(
 
 with db():
     model.base.ModelBase.metadata.create_all(db.session.get_bind())
+
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(key.router)
 app.include_router(location.router)

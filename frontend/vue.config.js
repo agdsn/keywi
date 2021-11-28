@@ -1,4 +1,6 @@
 const { defineConfig } = require('@vue/cli-service')
+const { ProvidePlugin } = require('webpack');
+
 module.exports = defineConfig({
   transpileDependencies: [
     'vuetify'
@@ -6,10 +8,19 @@ module.exports = defineConfig({
   configureWebpack: {
     resolve: {
       fallback: {
-        "http": false,
-        "https": false,
-        "util": false
-      }
-    }
-  }
+        http: require.resolve('http-browserify'),
+        https: require.resolve('https-browserify'),
+        stream: require.resolve('stream-browserify'),
+      },
+      aliasFields: ['browser'],
+    },
+    plugins: [
+      new ProvidePlugin({
+        process: 'process/browser',
+      }),
+      new ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+      }),
+    ],
+  },
 })
