@@ -2,6 +2,7 @@
   <div class="home">
     <app-title view-title="Meine Schlüssel"></app-title>
     <app-nav-bar></app-nav-bar>
+    <key-table key-data=""></key-table>
   </div>
 </template>
 
