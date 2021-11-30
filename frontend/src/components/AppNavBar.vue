@@ -1,13 +1,13 @@
 <template>
   <div class="nav-bar">
     <ul class="list left">
-      <li><a href="/keys">Meine Schlüssel</a></li>
-      <li><a href="/keys">Ausgeliehene Schlüssel</a></li>
-      <li><a href="/safe">Tresore</a></li>
-      <li><a href="/lock">Schlösser</a></li>
+      <li><router-link to="/keys">Meine Schlüssel</router-link></li>
+      <li><router-link to="/keys">Ausgeliehene Schlüssel</router-link></li>
+      <li><router-link to="/safe">Tresore</router-link></li>
+      <li><router-link to="/lock">Schlösser</router-link></li>
     </ul>
     <ul class="list">
-      <li><a href="#">Logout</a></li>
+      <li><router-link to="#">Logout</router-link></li>
     </ul>
 
   </div>
