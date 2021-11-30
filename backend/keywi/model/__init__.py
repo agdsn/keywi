@@ -13,7 +13,6 @@ class User(UUIDModel):
     email = Column(EmailType, nullable=False)
 
 
-
 class Location(UUIDModel):
     __tablename__ = "location"
 
@@ -62,7 +61,7 @@ class Rental(UUIDModel):
         CheckConstraint('("end" is null) or ("end" >= "begin")'),
     )
 
-    begin = Column(DateTime(timezone=True), nullable=False)
+    begin = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     end = Column(DateTime(timezone=True), nullable=True)
     allowed_by = Column(String, comment="Name of the document that allows the user to rent this key.")
     key_id = Column(ForeignKey("key.id", ondelete="CASCADE"), nullable=False)

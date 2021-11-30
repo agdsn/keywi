@@ -2,10 +2,13 @@ from typing import List
 
 from fastapi import APIRouter, Depends, Body
 from fastapi_sqlalchemy import db
+from sqlalchemy.sql.functions import current_user
 
 from api.helpers import PathModelGetter
-from model import Location
+from model import Location, User
 from model.pydantic import LocationModel, LocationModelCreate, LocationModelPatch
+
+import lib.location
 
 router = APIRouter(prefix="/location", tags=["location"])
 
@@ -21,8 +24,13 @@ def get_location(location: Location = Depends(PathModelGetter(Location))):
 
 
 @router.post("/", response_model=LocationModel)
-def create_location(location_create: LocationModelCreate):
-    pass
+def create_location(location_create: LocationModelCreate, c_user: User = Depends(current_user)):
+    args = location_create.dict()
+    location = lib.location.create_location(**args, processor=c_user)
+
+    db.session.commit()
+
+    return location
 
 
 @router.patch("/{uuid}", response_model=LocationModel)
