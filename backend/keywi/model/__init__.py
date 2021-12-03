@@ -1,6 +1,6 @@
 from sqlalchemy import String, Column, ForeignKey, Boolean, DateTime, CheckConstraint, func, Float
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy_utils import EmailType
+from sqlalchemy_utils import EmailType, PasswordType
 
 from model.base import UUIDModel
 
@@ -11,6 +11,7 @@ class User(UUIDModel):
     login = Column(String, nullable=False, unique=True)
     name = Column(String, nullable=False)
     email = Column(EmailType, nullable=False)
+    password = Column(PasswordType(schemes=['pbkdf2_sha512']))
 
 
 class Location(UUIDModel):

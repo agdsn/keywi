@@ -21,14 +21,31 @@ def optional(*fields):
 
 # User
 
-class UserModel(PydModel):
-    id: UUID
+
+class UserModelBase(PydModel):
     login: constr(max_length=30, min_length=2)
     name: str
+
+
+class UserModelShort(UserModelBase):
+    id: UUID
+
+
+class UserModel(UserModelShort):
     email: EmailStr
 
 
+class UserModelCreate(UserModelBase):
+    email: EmailStr
+    password: constr(max_length=128, min_length=9)
+
+
+@optional
+class UserModelPatch(UserModelCreate):
+    pass
+
 # Location
+
 
 class LocationModelBase(PydModel):
     name: str
@@ -36,11 +53,19 @@ class LocationModelBase(PydModel):
     latitude: float = None
     longitude: float = None
 
+
+class LocationModelShort(PydModel):
+    id: UUID
+    name: str
+
+
 class LocationModel(LocationModelBase):
     id: UUID
 
+
 class LocationModelCreate(LocationModelBase):
     pass
+
 
 @optional
 class LocationModelPatch(LocationModelBase):
@@ -54,12 +79,18 @@ class LockModelBase(PydModel):
     owner: str = None
 
 
-class LockModel(LockModelBase):
+class LockModelShort(PydModel):
     id: UUID
-    location: LocationModel
+    name: str
+
+
+class LockModel(LockModelBase):
+    location: LocationModelShort
+
 
 class LockModelCreate(LocationModelBase):
     location_id: UUID
+
 
 @optional
 class LockModelPatch(LockModelCreate):
@@ -71,12 +102,20 @@ class LockModelPatch(LockModelCreate):
 class SafeModelBase(PydModel):
     name: str
 
+
 class SafeModel(SafeModelBase):
     id: UUID
-    location: LocationModel
+    location: LocationModelShort
+
+
+class SafeModelShort(PydModel):
+    id: UUID
+    name: str
+
 
 class SafeModelCreate(SafeModelBase):
     location_id: UUID
+
 
 @optional
 class SafeModelPatch(SafeModelCreate):
@@ -90,14 +129,24 @@ class KeyModelBase(PydModel):
     rentable: bool = False
     checked: bool = False
 
+
 class KeyModel(KeyModelBase):
     id: UUID
-    lock: LockModel
-    safe: SafeModel
+    lock: LockModelShort
+    safe: SafeModelShort
+
+
+class KeyModelShort(PydModel):
+    id: UUID
+    number: str
+    lock: LockModelShort
+    safe: SafeModelShort
+
 
 class KeyModelCreate(KeyModelBase):
     lock_id: UUID
     safe_id: UUID
+
 
 @optional
 class KeyModelPatch(KeyModelCreate):
@@ -111,19 +160,29 @@ class RentalModelBase(PydModel):
     end: datetime = None
     allowed_by: str = None
 
+
 class RentalModel(RentalModelBase):
     id: UUID
-    key: KeyModel
-    user: UserModel
-    issuing_user: UserModel
+    key: KeyModelShort
+    user: UserModelShort
+    issuing_user: UserModelShort
+
+
+class RentalModelShort(RentalModel):
+    id: UUID
+    user: UserModelShort
+    begin: datetime
+    end: datetime = None
+
 
 class RentalModelCreate(RentalModelBase):
     begin: datetime = None
-    key_id: KeyModel
-    user_id: UserModel
+    key_id: UUID
+    user_id: UUID
+
 
 @optional
-class RentalModelPatch(RentalModelCreate):
+class RentalModelPatch(RentalModelBase):
     pass
 
 
@@ -134,9 +193,9 @@ class LogEntryModel(PydModel):
     message: str
     creator: UserModel
 
-    location: LocationModel = None
-    key: KeyModel = None
-    user: UserModel = None
-    lock: LockModel = None
-    safe: SafeModel = None
-    rental: RentalModel = None
+    location: LocationModelShort = None
+    key: KeyModelShort = None
+    user: UserModelShort = None
+    lock: LockModelShort = None
+    safe: SafeModelShort = None
+    rental: RentalModelShort = None

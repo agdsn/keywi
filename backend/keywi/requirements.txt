@@ -7,3 +7,5 @@ SQLAlchemy-Utils~=0.37.9
 pydantic[email]
 starlette
 wrapt
+python-multipart
+passlib
