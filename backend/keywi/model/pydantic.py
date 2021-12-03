@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import inspect
 from datetime import datetime
+from typing import Optional
 from uuid import UUID
 
 from pydantic import EmailStr, constr
@@ -143,7 +144,7 @@ class KeyModel(KeyModelBase):
     id: UUID
     lock: LockModelShort
     safe: SafeModelShort
-    active_rental: RentalModelShort
+    active_rental: Optional[RentalModelShort]
 
 
 class KeyModelShort(PydModel):
