@@ -1,4 +1,4 @@
-from sqlalchemy import String, Column, ForeignKey, Boolean, DateTime, CheckConstraint, func, Float, or_
+from sqlalchemy import String, Column, ForeignKey, Boolean, DateTime, CheckConstraint, func, Float, or_, select, and_
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy_utils import EmailType, PasswordType
@@ -28,11 +28,11 @@ class Location(UUIDModel):
     longitude = Column(Float)
 
     @property
-    def number_locks(self):
+    def amount_locks(self):
         return len(self.locks)
 
     @property
-    def number_safes(self):
+    def amount_safes(self):
         return len(self.safes)
 
 
@@ -45,9 +45,16 @@ class Lock(UUIDModel):
 
     location = relationship("Location", backref=backref("locks"))
 
+    free_keys = relationship("Key", primaryjoin="and_(Key.lock_id == Lock.id,"
+                                                "     Key.free)")
+
     @property
-    def number_keys(self):
+    def amount_keys(self):
         return len(self.keys)
+
+    @property
+    def amount_free_keys(self):
+        return len(self.free_keys)
 
 
 class Safe(UUIDModel):
@@ -59,7 +66,7 @@ class Safe(UUIDModel):
     location = relationship("Location", backref=backref("safes"))
 
     @property
-    def number_keys(self):
+    def amount_keys(self):
         return len(self.keys)
 
 
@@ -78,6 +85,14 @@ class Key(UUIDModel):
 
     active_rental = relationship("Rental", uselist=False,
                                  primaryjoin="and_(Rental.key_id == Key.id, Rental.active)")
+
+    @hybrid_property
+    def free(self):
+        return self.active_rental is None
+
+    @free.expression
+    def free(self):
+        return select(Rental.id).select_from(Rental).where(and_(Rental.active, Rental.key_id == self.id)).scalar_subquery().is_(None)
 
 
 class Rental(UUIDModel):

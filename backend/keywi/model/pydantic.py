@@ -65,8 +65,8 @@ class LocationModelShort(PydModel):
 
 class LocationModel(LocationModelBase):
     id: UUID
-    number_locks: int
-    number_safes: int
+    amount_locks: int
+    amount_safes: int
 
 
 class LocationModelCreate(LocationModelBase):
@@ -92,7 +92,8 @@ class LockModelShort(PydModel):
 
 class LockModel(LockModelBase):
     location: LocationModelShort
-    number_keys: int
+    amount_keys: int
+    amount_free_keys: int
 
 
 class LockModelCreate(LocationModelBase):
@@ -113,7 +114,7 @@ class SafeModelBase(PydModel):
 class SafeModel(SafeModelBase):
     id: UUID
     location: LocationModelShort
-    number_keys: int
+    amount_keys: int
 
 
 class SafeModelShort(PydModel):
@@ -178,9 +179,8 @@ class RentalModel(RentalModelBase):
     active: bool
 
 
-class RentalModelShort(RentalModel):
+class RentalModelShort(PydModel):
     id: UUID
-    user: UserModelShort
     begin: datetime
     end: datetime = None
 
