@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import inspect
 from datetime import datetime
 from uuid import UUID
@@ -19,7 +21,7 @@ def optional(*fields):
         return dec(cls)
     return dec
 
-# User
+# User (1/2)
 
 
 class UserModelBase(PydModel):
@@ -31,10 +33,6 @@ class UserModelShort(UserModelBase):
     id: UUID
 
 
-class UserModel(UserModelShort):
-    email: EmailStr
-
-
 class UserModelCreate(UserModelBase):
     email: EmailStr
     password: constr(max_length=128, min_length=9)
@@ -43,6 +41,12 @@ class UserModelCreate(UserModelBase):
 @optional
 class UserModelPatch(UserModelCreate):
     pass
+
+
+class UserModel(UserModelShort):
+    email: EmailStr
+    active_rentals: RentalModelShort
+
 
 # Location
 
@@ -61,6 +65,8 @@ class LocationModelShort(PydModel):
 
 class LocationModel(LocationModelBase):
     id: UUID
+    number_locks: int
+    number_safes: int
 
 
 class LocationModelCreate(LocationModelBase):
@@ -86,6 +92,7 @@ class LockModelShort(PydModel):
 
 class LockModel(LockModelBase):
     location: LocationModelShort
+    number_keys: int
 
 
 class LockModelCreate(LocationModelBase):
@@ -106,6 +113,7 @@ class SafeModelBase(PydModel):
 class SafeModel(SafeModelBase):
     id: UUID
     location: LocationModelShort
+    number_keys: int
 
 
 class SafeModelShort(PydModel):
@@ -134,6 +142,7 @@ class KeyModel(KeyModelBase):
     id: UUID
     lock: LockModelShort
     safe: SafeModelShort
+    active_rental: RentalModelShort
 
 
 class KeyModelShort(PydModel):
@@ -166,6 +175,7 @@ class RentalModel(RentalModelBase):
     key: KeyModelShort
     user: UserModelShort
     issuing_user: UserModelShort
+    active: bool
 
 
 class RentalModelShort(RentalModel):
@@ -191,7 +201,7 @@ class RentalModelPatch(RentalModelBase):
 class LogEntryModel(PydModel):
     timestamp: datetime
     message: str
-    creator: UserModel
+    creator: UserModelShort
 
     location: LocationModelShort = None
     key: KeyModelShort = None
@@ -199,3 +209,7 @@ class LogEntryModel(PydModel):
     lock: LockModelShort = None
     safe: SafeModelShort = None
     rental: RentalModelShort = None
+
+
+UserModel.update_forward_refs()
+KeyModel.update_forward_refs()

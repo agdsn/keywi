@@ -1,8 +1,10 @@
-from sqlalchemy import String, Column, ForeignKey, Boolean, DateTime, CheckConstraint, func, Float
+from sqlalchemy import String, Column, ForeignKey, Boolean, DateTime, CheckConstraint, func, Float, or_
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy_utils import EmailType, PasswordType
 
 from model.base import UUIDModel
+from model.time import utcnow
 
 
 class User(UUIDModel):
@@ -13,6 +15,9 @@ class User(UUIDModel):
     email = Column(EmailType, nullable=False)
     password = Column(PasswordType(schemes=['pbkdf2_sha512']))
 
+    active_rentals = relationship("Rental", primaryjoin="and_(Rental.user_id == User.id,"
+                                                        "     Rental.active)",)
+
 
 class Location(UUIDModel):
     __tablename__ = "location"
@@ -21,6 +26,14 @@ class Location(UUIDModel):
     address = Column(String)
     latitude = Column(Float)
     longitude = Column(Float)
+
+    @property
+    def number_locks(self):
+        return len(self.locks)
+
+    @property
+    def number_safes(self):
+        return len(self.safes)
 
 
 class Lock(UUIDModel):
@@ -32,6 +45,10 @@ class Lock(UUIDModel):
 
     location = relationship("Location", backref=backref("locks"))
 
+    @property
+    def number_keys(self):
+        return len(self.keys)
+
 
 class Safe(UUIDModel):
     __tablename__ = "safe"
@@ -40,6 +57,10 @@ class Safe(UUIDModel):
     location_id = Column(ForeignKey("location.id", ondelete="CASCADE"), nullable=False)
 
     location = relationship("Location", backref=backref("safes"))
+
+    @property
+    def number_keys(self):
+        return len(self.keys)
 
 
 class Key(UUIDModel):
@@ -55,6 +76,9 @@ class Key(UUIDModel):
     lock = relationship("Lock", backref=backref("keys"))
     safe = relationship("Safe", backref=backref("keys"))
 
+    active_rental = relationship("Rental", uselist=False,
+                                 primaryjoin="and_(Rental.key_id == Key.id, Rental.active)")
+
 
 class Rental(UUIDModel):
     __tablename__ = "rental"
@@ -69,9 +93,18 @@ class Rental(UUIDModel):
     user_id = Column(ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     issuing_user_id = Column(ForeignKey("user.id", ondelete="SET NULL"), nullable=True)
 
-    key = relationship("Key", backref=backref("rentals"))
-    user = relationship("User", backref=backref("rentals"), primaryjoin="Rental.user_id == User.id")
+    key = relationship("Key", backref=backref("rentals", overlaps="active_rental"), overlaps="active_rental")
+    user = relationship("User", backref=backref("rentals", overlaps="active_rentals"), primaryjoin="Rental.user_id == User.id",
+                        overlaps="active_rentals")
     issuing_user = relationship("User", backref=backref("issued_rentals"), primaryjoin="Rental.issuing_user_id == User.id")
+
+    @hybrid_property
+    def active(self):
+        return self.end is None or self.end > utcnow()
+
+    @active.expression
+    def active(self):
+        return or_(self.end.is_(None), self.end > func.now())
 
 
 class LogEntry(UUIDModel):
