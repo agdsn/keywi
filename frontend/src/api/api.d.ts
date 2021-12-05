@@ -22,24 +22,41 @@ declare namespace Components {
          */
         export interface KeyModel {
             /**
-             * Name
+             * Number
              */
-            name: string;
+            number: string;
+            /**
+             * Rentable
+             */
+            rentable?: boolean;
+            /**
+             * Checked
+             */
+            checked?: boolean;
             /**
              * Id
              */
             id: string; // uuid
-            lock: /* LockModel */ LockModel;
-            safe: /* SafeModel */ SafeModel;
+            lock: /* LockModelShort */ LockModelShort;
+            safe: /* SafeModelShort */ SafeModelShort;
+            active_rental?: /* RentalModelShort */ RentalModelShort;
         }
         /**
          * KeyModelCreate
          */
         export interface KeyModelCreate {
             /**
-             * Name
+             * Number
              */
-            name: string;
+            number: string;
+            /**
+             * Rentable
+             */
+            rentable?: boolean;
+            /**
+             * Checked
+             */
+            checked?: boolean;
             /**
              * Lock Id
              */
@@ -54,9 +71,17 @@ declare namespace Components {
          */
         export interface KeyModelPatch {
             /**
-             * Name
+             * Number
              */
-            name?: string;
+            number?: string;
+            /**
+             * Rentable
+             */
+            rentable?: boolean;
+            /**
+             * Checked
+             */
+            checked?: boolean;
             /**
              * Lock Id
              */
@@ -65,6 +90,21 @@ declare namespace Components {
              * Safe Id
              */
             safe_id?: string; // uuid
+        }
+        /**
+         * KeyModelShort
+         */
+        export interface KeyModelShort {
+            /**
+             * Id
+             */
+            id: string; // uuid
+            /**
+             * Number
+             */
+            number: string;
+            lock: /* LockModelShort */ LockModelShort;
+            safe: /* SafeModelShort */ SafeModelShort;
         }
         /**
          * LocationModel
@@ -90,6 +130,14 @@ declare namespace Components {
              * Id
              */
             id: string; // uuid
+            /**
+             * Amount Locks
+             */
+            amount_locks: number;
+            /**
+             * Amount Safes
+             */
+            amount_safes: number;
         }
         /**
          * LocationModelCreate
@@ -134,6 +182,19 @@ declare namespace Components {
             longitude?: number;
         }
         /**
+         * LocationModelShort
+         */
+        export interface LocationModelShort {
+            /**
+             * Id
+             */
+            id: string; // uuid
+            /**
+             * Name
+             */
+            name: string;
+        }
+        /**
          * LockModel
          */
         export interface LockModel {
@@ -142,22 +203,18 @@ declare namespace Components {
              */
             name: string;
             /**
-             * Address
+             * Owner
              */
-            address?: string;
+            owner?: string;
+            location: /* LocationModelShort */ LocationModelShort;
             /**
-             * Latitude
+             * Amount Keys
              */
-            latitude?: number;
+            amount_keys: number;
             /**
-             * Longitude
+             * Amount Free Keys
              */
-            longitude?: number;
-            /**
-             * Id
-             */
-            id: string; // uuid
-            location: /* LocationModel */ LocationModel;
+            amount_free_keys: number;
         }
         /**
          * LockModelCreate
@@ -210,6 +267,19 @@ declare namespace Components {
             location_id?: string; // uuid
         }
         /**
+         * LockModelShort
+         */
+        export interface LockModelShort {
+            /**
+             * Id
+             */
+            id: string; // uuid
+            /**
+             * Name
+             */
+            name: string;
+        }
+        /**
          * LogEntryModel
          */
         export interface LogEntryModel {
@@ -221,13 +291,13 @@ declare namespace Components {
              * Message
              */
             message: string;
-            creator: /* UserModel */ UserModel;
-            location?: /* LocationModel */ LocationModel;
-            key?: /* KeyModel */ KeyModel;
-            user?: /* UserModel */ UserModel;
-            lock?: /* LockModel */ LockModel;
-            safe?: /* SafeModel */ SafeModel;
-            rental?: /* RentalModel */ RentalModel;
+            creator: /* UserModelShort */ UserModelShort;
+            location?: /* LocationModelShort */ LocationModelShort;
+            key?: /* KeyModelShort */ KeyModelShort;
+            user?: /* UserModelShort */ UserModelShort;
+            lock?: /* LockModelShort */ LockModelShort;
+            safe?: /* SafeModelShort */ SafeModelShort;
+            rental?: /* RentalModelShort */ RentalModelShort;
         }
         /**
          * RentalModel
@@ -249,39 +319,72 @@ declare namespace Components {
              * Id
              */
             id: string; // uuid
-            key: /* KeyModel */ KeyModel;
-            user: /* UserModel */ UserModel;
-            issuing_user: /* UserModel */ UserModel;
+            key: /* KeyModelShort */ KeyModelShort;
+            user: /* UserModelShort */ UserModelShort;
+            issuing_user: /* UserModelShort */ UserModelShort;
+            /**
+             * Active
+             */
+            active: boolean;
         }
         /**
          * RentalModelCreate
          */
         export interface RentalModelCreate {
             /**
-             * Name
-             */
-            name: string;
-            /**
              * Begin
              */
             begin?: string; // date-time
-            key_id: /* KeyModel */ KeyModel;
-            user_id: /* UserModel */ UserModel;
+            /**
+             * End
+             */
+            end?: string; // date-time
+            /**
+             * Allowed By
+             */
+            allowed_by?: string;
+            /**
+             * Key Id
+             */
+            key_id: string; // uuid
+            /**
+             * User Id
+             */
+            user_id: string; // uuid
         }
         /**
          * RentalModelPatch
          */
         export interface RentalModelPatch {
             /**
-             * Name
-             */
-            name?: string;
-            /**
              * Begin
              */
             begin?: string; // date-time
-            key_id?: /* KeyModel */ KeyModel;
-            user_id?: /* UserModel */ UserModel;
+            /**
+             * End
+             */
+            end?: string; // date-time
+            /**
+             * Allowed By
+             */
+            allowed_by?: string;
+        }
+        /**
+         * RentalModelShort
+         */
+        export interface RentalModelShort {
+            /**
+             * Id
+             */
+            id: string; // uuid
+            /**
+             * Begin
+             */
+            begin: string; // date-time
+            /**
+             * End
+             */
+            end?: string; // date-time
         }
         /**
          * SafeModel
@@ -295,7 +398,11 @@ declare namespace Components {
              * Id
              */
             id: string; // uuid
-            location: /* LocationModel */ LocationModel;
+            location: /* LocationModelShort */ LocationModelShort;
+            /**
+             * Amount Keys
+             */
+            amount_keys: number;
         }
         /**
          * SafeModelCreate
@@ -324,13 +431,22 @@ declare namespace Components {
             location_id?: string; // uuid
         }
         /**
-         * UserModel
+         * SafeModelShort
          */
-        export interface UserModel {
+        export interface SafeModelShort {
             /**
              * Id
              */
             id: string; // uuid
+            /**
+             * Name
+             */
+            name: string;
+        }
+        /**
+         * UserModel
+         */
+        export interface UserModel {
             /**
              * Login
              */
@@ -340,9 +456,31 @@ declare namespace Components {
              */
             name: string;
             /**
+             * Id
+             */
+            id: string; // uuid
+            /**
              * Email
              */
             email: string; // email
+            active_rentals: /* RentalModelShort */ RentalModelShort;
+        }
+        /**
+         * UserModelShort
+         */
+        export interface UserModelShort {
+            /**
+             * Login
+             */
+            login: string;
+            /**
+             * Name
+             */
+            name: string;
+            /**
+             * Id
+             */
+            id: string; // uuid
         }
         /**
          * ValidationError

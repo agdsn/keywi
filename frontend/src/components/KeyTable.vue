@@ -8,11 +8,20 @@
     loading-text="Lade Daten..."
     ref="table"
     :item-class="row_classes"
-  ></v-data-table>
+  >
+<!--    TODO: umschreiben als Komponente-->
+    <template v-slot:[`item.lock_name`] = "{ item }">
+      <router-link :to="`/lock/${ item.lock_id }`">{{ item.lock_name }}</router-link>
+    </template>
+
+    <template v-slot:[`item.safe_name`] = "{ item }">
+      <router-link :to="`/safe/${ item.safe_id }`">{{ item.safe_name }}</router-link>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
-import axios from "axios";
+import api from "@/api/api";
 
 export default {
   name: "KeyTable",
@@ -21,50 +30,74 @@ export default {
     loading: true,
     headers: [
       {
-        text: 'Schlüssel ID',
-        value: "key-id"
+        text: "Schloss",
+        // lock-name als identifier schmeißt Fehler -> lock_name
+        value: "lock_name"
       },
       {
-        text: "Schloss",
-        value: "lock-name"
+        text: "Schlüsselnummer",
+        value: "key_number"
       },
       {
         text: "Tresor",
-        value: "safe-name"
+        value: "safe_name"
       },
         {
-        text: "Ausleihbar",
-        value: "rentable"
+        text: "Ausleihe",
+        value: "rental"
       }
     ],
     tableData: []
   }),
   mounted() { this.loadData(); },
   methods: {
-    loadData() {
-      axios.get('http://localhost:6080/key').then(response => {
-        response.data.forEach(
-          key => {
-            this.tableData.push({
-              "key-id": key.id,
-              "lock-name": key.lock.name,
-              "safe-name": key.safe.name,
-              "rentable": this.isRentable(key) ? "Ja" : "Nein"
-            });
-          }
-        );
-        this.loading = false;
-      })
+    async loadData() {
+      let paramId = this.$route.params.id;
+
+      const apiStub = await api();
+      // load specific key if uuid is given in path parameter. load all keys if not
+      if(paramId) {
+        apiStub.key_getKey(paramId).then(response => {
+          let key = response.data;
+          this.pushKeyToDataTable(key);
+          this.loading = false;
+        }).finally(() => {
+          this.loading = false
+        });
+      } else {
+        apiStub.key_getKeys().then(response => {
+          response.data.forEach(key => {
+            this.pushKeyToDataTable(key);
+          });
+        }).finally(() => {
+          this.loading = false;
+        })
+      }
     },
 
-    isRentable(key) {
-      return key.rentable && !key.checked;
+    pushKeyToDataTable(key) {
+      this.tableData.push({
+              "lock_name": key.lock.name,
+              "key_number": key.number,
+              "safe_name": key.safe.name,
+              "rental": this.getRentalStatus(key),
+              "lock_id": key.lock.id,
+              "safe_id": key.safe.id
+            });
+    },
+
+    getRentalStatus(key) {
+      if(key.active_rental) {
+        return "Ausgeliehen";
+      } else if(!key.rentable) {
+        return "Nicht ausleihbar";
+      } else {
+        return "Ausleihbar";
+      }
     },
 
     row_classes(item) {
-      console.log("row classes");
-      console.log(item.rentable);
-      if(item.rentable === "Ja") {
+      if(item.rental === "Ausleihbar") {
         return "green-cell"
       } else {
         return "red-cell";
@@ -78,13 +111,17 @@ export default {
 </script>
 
 <style>
-  .red-cell :last-child {
+  .red-cell td:last-child {
     background-color: #DDC1BB;
     border-radius: 5px;
   }
 
-  .green-cell :last-child {
+  .green-cell td:last-child {
     background-color: #ABCC9F;
     border-radius: 5px;
+  }
+
+  td a {
+    text-decoration: none;
   }
 </style>

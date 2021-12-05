@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "@/api/api";
 
 export default {
   name: "LockTable",
@@ -26,24 +26,51 @@ export default {
       {
         text: "Ort",
         value: "location-name"
+      },
+      {
+        text: "Besitzer",
+        value: "owner-name"
+      },
+      {
+        text: "Verfügbare Schlüssel",
+        value: "available-keys"
       }
     ],
     tableData: []
   }),
   mounted() { this.loadData(); },
   methods: {
-    loadData() {
-      axios.get('http://localhost:6080/lock').then(response => {
-        response.data.forEach(
-          lock => {
-            this.tableData.push({
+    async loadData() {
+      let paramId = this.$route.params.id;
+
+      const apiStub = await api();
+      // load specific lock if uuid is given in path parameter. load all locks if not
+      if(paramId) {
+        apiStub.lock_getLock(paramId).then(response => {
+          let lock = response.data;
+          this.pushLockToDataTable(lock);
+        }).finally(() => {
+          this.loading = false;
+        });
+      } else {
+        apiStub.lock_getLocks().then(response => {
+          response.data.forEach(lock => {
+            this.pushLockToDataTable(lock);
+          });
+          this.loading = false;
+        }).finally(() => {
+          this.loading = false;
+        });
+      }
+    },
+
+    pushLockToDataTable(lock) {
+      this.tableData.push({
               "lock-name": lock.name,
-              "location-name": lock.location.name
+              "location-name": lock.location.name,
+              "owner-name": lock.owner,
+              "available-keys": lock.amount_free_keys + " / " + lock.amount_keys
             });
-          }
-        );
-        this.loading = false;
-      })
     },
   }
 }

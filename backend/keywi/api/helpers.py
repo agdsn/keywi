@@ -7,6 +7,7 @@ from fastapi.routing import APIRoute
 
 from model import UUIDModel
 from model.base import ModelBase
+from model.session import session
 
 
 def to_camel_case(snake_str):
@@ -46,7 +47,7 @@ class PathModelGetter:
         obj = None
 
         if is_valid_uuid(uuid):
-            obj = self.model.q.get(uuid)
+            obj = session.query(self.model).get(uuid)
 
         if obj is None:
             raise HTTPException(404, f"{self.model.__name__} with UUID {uuid} not found!")
@@ -55,7 +56,7 @@ class PathModelGetter:
 
 
 def get_or_404(model: Type[ModelBase], ident: any):
-    obj = model.q.get(ident)
+    obj = session.query(model).get(ident)
 
     if obj is None:
         raise HTTPException(404, f'{model.__name__} with identifier {ident} not found!')

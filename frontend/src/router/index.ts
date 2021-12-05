@@ -8,18 +8,18 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/keys',
-    alias: '/',
+    path: '/keys/:id?',
+      alias: '/',
     name: 'keys',
     component: AllKeysView
   },
   {
-    path: '/safe',
+    path: '/safe/:id?',
     name: 'safe',
     component: AllSafesView
   },
       {
-    path: '/lock',
+    path: '/lock/:id?',
     name: 'lock',
     component: AllLocksView
   }
