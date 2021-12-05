@@ -7,7 +7,8 @@ from api import user, safe, rental, log, lock, location, key
 from api.helpers import use_route_names_as_operation_ids
 
 from lib.app_config import app_config
-
+from model.helper import init_data
+from model.session import session
 
 app = FastAPI(title="Keywi", version="0.0.1",
               servers=[{"url": 'http://localhost:6080', "description": "main"}])
@@ -23,7 +24,10 @@ app.add_middleware(
 )
 
 with db():
-    model.base.ModelBase.metadata.create_all(db.session.get_bind())
+    model.base.ModelBase.metadata.create_all(session.get_bind())
+
+    if len(session.query(model.User).all()) == 0:
+        init_data(_commit=True)
 
 origins = [
     "http://localhost",

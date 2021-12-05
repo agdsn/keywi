@@ -3,9 +3,12 @@ from typing import List
 from fastapi import APIRouter, Depends, Body
 from fastapi_sqlalchemy import db
 
-from api.helpers import PathModelGetter
-from model import Key
+from api.auth import get_current_user
+from api.helpers import PathModelGetter, get_or_404
+from model import Key, User, Lock, Safe
 from model.pydantic import KeyModel, KeyModelCreate, KeyModelPatch
+
+import lib.key
 
 router = APIRouter(prefix="/key", tags=["key"])
 
@@ -21,16 +24,26 @@ def get_key(key: Key = Depends(PathModelGetter(Key))):
 
 
 @router.post("/", response_model=KeyModel)
-def create_key(key_create: KeyModelCreate):
-    pass
+def create_key(key_create: KeyModelCreate,
+               c_user: User = Depends(get_current_user)):
+    args = key_create.dict()
+
+    args['lock'] = get_or_404(Lock, args.pop('lock_id'))
+    args['safe'] = get_or_404(Safe, args.pop('safe_id'))
+
+    lock = lib.key.create_key(**args, processor=c_user, _commit=True)
+
+    return lock
 
 
 @router.patch("/{uuid}", response_model=KeyModel)
 def edit_key(key: Key = Depends(PathModelGetter(Key)),
-             key_patch: KeyModelPatch = Body(...)):
+             key_patch: KeyModelPatch = Body(...),
+             c_user: User = Depends(get_current_user)):
     pass
 
 
-@router.delete("/{uuid}", response_model=KeyModel)
-def delete_key(key: Key = Depends(PathModelGetter(Key))):
+@router.delete("/{uuid}", response_model=KeyModel,)
+def delete_key(key: Key = Depends(PathModelGetter(Key)),
+               c_user: User = Depends(get_current_user)):
     pass
