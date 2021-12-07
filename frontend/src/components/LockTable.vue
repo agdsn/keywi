@@ -15,7 +15,6 @@ import api from "@/api/api";
 
 export default {
   name: "LockTable",
-  props: [ "lockData" ],
   data: () => ({
     loading: true,
     headers: [

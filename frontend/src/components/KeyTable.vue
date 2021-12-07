@@ -17,6 +17,10 @@
     <template v-slot:[`item.safe_name`] = "{ item }">
       <router-link :to="`/safe/${ item.safe_id }`">{{ item.safe_name }}</router-link>
     </template>
+
+    <template v-slot:[`item.location_name`] = "{ item }">
+      <router-link :to="`/location/${ item.location_id }`">{{ item.location_name }}</router-link>
+    </template>
   </v-data-table>
 </template>
 
@@ -25,10 +29,13 @@ import api from "@/api/api";
 
 export default {
   name: "KeyTable",
-  props: [ "keyData" ],
   data: () => ({
     loading: true,
     headers: [
+      {
+        text: "Ort",
+        value: "location_name"
+      },
       {
         text: "Schloss",
         // lock-name als identifier schmeißt Fehler -> lock_name
@@ -77,6 +84,8 @@ export default {
 
     pushKeyToDataTable(key) {
       this.tableData.push({
+              "location_name": key.location.name,
+              "location_id": key.location.id,
               "lock_name": key.lock.name,
               "key_number": key.number,
               "safe_name": key.safe.name,

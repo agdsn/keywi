@@ -2,7 +2,7 @@
   <div class="home">
     <app-title view-title="Tresor"></app-title>
     <app-nav-bar></app-nav-bar>
-    <safe-table safe-data=""></safe-table>
+    <safe-table></safe-table>
   </div>
 </template>
 

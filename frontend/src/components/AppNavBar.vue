@@ -5,6 +5,7 @@
       <li><router-link to="/keys">Ausgeliehene Schlüssel</router-link></li>
       <li><router-link to="/safe">Tresore</router-link></li>
       <li><router-link to="/lock">Schlösser</router-link></li>
+      <li><router-link to="/location">Orte</router-link></li>
     </ul>
     <ul class="list">
       <li><router-link to="#">Logout</router-link></li>

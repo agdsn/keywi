@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import AllKeysView from '../views/AllKeysView.vue'
 import AllSafesView from "@/views/AllSafesView.vue";
 import AllLocksView from "@/views/AllLocksView.vue";
+import AllLocationsView from "@/views/AllLocationsView.vue";
 
 Vue.use(VueRouter)
 
@@ -18,10 +19,15 @@ const routes: Array<RouteConfig> = [
     name: 'safe',
     component: AllSafesView
   },
-      {
+  {
     path: '/lock/:id?',
     name: 'lock',
     component: AllLocksView
+  },
+  {
+    path: '/location/:id?',
+    name: 'location',
+    component: AllLocationsView
   }
 ]
 

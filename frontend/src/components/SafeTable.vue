@@ -15,7 +15,6 @@ import api from "@/api/api";
 
 export default {
   name: "SafeTable",
-  props: [ "safeData" ],
   data: () => ({
     loading: true,
     headers: [

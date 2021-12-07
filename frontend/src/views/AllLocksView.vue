@@ -2,7 +2,7 @@
   <div class="home">
     <app-title view-title="Schlösser"></app-title>
     <app-nav-bar></app-nav-bar>
-    <lock-table lock-data=""></lock-table>
+    <lock-table></lock-table>
   </div>
 </template>
 
