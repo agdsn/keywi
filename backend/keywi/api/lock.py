@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Body
 from fastapi_sqlalchemy import db
 
 from api.auth import get_current_user
-from api.helpers import PathModelGetter, get_or_404
+from api.helpers import PathModelGetter, get_or_404, SuccessModel
 from model import Lock, User, Location
 from model.pydantic import LockModel, LockModelCreate, LockModelPatch
 
@@ -39,7 +39,7 @@ def create_lock(lock_create: LockModelCreate,
 def edit_lock(lock: Lock = Depends(PathModelGetter(Lock)),
               lock_patch: LockModelPatch = Body(...),
               c_user: User = Depends(get_current_user)):
-    args = lock_patch.dict(exclSafeude_unset=True)
+    args = lock_patch.dict(exclude_unset=True)
 
     if 'location_id' in args:
         args['location'] = get_or_404(Location, args.pop('location_id'))
@@ -49,7 +49,9 @@ def edit_lock(lock: Lock = Depends(PathModelGetter(Lock)),
     return lock
 
 
-@router.delete("/{uuid}", response_model=LockModel)
+@router.delete("/{uuid}", response_model=SuccessModel)
 def delete_lock(lock: Lock = Depends(PathModelGetter(Lock)),
                 c_user: User = Depends(get_current_user)):
-    return lib.lock.delete_lock(lock, processor=c_user, _commit=True)
+    lib.lock.delete_lock(lock, processor=c_user, _commit=True)
+
+    return SuccessModel

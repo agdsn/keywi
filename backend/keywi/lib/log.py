@@ -1,19 +1,19 @@
-from fastapi_sqlalchemy import db
+from model import User, LogEntry, Lock, Location
+from model.session import session
 
-from model import User, LogEntry
 
-
-def log_event(message: str, creator: User = None, **log_params):
+def log_event(message: str,
+              creator: User = None,
+              **kwargs):
     """
     This method will create a new LogEntry.
     """
-    with db():
-        le = LogEntry(
-            message=message,
-            creator=creator,
-            **log_params,
-        )
+    le = LogEntry(
+        message=message,
+        creator=creator,
+        **kwargs,
+    )
 
-        db.session.add(le)
+    session.add(le)
 
     return le

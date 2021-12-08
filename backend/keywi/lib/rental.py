@@ -13,7 +13,6 @@ def create_rental(key: Key, user: User, issuing_user: User, processor: User, beg
                          log_params={'rental': REFERENCED_OBJ,
                                      'key': key,
                                      'user': user},
-                         issuing_user=processor,
                          **locals())
 
 

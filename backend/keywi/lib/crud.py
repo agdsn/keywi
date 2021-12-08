@@ -30,7 +30,7 @@ def create_object(model: Type[UUIDModel],
     session.flush()
 
     log_data = {
-        key: obj[key]
+        key: getattr(obj, key)
         for key in log_keys
     } if log_keys is not None else {}
 
