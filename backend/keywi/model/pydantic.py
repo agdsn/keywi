@@ -145,7 +145,7 @@ class KeyModel(KeyModelBase):
     lock: LockModelShort
     safe: SafeModelShort
     active_rental: Optional[RentalModelShort]
-
+    location: LocationModelShort
 
 class KeyModelShort(PydModel):
     id: UUID

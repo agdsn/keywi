@@ -29,14 +29,18 @@ def create_object(model: Type[UUIDModel],
     session.add(obj)
     session.flush()
 
-    log_data = {
-        key: obj[key]
-        for key in log_keys
-    } if log_keys is not None else {}
+    log_data = {}
+    # TODO: fix
+
+    # log_data = {
+    #     key: obj[key]
+    #     for key in log_keys
+    # } if log_keys is not None else {}
 
     log_params = {} if log_params is None else replace_ref_object(log_params, obj)
 
-    log_event(f"Created {classname} with ID {obj.id}: {log_data}", creator=processor, **log_params)
+    # TODO: fix
+    # log_event(f"Created {classname} with ID {obj.id}: {log_data}", creator=processor, **log_params)
 
     return obj
 

@@ -24,9 +24,13 @@ def get_location(location: Location = Depends(PathModelGetter(Location))):
 
 
 @router.post("/", response_model=LocationModel)
-def create_location(location_create: LocationModelCreate, c_user: User = Depends(get_current_user)):
+def create_location(location_create: LocationModelCreate
+                    # , c_user: User = Depends(get_current_user)
+                    ):
     args = location_create.dict()
-    location = lib.location.create_location(**args, processor=c_user, _commit=True)
+    location = lib.location.create_location(**args,
+                                            # processor=c_user,
+                                            _commit=True)
 
     return location
 

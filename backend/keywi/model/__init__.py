@@ -94,6 +94,9 @@ class Key(UUIDModel):
     def free(self):
         return select(Rental.id).select_from(Rental).where(and_(Rental.active, Rental.key_id == self.id)).scalar_subquery().is_(None)
 
+    @property
+    def location(self):
+        return self.lock.location
 
 class Rental(UUIDModel):
     __tablename__ = "rental"
