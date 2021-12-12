@@ -22,4 +22,9 @@ export default Vue.extend({
   :root {
     --primary-color: #41A6A0;
   }
+
+  .primary-color {
+    background-color: var(--primary-color);
+    color: #ffffff !important;
+  }
 </style>

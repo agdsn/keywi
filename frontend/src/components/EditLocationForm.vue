@@ -1,8 +1,4 @@
 <template>
-  <div>
-    <h2>
-      Ort hinzufügen
-    </h2>
     <v-form ref="form">
       <v-text-field label="Name" v-model="name" :rules="nameRules" required/>
       <v-text-field label="Adresse" v-model="address"/>
@@ -12,7 +8,6 @@
         Speichern
       </v-btn>
    </v-form>
-  </div>
 </template>
 
 <script>

@@ -146,6 +146,7 @@ class KeyModel(KeyModelBase):
     safe: SafeModelShort
     active_rental: Optional[RentalModelShort]
     checked: bool = False
+    location: LocationModelShort
 
 
 class KeyModelShort(PydModel):

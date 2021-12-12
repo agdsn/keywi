@@ -23,10 +23,10 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
 
 @router.post("/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = db.session.query(User).filter_by(username=form_data.username)
+    user = db.session.query(User).filter_by(login=form_data.username).scalar()
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    return {"access_token": user.username, "token_type": "bearer"}
+    return {"access_token": user.login, "token_type": "bearer"}
 
 

@@ -12,6 +12,7 @@
 
 <script>
 import api from "@/api/api";
+import qs from "qs";
 
 export default {
   name: "LocationTable",
@@ -43,6 +44,8 @@ export default {
       let paramId = this.$route.params.id;
 
       const apiStub = await api();
+
+
       // load specific location if uuid is given in path parameter. load all locations if not
       if(paramId) {
         apiStub.location_getLocation(paramId).then(response => {

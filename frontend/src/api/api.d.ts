@@ -9,6 +9,35 @@ import type {
 declare namespace Components {
     namespace Schemas {
         /**
+         * Body_login_auth_token_post
+         */
+        export interface BodyLoginAuthTokenPost {
+            /**
+             * Grant Type
+             */
+            grant_type?: string; // password
+            /**
+             * Username
+             */
+            username: string;
+            /**
+             * Password
+             */
+            password: string;
+            /**
+             * Scope
+             */
+            scope?: string;
+            /**
+             * Client Id
+             */
+            client_id?: string;
+            /**
+             * Client Secret
+             */
+            client_secret?: string;
+        }
+        /**
          * HTTPValidationError
          */
         export interface HTTPValidationError {
@@ -40,6 +69,7 @@ declare namespace Components {
             lock: /* LockModelShort */ LockModelShort;
             safe: /* SafeModelShort */ SafeModelShort;
             active_rental?: /* RentalModelShort */ RentalModelShort;
+            location: /* LocationModelShort */ LocationModelShort;
         }
         /**
          * KeyModelCreate
@@ -225,17 +255,9 @@ declare namespace Components {
              */
             name: string;
             /**
-             * Address
+             * Owner
              */
-            address?: string;
-            /**
-             * Latitude
-             */
-            latitude?: number;
-            /**
-             * Longitude
-             */
-            longitude?: number;
+            owner?: string;
             /**
              * Location Id
              */
@@ -250,17 +272,9 @@ declare namespace Components {
              */
             name?: string;
             /**
-             * Address
+             * Owner
              */
-            address?: string;
-            /**
-             * Latitude
-             */
-            latitude?: number;
-            /**
-             * Longitude
-             */
-            longitude?: number;
+            owner?: string;
             /**
              * Location Id
              */
@@ -444,6 +458,15 @@ declare namespace Components {
             name: string;
         }
         /**
+         * SuccessModel
+         */
+        export interface SuccessModel {
+            /**
+             * Success
+             */
+            success?: boolean;
+        }
+        /**
          * UserModel
          */
         export interface UserModel {
@@ -502,6 +525,13 @@ declare namespace Components {
     }
 }
 declare namespace Paths {
+    namespace AuthLogin {
+        export type RequestBody = /* Body_login_auth_token_post */ Components.Schemas.BodyLoginAuthTokenPost;
+        namespace Responses {
+            export type $200 = any;
+            export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
+        }
+    }
     namespace KeyCreateKey {
         export type RequestBody = /* KeyModelCreate */ Components.Schemas.KeyModelCreate;
         namespace Responses {
@@ -525,7 +555,7 @@ declare namespace Paths {
             Parameters.Uuid;
         }
         namespace Responses {
-            export type $200 = /* KeyModel */ Components.Schemas.KeyModel;
+            export type $200 = /* SuccessModel */ Components.Schemas.SuccessModel;
             export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
         }
     }
@@ -601,7 +631,7 @@ declare namespace Paths {
             Parameters.Uuid;
         }
         namespace Responses {
-            export type $200 = /* LocationModel */ Components.Schemas.LocationModel;
+            export type $200 = /* SuccessModel */ Components.Schemas.SuccessModel;
             export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
         }
     }
@@ -677,7 +707,7 @@ declare namespace Paths {
             Parameters.Uuid;
         }
         namespace Responses {
-            export type $200 = /* LockModel */ Components.Schemas.LockModel;
+            export type $200 = /* SuccessModel */ Components.Schemas.SuccessModel;
             export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
         }
     }
@@ -761,7 +791,7 @@ declare namespace Paths {
             Parameters.Uuid;
         }
         namespace Responses {
-            export type $200 = /* RentalModel */ Components.Schemas.RentalModel;
+            export type $200 = /* SuccessModel */ Components.Schemas.SuccessModel;
             export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
         }
     }
@@ -837,7 +867,7 @@ declare namespace Paths {
             Parameters.Uuid;
         }
         namespace Responses {
-            export type $200 = /* SafeModel */ Components.Schemas.SafeModel;
+            export type $200 = /* SuccessModel */ Components.Schemas.SuccessModel;
             export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
         }
     }
@@ -928,7 +958,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.KeyGetKeys.Responses.$$200>
+  ): OperationResponse<Paths.KeyGetKeys.Responses.$200>
   /**
    * key_createKey - Create Key
    */
@@ -936,7 +966,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: Paths.KeyCreateKey.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.KeyCreateKey.Responses.$$200>
+  ): OperationResponse<Paths.KeyCreateKey.Responses.$200>
   /**
    * key_getKey - Get Key
    */
@@ -944,7 +974,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.KeyGetKey.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.KeyGetKey.Responses.$$200>
+  ): OperationResponse<Paths.KeyGetKey.Responses.$200>
   /**
    * key_editKey - Edit Key
    */
@@ -952,7 +982,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.KeyEditKey.PathParameters> | null,
     data?: Paths.KeyEditKey.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.KeyEditKey.Responses.$$200>
+  ): OperationResponse<Paths.KeyEditKey.Responses.$200>
   /**
    * key_deleteKey - Delete Key
    */
@@ -960,7 +990,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.KeyDeleteKey.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.KeyDeleteKey.Responses.$$200>
+  ): OperationResponse<Paths.KeyDeleteKey.Responses.$200>
   /**
    * location_getLocations - Get Locations
    */
@@ -968,7 +998,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LocationGetLocations.Responses.$$200>
+  ): OperationResponse<Paths.LocationGetLocations.Responses.$200>
   /**
    * location_createLocation - Create Location
    */
@@ -976,7 +1006,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: Paths.LocationCreateLocation.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LocationCreateLocation.Responses.$$200>
+  ): OperationResponse<Paths.LocationCreateLocation.Responses.$200>
   /**
    * location_getLocation - Get Location
    */
@@ -984,7 +1014,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.LocationGetLocation.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LocationGetLocation.Responses.$$200>
+  ): OperationResponse<Paths.LocationGetLocation.Responses.$200>
   /**
    * location_editLocation - Edit Location
    */
@@ -992,7 +1022,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.LocationEditLocation.PathParameters> | null,
     data?: Paths.LocationEditLocation.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LocationEditLocation.Responses.$$200>
+  ): OperationResponse<Paths.LocationEditLocation.Responses.$200>
   /**
    * location_deleteLocation - Delete Location
    */
@@ -1000,7 +1030,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.LocationDeleteLocation.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LocationDeleteLocation.Responses.$$200>
+  ): OperationResponse<Paths.LocationDeleteLocation.Responses.$200>
   /**
    * lock_getLocks - Get Locks
    */
@@ -1008,7 +1038,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LockGetLocks.Responses.$$200>
+  ): OperationResponse<Paths.LockGetLocks.Responses.$200>
   /**
    * lock_createLock - Create Lock
    */
@@ -1016,7 +1046,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: Paths.LockCreateLock.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LockCreateLock.Responses.$$200>
+  ): OperationResponse<Paths.LockCreateLock.Responses.$200>
   /**
    * lock_getLock - Get Lock
    */
@@ -1024,7 +1054,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.LockGetLock.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LockGetLock.Responses.$$200>
+  ): OperationResponse<Paths.LockGetLock.Responses.$200>
   /**
    * lock_editLock - Edit Lock
    */
@@ -1032,7 +1062,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.LockEditLock.PathParameters> | null,
     data?: Paths.LockEditLock.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LockEditLock.Responses.$$200>
+  ): OperationResponse<Paths.LockEditLock.Responses.$200>
   /**
    * lock_deleteLock - Delete Lock
    */
@@ -1040,7 +1070,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.LockDeleteLock.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LockDeleteLock.Responses.$$200>
+  ): OperationResponse<Paths.LockDeleteLock.Responses.$200>
   /**
    * log_getLogs - Get Logs
    */
@@ -1048,7 +1078,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.LogGetLogs.Responses.$$200>
+  ): OperationResponse<Paths.LogGetLogs.Responses.$200>
   /**
    * rental_getRentals - Get Rentals
    */
@@ -1056,7 +1086,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.RentalGetRentals.Responses.$$200>
+  ): OperationResponse<Paths.RentalGetRentals.Responses.$200>
   /**
    * rental_createRental - Create Rental
    */
@@ -1064,7 +1094,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: Paths.RentalCreateRental.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.RentalCreateRental.Responses.$$200>
+  ): OperationResponse<Paths.RentalCreateRental.Responses.$200>
   /**
    * rental_getRental - Get Rental
    */
@@ -1072,7 +1102,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.RentalGetRental.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.RentalGetRental.Responses.$$200>
+  ): OperationResponse<Paths.RentalGetRental.Responses.$200>
   /**
    * rental_editRental - Edit Rental
    */
@@ -1080,7 +1110,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.RentalEditRental.PathParameters> | null,
     data?: Paths.RentalEditRental.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.RentalEditRental.Responses.$$200>
+  ): OperationResponse<Paths.RentalEditRental.Responses.$200>
   /**
    * rental_deleteRental - Delete Rental
    */
@@ -1088,7 +1118,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.RentalDeleteRental.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.RentalDeleteRental.Responses.$$200>
+  ): OperationResponse<Paths.RentalDeleteRental.Responses.$200>
   /**
    * safe_getSafes - Get Safes
    */
@@ -1096,7 +1126,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.SafeGetSafes.Responses.$$200>
+  ): OperationResponse<Paths.SafeGetSafes.Responses.$200>
   /**
    * safe_createSafe - Create Safe
    */
@@ -1104,7 +1134,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: Paths.SafeCreateSafe.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.SafeCreateSafe.Responses.$$200>
+  ): OperationResponse<Paths.SafeCreateSafe.Responses.$200>
   /**
    * safe_getSafe - Get Safe
    */
@@ -1112,7 +1142,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.SafeGetSafe.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.SafeGetSafe.Responses.$$200>
+  ): OperationResponse<Paths.SafeGetSafe.Responses.$200>
   /**
    * safe_editSafe - Edit Safe
    */
@@ -1120,7 +1150,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.SafeEditSafe.PathParameters> | null,
     data?: Paths.SafeEditSafe.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.SafeEditSafe.Responses.$$200>
+  ): OperationResponse<Paths.SafeEditSafe.Responses.$200>
   /**
    * safe_deleteSafe - Delete Safe
    */
@@ -1128,7 +1158,7 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.SafeDeleteSafe.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.SafeDeleteSafe.Responses.$$200>
+  ): OperationResponse<Paths.SafeDeleteSafe.Responses.$200>
   /**
    * user_getUsers - Get Users
    */
@@ -1136,7 +1166,7 @@ export interface OperationMethods {
     parameters?: Parameters<UnknownParamsObject> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.UserGetUsers.Responses.$$200>
+  ): OperationResponse<Paths.UserGetUsers.Responses.$200>
   /**
    * user_getUser - Get User
    */
@@ -1144,7 +1174,15 @@ export interface OperationMethods {
     parameters?: Parameters<Paths.UserGetUser.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.UserGetUser.Responses.$$200>
+  ): OperationResponse<Paths.UserGetUser.Responses.$200>
+  /**
+   * auth_login - Login
+   */
+  'auth_login'(
+    parameters?: Parameters<UnknownParamsObject> | null,
+    data?: Paths.AuthLogin.RequestBody,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.AuthLogin.Responses.$200>
 }
 
 export interface PathsDictionary {
@@ -1156,7 +1194,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.KeyGetKeys.Responses.$$200>
+    ): OperationResponse<Paths.KeyGetKeys.Responses.$200>
     /**
      * key_createKey - Create Key
      */
@@ -1164,7 +1202,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: Paths.KeyCreateKey.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.KeyCreateKey.Responses.$$200>
+    ): OperationResponse<Paths.KeyCreateKey.Responses.$200>
   }
   ['/key/{uuid}']: {
     /**
@@ -1174,7 +1212,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.KeyGetKey.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.KeyGetKey.Responses.$$200>
+    ): OperationResponse<Paths.KeyGetKey.Responses.$200>
     /**
      * key_deleteKey - Delete Key
      */
@@ -1182,7 +1220,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.KeyDeleteKey.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.KeyDeleteKey.Responses.$$200>
+    ): OperationResponse<Paths.KeyDeleteKey.Responses.$200>
     /**
      * key_editKey - Edit Key
      */
@@ -1190,7 +1228,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.KeyEditKey.PathParameters> | null,
       data?: Paths.KeyEditKey.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.KeyEditKey.Responses.$$200>
+    ): OperationResponse<Paths.KeyEditKey.Responses.$200>
   }
   ['/location/']: {
     /**
@@ -1200,7 +1238,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LocationGetLocations.Responses.$$200>
+    ): OperationResponse<Paths.LocationGetLocations.Responses.$200>
     /**
      * location_createLocation - Create Location
      */
@@ -1208,7 +1246,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: Paths.LocationCreateLocation.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LocationCreateLocation.Responses.$$200>
+    ): OperationResponse<Paths.LocationCreateLocation.Responses.$200>
   }
   ['/location/{uuid}']: {
     /**
@@ -1218,7 +1256,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.LocationGetLocation.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LocationGetLocation.Responses.$$200>
+    ): OperationResponse<Paths.LocationGetLocation.Responses.$200>
     /**
      * location_deleteLocation - Delete Location
      */
@@ -1226,7 +1264,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.LocationDeleteLocation.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LocationDeleteLocation.Responses.$$200>
+    ): OperationResponse<Paths.LocationDeleteLocation.Responses.$200>
     /**
      * location_editLocation - Edit Location
      */
@@ -1234,7 +1272,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.LocationEditLocation.PathParameters> | null,
       data?: Paths.LocationEditLocation.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LocationEditLocation.Responses.$$200>
+    ): OperationResponse<Paths.LocationEditLocation.Responses.$200>
   }
   ['/lock/']: {
     /**
@@ -1244,7 +1282,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LockGetLocks.Responses.$$200>
+    ): OperationResponse<Paths.LockGetLocks.Responses.$200>
     /**
      * lock_createLock - Create Lock
      */
@@ -1252,7 +1290,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: Paths.LockCreateLock.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LockCreateLock.Responses.$$200>
+    ): OperationResponse<Paths.LockCreateLock.Responses.$200>
   }
   ['/lock/{uuid}']: {
     /**
@@ -1262,7 +1300,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.LockGetLock.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LockGetLock.Responses.$$200>
+    ): OperationResponse<Paths.LockGetLock.Responses.$200>
     /**
      * lock_deleteLock - Delete Lock
      */
@@ -1270,7 +1308,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.LockDeleteLock.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LockDeleteLock.Responses.$$200>
+    ): OperationResponse<Paths.LockDeleteLock.Responses.$200>
     /**
      * lock_editLock - Edit Lock
      */
@@ -1278,7 +1316,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.LockEditLock.PathParameters> | null,
       data?: Paths.LockEditLock.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LockEditLock.Responses.$$200>
+    ): OperationResponse<Paths.LockEditLock.Responses.$200>
   }
   ['/log/']: {
     /**
@@ -1288,7 +1326,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.LogGetLogs.Responses.$$200>
+    ): OperationResponse<Paths.LogGetLogs.Responses.$200>
   }
   ['/rental/']: {
     /**
@@ -1298,7 +1336,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.RentalGetRentals.Responses.$$200>
+    ): OperationResponse<Paths.RentalGetRentals.Responses.$200>
     /**
      * rental_createRental - Create Rental
      */
@@ -1306,7 +1344,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: Paths.RentalCreateRental.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.RentalCreateRental.Responses.$$200>
+    ): OperationResponse<Paths.RentalCreateRental.Responses.$200>
   }
   ['/rental/{uuid}']: {
     /**
@@ -1316,7 +1354,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.RentalGetRental.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.RentalGetRental.Responses.$$200>
+    ): OperationResponse<Paths.RentalGetRental.Responses.$200>
     /**
      * rental_deleteRental - Delete Rental
      */
@@ -1324,7 +1362,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.RentalDeleteRental.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.RentalDeleteRental.Responses.$$200>
+    ): OperationResponse<Paths.RentalDeleteRental.Responses.$200>
     /**
      * rental_editRental - Edit Rental
      */
@@ -1332,7 +1370,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.RentalEditRental.PathParameters> | null,
       data?: Paths.RentalEditRental.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.RentalEditRental.Responses.$$200>
+    ): OperationResponse<Paths.RentalEditRental.Responses.$200>
   }
   ['/safe/']: {
     /**
@@ -1342,7 +1380,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.SafeGetSafes.Responses.$$200>
+    ): OperationResponse<Paths.SafeGetSafes.Responses.$200>
     /**
      * safe_createSafe - Create Safe
      */
@@ -1350,7 +1388,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: Paths.SafeCreateSafe.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.SafeCreateSafe.Responses.$$200>
+    ): OperationResponse<Paths.SafeCreateSafe.Responses.$200>
   }
   ['/safe/{uuid}']: {
     /**
@@ -1360,7 +1398,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.SafeGetSafe.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.SafeGetSafe.Responses.$$200>
+    ): OperationResponse<Paths.SafeGetSafe.Responses.$200>
     /**
      * safe_deleteSafe - Delete Safe
      */
@@ -1368,7 +1406,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.SafeDeleteSafe.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.SafeDeleteSafe.Responses.$$200>
+    ): OperationResponse<Paths.SafeDeleteSafe.Responses.$200>
     /**
      * safe_editSafe - Edit Safe
      */
@@ -1376,7 +1414,7 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.SafeEditSafe.PathParameters> | null,
       data?: Paths.SafeEditSafe.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.SafeEditSafe.Responses.$$200>
+    ): OperationResponse<Paths.SafeEditSafe.Responses.$200>
   }
   ['/user/']: {
     /**
@@ -1386,7 +1424,7 @@ export interface PathsDictionary {
       parameters?: Parameters<UnknownParamsObject> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.UserGetUsers.Responses.$$200>
+    ): OperationResponse<Paths.UserGetUsers.Responses.$200>
   }
   ['/user/{uuid}']: {
     /**
@@ -1396,7 +1434,17 @@ export interface PathsDictionary {
       parameters?: Parameters<Paths.UserGetUser.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.UserGetUser.Responses.$$200>
+    ): OperationResponse<Paths.UserGetUser.Responses.$200>
+  }
+  ['/auth/token']: {
+    /**
+     * auth_login - Login
+     */
+    'post'(
+      parameters?: Parameters<UnknownParamsObject> | null,
+      data?: Paths.AuthLogin.RequestBody,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.AuthLogin.Responses.$200>
   }
 }
 
