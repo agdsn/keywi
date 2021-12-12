@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Body
 from fastapi_sqlalchemy import db
 
 from api.auth import get_current_user
-from api.helpers import PathModelGetter
+from api.helpers import PathModelGetter, SuccessModel
 from model import Location, User
 from model.pydantic import LocationModel, LocationModelCreate, LocationModelPatch
 
@@ -46,7 +46,9 @@ def edit_location(location: Location = Depends(PathModelGetter(Location)),
     return location
 
 
-@router.delete("/{uuid}", response_model=LocationModel)
+@router.delete("/{uuid}", response_model=SuccessModel)
 def delete_location(location: Location = Depends(PathModelGetter(Location)),
                     c_user: User = Depends(get_current_user)):
-    return lib.location.delete_location(location, processor=c_user, _commit=True)
+    lib.location.delete_location(location, processor=c_user, _commit=True)
+
+    return SuccessModel()

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Body
 from fastapi_sqlalchemy import db
 
 from api.auth import get_current_user
-from api.helpers import PathModelGetter, get_or_404
+from api.helpers import PathModelGetter, get_or_404, SuccessModel
 from model import Rental, User, Key
 from model.pydantic import RentalModel, RentalModelCreate, RentalModelPatch
 
@@ -31,9 +31,9 @@ def create_rental(rental_create: RentalModelCreate,
     args['user'] = get_or_404(User, args.pop('user_id'))
     args['key'] = get_or_404(Key, args.pop('key_id'))
 
-    lock = lib.rental.create_rental(**args, processor=c_user, _commit=True)
+    rental = lib.rental.create_rental(**args, issuing_user=c_user, processor=c_user, _commit=True)
 
-    return lock
+    return rental
 
 
 @router.patch("/{uuid}", response_model=RentalModel)
@@ -42,12 +42,14 @@ def edit_rental(rental: Rental = Depends(PathModelGetter(Rental)),
                 c_user: User = Depends(get_current_user)):
     args = rental_patch.dict(exclude_unset=True)
 
-    lock = lib.rental.edit_rental(rental, processor=c_user, **args, _commit=True)
+    rental = lib.rental.edit_rental(rental, processor=c_user, **args, _commit=True)
 
-    return lock
+    return rental
 
 
-@router.delete("/{uuid}", response_model=RentalModel)
+@router.delete("/{uuid}", response_model=SuccessModel)
 def delete_rental(rental: Rental = Depends(PathModelGetter(Rental)),
                   c_user: User = Depends(get_current_user)):
-    return lib.rental.delete_rental(rental, processor=c_user, _commit=True)
+    lib.rental.delete_rental(rental, processor=c_user, _commit=True)
+
+    return SuccessModel()

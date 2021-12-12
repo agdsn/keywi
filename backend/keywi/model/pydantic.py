@@ -97,7 +97,7 @@ class LockModel(LockModelBase):
     amount_free_keys: int
 
 
-class LockModelCreate(LocationModelBase):
+class LockModelCreate(LockModelBase):
     location_id: UUID
 
 
@@ -145,7 +145,8 @@ class KeyModel(KeyModelBase):
     lock: LockModelShort
     safe: SafeModelShort
     active_rental: Optional[RentalModelShort]
-    location: LocationModelShort
+    checked: bool = False
+
 
 class KeyModelShort(PydModel):
     id: UUID
@@ -161,6 +162,7 @@ class KeyModelCreate(KeyModelBase):
 
 @optional
 class KeyModelPatch(KeyModelCreate):
+    checked: bool = False
     pass
 
 
@@ -178,6 +180,7 @@ class RentalModel(RentalModelBase):
     user: UserModelShort
     issuing_user: UserModelShort
     active: bool
+    end: datetime = None
 
 
 class RentalModelShort(PydModel):
@@ -194,6 +197,7 @@ class RentalModelCreate(RentalModelBase):
 
 @optional
 class RentalModelPatch(RentalModelBase):
+    end: datetime = None
     pass
 
 

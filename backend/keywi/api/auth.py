@@ -10,7 +10,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
-    user = db.session.query(User).filter_by(username=token)
+    user = db.session.query(User).filter_by(login=token).one_or_none()
 
     if not user:
         raise HTTPException(

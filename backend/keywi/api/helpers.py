@@ -1,12 +1,11 @@
-from http.client import HTTPException
 from typing import Type
 from uuid import UUID
 
-from fastapi import FastAPI, Path
+from fastapi import FastAPI, Path, HTTPException
 from fastapi.routing import APIRoute
 
 from model import UUIDModel
-from model.base import ModelBase
+from model.base import ModelBase, PydModel
 from model.session import session
 
 
@@ -62,3 +61,7 @@ def get_or_404(model: Type[ModelBase], ident: any):
         raise HTTPException(404, f'{model.__name__} with identifier {ident} not found!')
 
     return obj
+
+
+class SuccessModel(PydModel):
+    success: bool = True

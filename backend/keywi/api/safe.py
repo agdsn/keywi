@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Body
 from fastapi_sqlalchemy import db
 
 from api.auth import get_current_user
-from api.helpers import PathModelGetter, get_or_404
+from api.helpers import PathModelGetter, get_or_404, SuccessModel
 from model import Safe, User, Location
 from model.pydantic import SafeModel, SafeModelCreate, SafeModelPatch
 
@@ -49,7 +49,9 @@ def edit_safe(safe: Safe = Depends(PathModelGetter(Safe)),
     return lock
 
 
-@router.delete("/{uuid}", response_model=SafeModel)
+@router.delete("/{uuid}", response_model=SuccessModel)
 def delete_safe(safe: Safe = Depends(PathModelGetter(Safe)),
                 c_user: User = Depends(get_current_user)):
-    return lib.safe.delete_safe(safe, processor=c_user, _commit=True)
+    lib.safe.delete_safe(safe, processor=c_user, _commit=True)
+
+    return SuccessModel()
