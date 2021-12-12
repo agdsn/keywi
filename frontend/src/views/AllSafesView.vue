@@ -2,10 +2,10 @@
   <div class="home">
     <app-title view-title="Tresor"></app-title>
     <app-nav-bar></app-nav-bar>
-    <safe-table></safe-table>
+    <safe-table @editItem="editSafe"></safe-table>
     <v-divider class="mx-8"></v-divider>
-    <form-popup text="Tresor hinzufügen">
-      <edit-safe-form class="mx-8 my-4 "></edit-safe-form>
+    <form-popup text="Tresor hinzufügen" ref="popup">
+      <edit-safe-form class="mx-8 my-4 " :safe-template="safe" ref="form"></edit-safe-form>
     </form-popup>
   </div>
 </template>
@@ -27,7 +27,29 @@ export default Vue.extend({
       AppTitle,
       FormPopup,
       EditSafeForm
-    }
+    },
+    data() {
+      return {
+        safe: undefined
+      }
+    },
+
+  methods: {
+      editSafe(safe : any) {
+        this.safe = safe;
+
+        // TODO: Suche schönere Möglichkeit, Methoden von Kindern
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this.$refs.popup.openDialog();
+
+        if(this.$refs.form) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          this.$refs.form.updateSafeTemplate(safe);
+        }
+      }
+  }
   })
 
 

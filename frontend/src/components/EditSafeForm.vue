@@ -13,6 +13,7 @@ import api from "@/api/api";
 
 export default {
   name: "EditSafeForm",
+  props: ["safeTemplate"],
   data() {
     return {
       name: '',
@@ -25,24 +26,50 @@ export default {
 
       selectRule: [
           v => !!v || "Bitte Ort auswählen"
-      ]
+      ],
+
+      safeId : null
     }
   },
-  mounted() { this.loadLocations(); },
+  mounted() {
+    this.updateSafeTemplate(this.safeTemplate);
+    this.loadLocations();
+  },
   methods: {
+    updateSafeTemplate(safeTemplate) {
+      if(safeTemplate){
+        this.safeId = safeTemplate.safe_id;
+        this.name = safeTemplate.safe_name;
+        this.selectedLocationId = safeTemplate.location_id;
+      }
+    },
+
     async save() {
       if (this.$refs.form.validate() && this.selectedLocationId) {
         const apiStub = await api();
 
-        let safeModel = {
-          name: this.name,
-          location_id: this.selectedLocationId
-        }
+        if(this.safeId) {
+          const param = { uuid: this.safeId };
+          const safeModel = {
+            name: this.name,
+            location_id: this.selectedLocationId
+          }
 
-        apiStub.safe_createSafe(null, safeModel).then(() => {
-          this.$refs.form.reset();
-          this.$parent.$emit('save-form');
-        });
+          apiStub.safe_editSafe(param, safeModel).then(() => {
+            this.$refs.form.reset();
+            this.$parent.$emit('save-form');
+          });
+        } else {
+          let safeModel = {
+            name: this.name,
+            location_id: this.selectedLocationId
+           }
+
+          apiStub.safe_createSafe(null, safeModel).then(() => {
+            this.$refs.form.reset();
+            this.$parent.$emit('save-form');
+          });
+        }
       }
     },
     async loadLocations() {

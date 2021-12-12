@@ -28,6 +28,10 @@ export default {
   methods: {
     closeDialog: function() {
       this.dialog = false;
+    },
+
+    openDialog: function () {
+      this.dialog = true;
     }
   }
 

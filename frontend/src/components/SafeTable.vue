@@ -11,6 +11,22 @@
     <template v-slot:[`item.location_name`] = "{ item }">
       <router-link :to="`/location/${ item.location_id }`">{{ item.location_name }}</router-link>
     </template>
+
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template>
   </v-data-table>
 </template>
 
@@ -24,7 +40,7 @@ export default {
     headers: [
       {
         text: 'Tresor',
-        value: "safe-name"
+        value: "safe_name"
       },
       {
         text: "Ort",
@@ -33,6 +49,11 @@ export default {
       {
         text: "Anzahl Schlüssel",
         value: "amount-keys"
+      },
+      {
+        text: "Aktionen",
+        value: "actions",
+        sortable: false
       }
     ],
     tableData: []
@@ -62,10 +83,22 @@ export default {
         });
       }
     },
+
+    editItem(safe) {
+      this.$emit('editItem', safe);
+    },
+
+    async deleteItem(safe) {
+      // TODO: add confirmation prompt
+      const apiStub = await api();
+      const param = { uuid: safe.safe_id };
+      apiStub.safe_deleteSafe(param);
+    },
     
     pushSafeToDataTable(safe) {
       this.tableData.push({
-        "safe-name": safe.name,
+        "safe_id": safe.id,
+        "safe_name": safe.name,
         "location_name": safe.location.name,
         "location_id": safe.location.id,
         "amount-keys": safe.amount_keys
