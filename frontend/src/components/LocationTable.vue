@@ -12,7 +12,6 @@
 
 <script>
 import api from "@/api/api";
-import qs from "qs";
 
 export default {
   name: "LocationTable",

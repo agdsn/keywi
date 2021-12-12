@@ -93,6 +93,7 @@ class LockModelShort(PydModel):
 
 class LockModel(LockModelBase):
     location: LocationModelShort
+    id: UUID
     amount_keys: int
     amount_free_keys: int
 

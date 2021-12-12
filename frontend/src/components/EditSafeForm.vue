@@ -1,9 +1,7 @@
 <template>
     <v-form ref="form">
       <v-text-field label="Name" v-model="name" :rules="nameRules" required/>
-      <v-text-field label="Adresse" v-model="address"/>
-      <v-text-field label="Breitengrad (latitude)" v-model="lat"/>
-      <v-text-field label="Längengrad (longitude)" v-model="lon"/>
+      <v-select :items="locations" label="Ort" item-text="name" item-value="id" :rules="selectRule" v-model="selectedLocationId"></v-select>
       <v-btn color="validate" @click="save">
         Speichern
       </v-btn>
@@ -14,36 +12,44 @@
 import api from "@/api/api";
 
 export default {
-  name: "AddLocationForm",
+  name: "EditSafeForm",
   data() {
     return {
       name: '',
-      address: undefined,
-      lat: undefined,
-      lon: undefined,
+      locations: [],
+      selectedLocationId: undefined,
 
       nameRules: [
           v => !!v || 'Name erforderlich'
+      ],
+
+      selectRule: [
+          v => !!v || "Bitte Ort auswählen"
       ]
     }
   },
+  mounted() { this.loadLocations(); },
   methods: {
     async save() {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.form.validate() && this.selectedLocationId) {
         const apiStub = await api();
 
-        let locationModel = {
+        let safeModel = {
           name: this.name,
-          address: this.address,
-          latitude: this.lat,
-          longitude: this.log
+          location_id: this.selectedLocationId
         }
 
-        apiStub.location_createLocation(null, locationModel).then(() => {
+        apiStub.safe_createSafe(null, safeModel).then(() => {
           this.$refs.form.reset();
           this.$parent.$emit('save-form');
         });
       }
+    },
+    async loadLocations() {
+      const apiStub = await api();
+      apiStub.location_getLocations().then(response => {
+        this.locations = response.data;
+      })
     }
   }
 }

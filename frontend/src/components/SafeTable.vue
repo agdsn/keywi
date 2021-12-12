@@ -7,7 +7,11 @@
     :loading="loading"
     loading-text="Lade Daten..."
     ref="table"
-  ></v-data-table>
+  >
+    <template v-slot:[`item.location_name`] = "{ item }">
+      <router-link :to="`/location/${ item.location_id }`">{{ item.location_name }}</router-link>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
@@ -24,7 +28,7 @@ export default {
       },
       {
         text: "Ort",
-        value: "location-name"
+        value: "location_name"
       },
       {
         text: "Anzahl Schlüssel",
@@ -62,7 +66,8 @@ export default {
     pushSafeToDataTable(safe) {
       this.tableData.push({
         "safe-name": safe.name,
-        "location-name": safe.location.name,
+        "location_name": safe.location.name,
+        "location_id": safe.location.id,
         "amount-keys": safe.amount_keys
       });
     },

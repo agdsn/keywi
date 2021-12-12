@@ -2,10 +2,10 @@
   <div class="home pb-5">
     <app-title view-title="Orte"></app-title>
     <app-nav-bar></app-nav-bar>
-    <location-table class="mx-8 my-8"></location-table>
+    <location-table class="mx-8 my-8" ref="table"></location-table>
     <v-divider class="mx-8"></v-divider>
     <form-popup text="Ort hinzufügen">
-      <edit-location-form class="mx-8 my-4"></edit-location-form>
+      <edit-location-form class="mx-8 my-4 "></edit-location-form>
     </form-popup>
   </div>
 </template>

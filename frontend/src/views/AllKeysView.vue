@@ -3,6 +3,10 @@
     <app-title view-title="Meine Schlüssel"></app-title>
     <app-nav-bar></app-nav-bar>
     <key-table></key-table>
+    <v-divider class="mx-8"></v-divider>
+    <form-popup text="Schlüssel hinzufügen">
+      <edit-key-form class="mx-8 my-4 "></edit-key-form>
+    </form-popup>
   </div>
 </template>
 
@@ -10,9 +14,9 @@
   import Vue from 'vue'
   import AppTitle from "@/components/AppTitle.vue";
   import AppNavBar from "@/components/AppNavBar.vue";
-  import api from '@/api/api';
-  import axios from "axios";
   import KeyTable from "@/components/KeyTable.vue";
+  import FormPopup from "@/components/FormPopup.vue";
+  import EditKeyForm from "@/components/EditKeyForm.vue";
 
   export default Vue.extend({
     name: 'AllKeysView',
@@ -21,21 +25,9 @@
       KeyTable,
       AppNavBar,
       AppTitle,
-    },
-    // methods: {
-    //   async getData() {
-    //     const ac = await api;
-    //
-    //     ac.key_getKeys().then((rsp) => {
-    //       console.log(rsp);
-    //     });
-    //   }
-    // },
-    // mounted() {
-    //   this.getData();
-    //
-    //   axios.get('http://localhost:6080/key').then(response => console.log(response.data))
-    // }
+      FormPopup,
+      EditKeyForm
+    }
   })
 
 
