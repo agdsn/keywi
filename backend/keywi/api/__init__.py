@@ -17,7 +17,7 @@ app.add_middleware(DBSessionMiddleware, db_url=app_config.get('database', 'url')
 # add cors specification
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:8080", "https://keywi.agdsn.de"],
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True
