@@ -11,7 +11,9 @@ from model.helper import init_data
 from model.session import session
 
 app = FastAPI(title="Keywi", version="0.0.1", root_path=app_config.get('general', 'root_path'),
-              servers=[{"url": 'http://localhost:6080', "description": "main"}])
+              servers=[{"url": "{}{}".format(app_config.get('general', 'url'),
+                                             app_config.get('general', 'root_path')),
+                        "description": "main"}])
 app.add_middleware(DBSessionMiddleware, db_url=app_config.get('database', 'url'))
 
 # add cors specification
