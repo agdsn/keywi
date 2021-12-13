@@ -1,0 +1,25 @@
+version: '3'
+services:
+  prod-app:
+    build:
+      context: .
+      dockerfile: docker/prod-app.Dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    ports:
+      - "6080:6080"
+    volumes:
+      - ./config.ini:/opt/app/config.ini
+    depends_on:
+      - dev-db
+  prod-db:
+    image: postgres:14
+    ports:
+      - "54321:5432"
+    environment:
+      POSTGRES_USER: keywi
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: keywi
+    volumes:
+      - ./docker/db/init:/docker-entrypoint-initdb.d
