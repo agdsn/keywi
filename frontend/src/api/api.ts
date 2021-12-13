@@ -11,7 +11,7 @@ if (access_token != null) {
 
 function api() {
     const openapi = new OpenAPIClientAxios({
-        definition: `http://localhost:6080/openapi.json`,
+        definition: `${process.env.VUE_APP_KEYWI_API_URL}/openapi.json`,
         withServer: 'main',
         axiosConfigDefaults: {
             headers,
