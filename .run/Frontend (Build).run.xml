@@ -8,7 +8,7 @@
     <node-interpreter value="project" />
     <envs>
       <env name="NODE_ENV" value="production" />
-      <env name="VUE_APP_KEYWI_API_URL" value="https://keywi.agdsn.de" />
+      <env name="VUE_APP_KEYWI_API_URL" value="https://keywi.agdsn.de/api" />
     </envs>
     <method v="2" />
   </configuration>
