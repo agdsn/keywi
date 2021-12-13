@@ -2,10 +2,10 @@
   <div class="home">
     <app-title view-title="Schlüssel"></app-title>
     <app-nav-bar></app-nav-bar>
-    <key-table></key-table>
+    <key-table ref="keyTable"></key-table>
     <v-divider class="mx-8"></v-divider>
     <form-popup text="Schlüssel hinzufügen">
-      <edit-key-form class="mx-8 my-4 "></edit-key-form>
+      <edit-key-form class="mx-8 my-4" @submit="$refs.keyTable.loadData();"></edit-key-form>
     </form-popup>
   </div>
 </template>

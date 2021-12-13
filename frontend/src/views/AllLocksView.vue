@@ -2,10 +2,10 @@
   <div class="home">
     <app-title view-title="Schlösser"></app-title>
     <app-nav-bar></app-nav-bar>
-    <lock-table></lock-table>
+    <lock-table ref="lockTable"></lock-table>
     <v-divider class="mx-8"></v-divider>
     <form-popup text="Schloss hinzufügen">
-      <edit-lock-form class="mx-8 my-4 "></edit-lock-form>
+      <edit-lock-form @submit="$refs.lockTable.loadData();" class="mx-8 my-4 "></edit-lock-form>
     </form-popup>
   </div>
 </template>
