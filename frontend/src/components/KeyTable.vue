@@ -10,16 +10,20 @@
     :item-class="row_classes"
   >
 <!--    TODO: umschreiben als Komponente-->
-    <template v-slot:[`item.lock_name`] = "{ item }">
-      <router-link :to="`/lock/${ item.lock_id }`">{{ item.lock_name }}</router-link>
+    <template v-slot:[`item.lock.name`] = "{ item }">
+      <router-link :to="`/lock/${ item.lock.id }`">{{ item.lock.name }}</router-link>
     </template>
 
-    <template v-slot:[`item.safe_name`] = "{ item }">
-      <router-link :to="`/safe/${ item.safe_id }`">{{ item.safe_name }}</router-link>
+    <template v-slot:[`item.safe.name`] = "{ item }">
+      <router-link :to="`/safe/${ item.safe.id }`">{{ item.safe.name }}</router-link>
     </template>
 
-    <template v-slot:[`item.location_name`] = "{ item }">
-      <router-link :to="`/location/${ item.location_id }`">{{ item.location_name }}</router-link>
+    <template v-slot:[`item.location.name`] = "{ item }">
+      <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
+    </template>
+
+    <template v-slot:[`item.rental`] = "{ item }">
+      {{ getRentalStatus(item) }}
     </template>
   </v-data-table>
 </template>
@@ -34,20 +38,19 @@ export default {
     headers: [
       {
         text: "Ort",
-        value: "location_name"
+        value: "location.name"
       },
       {
         text: "Schloss",
-        // lock-name als identifier schmeißt Fehler -> lock_name
-        value: "lock_name"
+        value: "lock.name"
       },
       {
         text: "Schlüsselnummer",
-        value: "key_number"
+        value: "number"
       },
       {
         text: "Tresor",
-        value: "safe_name"
+        value: "safe.name"
       },
         {
         text: "Ausleihe",
@@ -61,39 +64,25 @@ export default {
     async loadData() {
       let paramId = this.$route.params.id;
 
-      const apiStub = await api();
+      const apiStub = await api;
       // load specific key if uuid is given in path parameter. load all keys if not
       if(paramId) {
         apiStub.key_getKey(paramId).then(response => {
-          let key = response.data;
-          this.pushKeyToDataTable(key);
+          this.tableData = [response.data];
+
           this.loading = false;
         }).finally(() => {
           this.loading = false
         });
       } else {
         apiStub.key_getKeys().then(response => {
-          response.data.forEach(key => {
-            this.pushKeyToDataTable(key);
-          });
+          this.tableData = response.data;
         }).finally(() => {
           this.loading = false;
         })
       }
     },
 
-    pushKeyToDataTable(key) {
-      this.tableData.push({
-              "location_name": key.location.name,
-              "location_id": key.location.id,
-              "lock_name": key.lock.name,
-              "key_number": key.number,
-              "safe_name": key.safe.name,
-              "rental": this.getRentalStatus(key),
-              "lock_id": key.lock.id,
-              "safe_id": key.safe.id
-            });
-    },
 
     getRentalStatus(key) {
       if(key.active_rental) {
@@ -106,7 +95,7 @@ export default {
     },
 
     row_classes(item) {
-      if(item.rental === "Ausleihbar") {
+      if(item.active_rental == null && item.rentable) {
         return "green-cell"
       } else {
         return "red-cell";

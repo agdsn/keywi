@@ -17,7 +17,7 @@ services:
   dev-db:
     image: postgres:14
     ports:
-      - "54326:5432"
+      - "54321:5432"
     environment:
       POSTGRES_USER: keywi
       POSTGRES_PASSWORD: password

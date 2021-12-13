@@ -46,7 +46,7 @@ export default {
 
     async save() {
       if (this.$refs.form.validate() && this.selectedLocationId) {
-        const apiStub = await api();
+        const apiStub = await api;
 
         if(this.safeId) {
           const param = { uuid: this.safeId };
@@ -58,6 +58,7 @@ export default {
           apiStub.safe_editSafe(param, safeModel).then(() => {
             this.$refs.form.reset();
             this.$parent.$emit('save-form');
+            this.$emit('submit');
           });
         } else {
           let safeModel = {
@@ -67,13 +68,13 @@ export default {
 
           apiStub.safe_createSafe(null, safeModel).then(() => {
             this.$refs.form.reset();
-            this.$parent.$emit('save-form');
+            this.$emit('submit');
           });
         }
       }
     },
     async loadLocations() {
-      const apiStub = await api();
+      const apiStub = await api;
       apiStub.location_getLocations().then(response => {
         this.locations = response.data;
       })

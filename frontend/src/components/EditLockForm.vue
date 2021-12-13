@@ -34,7 +34,7 @@ export default {
   methods: {
     async save() {
       if (this.$refs.form.validate() && this.selectedLocationId) {
-        const apiStub = await api();
+        const apiStub = await api;
 
         let lockModel = {
           name: this.name,
@@ -44,12 +44,13 @@ export default {
 
         apiStub.lock_createLock(null, lockModel).then(() => {
           this.$refs.form.reset();
+          this.$emit('submit');
           this.$parent.$emit('save-form');
         });
       }
     },
     async loadLocations() {
-      const apiStub = await api();
+      const apiStub = await api;
       apiStub.location_getLocations().then(response => {
         this.locations = response.data;
       })

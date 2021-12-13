@@ -2,10 +2,12 @@
   <div class="home">
     <app-title view-title="Tresor"></app-title>
     <app-nav-bar></app-nav-bar>
-    <safe-table @editItem="editSafe"></safe-table>
+    <safe-table ref="safeTable" @editItem="editSafe"></safe-table>
     <v-divider class="mx-8"></v-divider>
     <form-popup text="Tresor hinzufügen" ref="popup">
-      <edit-safe-form class="mx-8 my-4 " :safe-template="safe" ref="form"></edit-safe-form>
+      <edit-safe-form @submit="$refs.safeTable.loadData();" class="mx-8 my-4 " :safe-template="safe" ref="form">
+
+      </edit-safe-form>
     </form-popup>
   </div>
 </template>

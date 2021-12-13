@@ -8,8 +8,8 @@
     loading-text="Lade Daten..."
     ref="table"
   >
-    <template v-slot:[`item.location_name`] = "{ item }">
-      <router-link :to="`/location/${ item.location_id }`">{{ item.location_name }}</router-link>
+    <template v-slot:[`item.location.name`] = "{ item }">
+      <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
@@ -40,15 +40,15 @@ export default {
     headers: [
       {
         text: 'Tresor',
-        value: "safe_name"
+        value: "name"
       },
       {
         text: "Ort",
-        value: "location_name"
+        value: "location.name"
       },
       {
         text: "Anzahl Schlüssel",
-        value: "amount-keys"
+        value: "amount_keys"
       },
       {
         text: "Aktionen",
@@ -63,20 +63,17 @@ export default {
     async loadData() {
       let paramId = this.$route.params.id;
 
-      const apiStub = await api();
+      const apiStub = await api;
       // load specific safe if uuid is given in path parameter. load all safes if not
       if(paramId) {
         apiStub.safe_getSafe(paramId).then(response => {
-          let safe = response.data;
-          this.pushSafeToDataTable(safe);
+          this.tableData = [response.data];
         }).finally(() => {
           this.loading = false;
         });
       } else {
         apiStub.safe_getSafes().then(response => {
-          response.data.forEach(safe => {
-            this.pushSafeToDataTable(safe);
-          });
+          this.tableData = response.data;
           this.loading = false;
         }).finally(() => {
           this.loading = false;
@@ -90,20 +87,11 @@ export default {
 
     async deleteItem(safe) {
       // TODO: add confirmation prompt
-      const apiStub = await api();
+      const apiStub = await api;
       const param = { uuid: safe.safe_id };
       apiStub.safe_deleteSafe(param);
     },
-    
-    pushSafeToDataTable(safe) {
-      this.tableData.push({
-        "safe_id": safe.id,
-        "safe_name": safe.name,
-        "location_name": safe.location.name,
-        "location_id": safe.location.id,
-        "amount-keys": safe.amount_keys
-      });
-    },
+
   }
 }
 </script>

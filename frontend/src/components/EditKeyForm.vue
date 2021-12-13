@@ -40,7 +40,7 @@ export default {
   methods: {
     async save() {
       if (this.$refs.form.validate() && this.selectedLockId && this.selectedSafeId) {
-        const apiStub = await api();
+        const apiStub = await api;
 
         let keyModel = {
           number: this.name,
@@ -52,11 +52,12 @@ export default {
         apiStub.key_createKey(null, keyModel).then(() => {
           this.$refs.form.reset();
           this.$parent.$emit('save-form');
+          this.$emit('submit');
         });
       }
     },
     async loadData() {
-      const apiStub = await api();
+      const apiStub = await api;
       apiStub.lock_getLocks().then(response => {
         this.locks = response.data;
         this.locks.forEach(lock => {

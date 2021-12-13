@@ -30,7 +30,7 @@ export default {
   methods: {
     async save() {
       if (this.$refs.form.validate()) {
-        const apiStub = await api();
+        const apiStub = await api;
 
         let locationModel = {
           name: this.name,
@@ -41,6 +41,7 @@ export default {
 
         apiStub.location_createLocation(null, locationModel).then(() => {
           this.$refs.form.reset();
+          this.$emit('submit');
           this.$parent.$emit('save-form');
         });
       }

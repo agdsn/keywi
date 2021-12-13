@@ -1,7 +1,7 @@
 <template>
   <v-dialog max-width="600px" v-model="dialog">
     <template v-slot:activator="{ on }">
-      <v-btn text class="primary-color mx-8 my-4" v-on="on">
+      <v-btn text class="primary-color mx-8 my-4" v-on="on" v-if="renderBtn">
         {{ text }}
       </v-btn>
     </template>
@@ -19,7 +19,13 @@
 <script>
 export default {
   name: "FormPopup",
-  props: [ 'text' ],
+  props: {
+    text: String,
+    renderBtn: {
+      type: Boolean,
+      default: true,
+    }
+  },
   data() {
     return {
       dialog: false

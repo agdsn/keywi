@@ -20,19 +20,19 @@ export default {
     headers: [
       {
         text: 'Ort',
-        value: "location-name"
+        value: "name"
       },
       {
         text: "Adresse",
-        value: "location-address"
+        value: "address"
       },
       {
         text: "Anzahl Tresore",
-        value: "location-number-safes"
+        value: "amount_safes"
       },
       {
         text: "Anzahl Schlösser",
-        value: "location-number-locks"
+        value: "amount_locks"
       }
     ],
     tableData: []
@@ -42,36 +42,24 @@ export default {
     async loadData() {
       let paramId = this.$route.params.id;
 
-      const apiStub = await api();
-
+      const apiStub = await api;
 
       // load specific location if uuid is given in path parameter. load all locations if not
       if(paramId) {
         apiStub.location_getLocation(paramId).then(response => {
-          let location = response.data;
-          this.pushLocationToDataTable(location);
+          this.tableData = [response.data];
         }).finally(() => {
           this.loading = false;
         });
       } else {
         apiStub.location_getLocations().then(response => {
-          response.data.forEach(location => {
-            this.pushLocationToDataTable(location);
-          });
+          this.tableData = response.data;
+
           this.loading = false;
         }).finally(() => {
           this.loading = false;
         });
       }
-    },
-
-    pushLocationToDataTable(location) {
-      this.tableData.push({
-        "location-name": location.name,
-        "location-address": location.address,
-        "location-number-safes": location.amount_safes,
-        "location-number-locks": location.amount_locks
-      });
     },
   }
 }

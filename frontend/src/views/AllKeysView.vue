@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <app-title view-title="Meine Schlüssel"></app-title>
+    <app-title view-title="Schlüssel"></app-title>
     <app-nav-bar></app-nav-bar>
     <key-table></key-table>
     <v-divider class="mx-8"></v-divider>

@@ -8,8 +8,11 @@
     loading-text="Lade Daten..."
     ref="table"
   >
-    <template v-slot:[`item.location_name`] = "{ item }">
-      <router-link :to="`/location/${ item.location_id }`">{{ item.location_name }}</router-link>
+    <template v-slot:[`item.location.name`] = "{ item }">
+      <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
+    </template>
+    <template v-slot:[`item.available_keys`] = "{ item }">
+      {{ item.amount_free_keys }} / {{ item.amount_keys }}
     </template>
   </v-data-table>
 </template>
@@ -24,19 +27,19 @@ export default {
     headers: [
       {
         text: 'Schloss',
-        value: "lock-name"
+        value: "name"
       },
       {
         text: "Ort",
-        value: "location_name"
+        value: "location.name"
       },
       {
         text: "Besitzer",
-        value: "owner-name"
+        value: "owner"
       },
       {
         text: "Verfügbare Schlüssel",
-        value: "available-keys"
+        value: "available_keys"
       }
     ],
     tableData: []
@@ -46,35 +49,23 @@ export default {
     async loadData() {
       let paramId = this.$route.params.id;
 
-      const apiStub = await api();
+      const apiStub = await api;
       // load specific lock if uuid is given in path parameter. load all locks if not
       if(paramId) {
         apiStub.lock_getLock(paramId).then(response => {
-          let lock = response.data;
-          this.pushLockToDataTable(lock);
+          this.tableData = [response.data];
         }).finally(() => {
           this.loading = false;
         });
       } else {
         apiStub.lock_getLocks().then(response => {
-          response.data.forEach(lock => {
-            this.pushLockToDataTable(lock);
-          });
+          this.tableData = response.data;
+
           this.loading = false;
         }).finally(() => {
           this.loading = false;
         });
       }
-    },
-
-    pushLockToDataTable(lock) {
-      this.tableData.push({
-              "lock-name": lock.name,
-              "location_name": lock.location.name,
-              "location_id": lock.location.id,
-              "owner-name": lock.owner,
-              "available-keys": lock.amount_free_keys + " / " + lock.amount_keys
-            });
     },
   }
 }
