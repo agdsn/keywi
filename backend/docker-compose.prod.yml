@@ -12,7 +12,7 @@ services:
     volumes:
       - ./config.ini:/opt/app/config.ini
     depends_on:
-      - dev-db
+      - prod-db
   prod-db:
     image: postgres:14
     ports:
