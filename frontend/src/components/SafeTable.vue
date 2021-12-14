@@ -88,7 +88,7 @@ export default {
     async deleteItem(safe) {
       // TODO: add confirmation prompt
       const apiStub = await api;
-      const param = { uuid: safe.safe_id };
+      const param = { uuid: safe.id };
       apiStub.safe_deleteSafe(param);
     },
 

@@ -38,9 +38,9 @@ export default {
   methods: {
     updateSafeTemplate(safeTemplate) {
       if(safeTemplate){
-        this.safeId = safeTemplate.safe_id;
-        this.name = safeTemplate.safe_name;
-        this.selectedLocationId = safeTemplate.location_id;
+        this.safeId = safeTemplate.id;
+        this.name = safeTemplate.name;
+        this.selectedLocationId = safeTemplate.location.id;
       }
     },
 
