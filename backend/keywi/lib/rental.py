@@ -7,7 +7,7 @@ from model.session import with_transaction
 
 @with_transaction
 def create_rental(key: Key, user: User, issuing_user: User, processor: User, begin: datetime = None,
-                  allowed_by: str = None):
+                  end: datetime = None, allowed_by: str = None):
     return create_object(Rental,
                          log_keys=['key_id', 'user_id', 'issuing_user_id', 'begin', 'allowed_by'],
                          log_params={'rental': REFERENCED_OBJ,

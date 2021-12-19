@@ -40,15 +40,40 @@
         >
           mdi-delete
         </v-icon>
+        <v-tooltip top>
+          <template v-slot:activator="{on}">
+            <v-icon
+              class="ml-2"
+              :color="getKeyColor(item)"
+              small
+              @click="openRentPrompt(item)"
+              v-on="on"
+            >
+              mdi-key
+            </v-icon>
+          </template>
+
+          <span>Schlüssel ausleihen</span>
+        </v-tooltip>
       </template>
     </v-data-table>
 
-    <v-dialog v-model="dialog" width="500px">
+    <v-dialog v-model="deleteDialog" width="500px">
       <v-card class="pb-1">
-        <v-card-title>Schlüssel {{keyToDeleteNumber}} wirklich löschen?</v-card-title>
+        <v-card-title>Schlüssel {{keyInDialogNumber}} wirklich löschen?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    
+    <v-dialog v-model="rentDialog" width="500px">
+      <v-card class="pb-1">
+        <v-card-title>Schlüssel {{keyInDialogNumber}} wirklich ausleihen?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="primary-color" @click="rentItem">Bestätigen</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -61,8 +86,9 @@ import api from "@/api/api";
 export default {
   name: "KeyTable",
   data: () => ({
-    keyToDelete: undefined,
-    dialog: false,
+    keyInDialog: undefined,
+    deleteDialog: false,
+    rentDialog: false,
     loading: true,
     headers: [
       {
@@ -121,18 +147,38 @@ export default {
       this.$emit('editItem', key);
     },
 
-    openDeletePrompt(keyToDelete) {
-      this.keyToDelete = keyToDelete;
-      this.dialog = true;
+    openDeletePrompt(keyInDialog) {
+      this.keyInDialog = keyInDialog;
+      this.deleteDialog = true;
+    },
+
+    openRentPrompt(keyInDialog) {
+      this.keyInDialog = keyInDialog;
+      this.rentDialog = true;
     },
 
     async deleteItem() {
       const apiStub = await api;
-      const param = { uuid: this.keyToDelete.id };
+      const param = { uuid: this.keyInDialog.id };
       apiStub.key_deleteKey(param).then(() => {
-        this.dialog = false;
+        this.deleteDialog = false;
         this.loadData();
       });
+    },
+
+    async rentItem() {
+      const apiStub = await api;
+      const rentalModel = {
+        key_id: this.keyInDialog.id,
+        begin: new Date().toISOString(),
+        // TODO: change
+        user_id: '96c5f55a-b098-4100-8999-8a4591199e78'
+      }
+
+      apiStub.rental_createRental(null, rentalModel).then(() => {
+        this.rentDialog = false;
+        this.loadData();
+      })
     },
 
     getRentalStatus(key) {
@@ -151,12 +197,18 @@ export default {
       } else {
         return "red-cell";
       }
+    },
+
+    // make key icon green if current user rented it
+    // currently not supported by backend
+    getKeyColor(key) {
+      return "initial";
     }
   },
   computed: {
-    keyToDeleteNumber() {
-      if(!this.keyToDelete) return '';
-      return this.keyToDelete.number;
+    keyInDialogNumber() {
+      if(!this.keyInDialog) return '';
+      return this.keyInDialog.number;
     }
   }
 }
