@@ -25,6 +25,22 @@
     <template v-slot:[`item.rental`] = "{ item }">
       {{ getRentalStatus(item) }}
     </template>
+
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template>
   </v-data-table>
 </template>
 
@@ -52,9 +68,14 @@ export default {
         text: "Tresor",
         value: "safe.name"
       },
-        {
+      {
         text: "Ausleihe",
         value: "rental"
+      },
+      {
+        text: "Aktionen",
+        value: "actions",
+        sortable: false
       }
     ],
     tableData: []
@@ -83,6 +104,17 @@ export default {
       }
     },
 
+    editItem(key) {
+      this.$emit('editItem', key);
+    },
+
+    async deleteItem(key) {
+      // TODO: add confirmation prompt
+      const apiStub = await api;
+      const param = { uuid: key.id };
+      apiStub.key_deleteKey(param).then(this.loadData);
+    },
+
 
     getRentalStatus(key) {
       if(key.active_rental) {
@@ -109,12 +141,12 @@ export default {
 </script>
 
 <style>
-  .red-cell td:last-child {
+  .red-cell td:nth-last-child(2) {
     background-color: #DDC1BB;
     border-radius: 5px;
   }
 
-  .green-cell td:last-child {
+  .green-cell td:nth-last-child(2) {
     background-color: #ABCC9F;
     border-radius: 5px;
   }

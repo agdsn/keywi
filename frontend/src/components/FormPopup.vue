@@ -1,22 +1,28 @@
 <template>
   <v-dialog max-width="600px" v-model="dialog">
-    <template v-slot:activator="{ on }">
-      <v-btn text class="primary-color mx-8 my-4" v-on="on" v-if="renderBtn">
+    <template v-slot:activator="{ on: activationEvent }">
+      <v-btn text class="primary-color mx-8 my-4" v-on="activationEvent" @click="$emit('button-add-clicked')" v-if="renderBtn">
         {{ text }}
       </v-btn>
     </template>
-    <v-card v-on:save-form="closeDialog">
+    <v-card>
       <v-card-title>
         <h2>{{ text }}</h2>
       </v-card-title>
       <v-card-text class="pb-10">
-        <slot></slot>
+        <component
+            ref="form"
+            v-bind:is="form"
+            class="mx-8 my-4"
+            @save-form="saveForm"
+            @mounted="mountedEvent"/>
       </v-card-text>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+
 export default {
   name: "FormPopup",
   props: {
@@ -24,7 +30,8 @@ export default {
     renderBtn: {
       type: Boolean,
       default: true,
-    }
+    },
+    form: String
   },
   data() {
     return {
@@ -38,6 +45,19 @@ export default {
 
     openDialog: function () {
       this.dialog = true;
+    },
+
+    saveForm: function() {
+      this.$emit('save-form');
+      this.closeDialog();
+    },
+
+    mountedEvent() {
+      this.$emit('mounted');
+    },
+
+    buttonClicked() {
+      console.log('button clicked');
     }
   }
 

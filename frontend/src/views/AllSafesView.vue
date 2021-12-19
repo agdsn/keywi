@@ -2,13 +2,14 @@
   <div class="home">
     <app-title view-title="Tresor"></app-title>
     <app-nav-bar></app-nav-bar>
-    <safe-table ref="safeTable" @editItem="editSafe"></safe-table>
+    <safe-table ref="safeTable" @editItem="editSafe" class="mx-7 mt-7"/>
     <v-divider class="mx-8"></v-divider>
-    <form-popup text="Tresor hinzufügen" ref="popup">
-      <edit-safe-form @submit="$refs.safeTable.loadData();" class="mx-8 my-4 " :safe-template="safe" ref="form">
-
-      </edit-safe-form>
-    </form-popup>
+    <form-popup text="Tresor hinzufügen"
+                ref="popup"
+                form="edit-safe-form"
+                @save-form="$refs.safeTable.loadData();"
+                @mounted="mountedEvent"
+                @button-add-clicked="buttonAddClicked"/>
   </div>
 </template>
 
@@ -18,7 +19,6 @@ import AppTitle from "@/components/AppTitle.vue";
 import AppNavBar from "@/components/AppNavBar.vue";
 import SafeTable from "@/components/SafeTable.vue";
 import FormPopup from "@/components/FormPopup.vue";
-import EditSafeForm from "@/components/EditSafeForm.vue";
 
 export default Vue.extend({
     name: 'AllSafesView',
@@ -27,38 +27,49 @@ export default Vue.extend({
       SafeTable,
       AppNavBar,
       AppTitle,
-      FormPopup,
-      EditSafeForm
+      FormPopup
     },
     data() {
       return {
-        safe: undefined
+        editedSafe: undefined
       }
     },
 
   methods: {
-      editSafe(safe : any) {
-        this.safe = safe;
+      editSafe(editedSafe : any) {
+        this.editedSafe = editedSafe;
 
-        // TODO: Suche schönere Möglichkeit, Methoden von Kindern
+        // Sind schlecht konfigurierte linter nicht eine tolle Erfindung
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.$refs.popup.openDialog();
 
-        if(this.$refs.form) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if(this.$refs.popup.$refs.form) {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          this.$refs.form.updateSafeTemplate(safe);
+          this.$refs.popup.$refs.form.fillForm(this.editedSafe);
         }
-      }
+      },
+
+    mountedEvent() {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this.$refs.popup.$refs.form.fillForm(this.editedSafe);
+    },
+
+    buttonAddClicked() {
+        this.editedSafe = undefined;
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if(this.$refs.popup.$refs.form) this.$refs.popup.$refs.form.fillForm(this.editedSafe);
+    }
   }
   })
-
 
 </script>
 
 <style scoped>
-  .v-data-table {
-    margin: 30px 30px 0 30px;
-  }
 </style>

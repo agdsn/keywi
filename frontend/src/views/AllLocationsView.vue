@@ -2,11 +2,14 @@
   <div class="home pb-5">
     <app-title view-title="Orte"></app-title>
     <app-nav-bar></app-nav-bar>
-    <location-table class="mx-8 my-8" ref="locationTable"></location-table>
+    <location-table class="mx-7 mt-7" ref="locationTable" @editItem="editLocation"/>
     <v-divider class="mx-8"></v-divider>
-    <form-popup text="Ort hinzufügen">
-      <edit-location-form class="mx-8 my-4" @submit="$refs.locationTable.loadData();"></edit-location-form>
-    </form-popup>
+    <form-popup text="Ort hinzufügen"
+                form="edit-location-form"
+                @save-form="$refs.locationTable.loadData();"
+                ref="popup"
+                @mounted="mountedEvent"
+                @button-add-clicked="buttonAddClicked"/>
   </div>
 </template>
 
@@ -15,7 +18,6 @@ import Vue from 'vue'
 import AppTitle from "@/components/AppTitle.vue";
 import AppNavBar from "@/components/AppNavBar.vue";
 import LocationTable from "@/components/LocationTable.vue";
-import EditLocationForm from "@/components/EditLocationForm.vue";
 import FormPopup from "@/components/FormPopup.vue";
 
 export default Vue.extend({
@@ -23,10 +25,45 @@ export default Vue.extend({
 
     components: {
       FormPopup,
-      EditLocationForm,
       AppNavBar,
       AppTitle,
       LocationTable
+    },
+  data() {
+      return {
+        editedLocation: undefined
+      }
+    },
+    methods: {
+        editLocation(editedLocation : any) {
+          this.editedLocation = editedLocation;
+          
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          this.$refs.popup.openDialog();
+  
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          if(this.$refs.popup.$refs.form) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            this.$refs.popup.$refs.form.fillForm(this.editedLocation);
+          }
+        },
+  
+      mountedEvent() {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          this.$refs.popup.$refs.form.fillForm(this.editedLocation);
+      },
+  
+      buttonAddClicked() {
+          this.editedLocation = undefined;
+  
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          if(this.$refs.popup.$refs.form) this.$refs.popup.$refs.form.fillForm(this.editedLocation);
+      }
     }
   })
 

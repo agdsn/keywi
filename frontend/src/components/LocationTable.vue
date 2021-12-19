@@ -7,7 +7,23 @@
     :loading="loading"
     loading-text="Lade Daten..."
     ref="table"
-  ></v-data-table>
+  >
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
@@ -33,6 +49,11 @@ export default {
       {
         text: "Anzahl Schlösser",
         value: "amount_locks"
+      },
+      {
+        text: "Aktionen",
+        value: "actions",
+        sortable: false
       }
     ],
     tableData: []
@@ -60,6 +81,17 @@ export default {
           this.loading = false;
         });
       }
+    },
+
+    editItem(location) {
+      this.$emit('editItem', location);
+    },
+
+    async deleteItem(location) {
+      // TODO: add confirmation prompt
+      const apiStub = await api;
+      const param = { uuid: location.id };
+      apiStub.location_deleteLocation(param).then(this.loadData);
     },
   }
 }

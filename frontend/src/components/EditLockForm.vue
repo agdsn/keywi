@@ -30,23 +30,50 @@ export default {
       ]
     }
   },
-  mounted() { this.loadLocations(); },
+  mounted() {
+    this.loadLocations();
+    this.$emit('mounted');
+  },
   methods: {
+    fillForm(lockTemplate) {
+      if(lockTemplate){
+        this.lockId = lockTemplate.id;
+        this.name = lockTemplate.name;
+        this.owner = lockTemplate.owner;
+        this.selectedLocationId = lockTemplate.location.id;
+      } else {
+        this.lockId = undefined;
+        this.name = '';
+        this.owner = '';
+        this.selectedLocationId = undefined;
+      }
+
+      this.$refs.form.resetValidation();
+    },
+
     async save() {
       if (this.$refs.form.validate() && this.selectedLocationId) {
         const apiStub = await api;
 
-        let lockModel = {
-          name: this.name,
-          owner: this.owner,
-          location_id: this.selectedLocationId
-        }
+        const lockModel = {
+            name: this.name,
+            owner: this.owner,
+            location_id: this.selectedLocationId
+          }
 
-        apiStub.lock_createLock(null, lockModel).then(() => {
-          this.$refs.form.reset();
-          this.$emit('submit');
-          this.$parent.$emit('save-form');
-        });
+        if(this.lockId) {
+          const param = { uuid: this.lockId };
+
+          apiStub.lock_editLock(param, lockModel).then(() => {
+            this.$refs.form.reset();
+            this.$emit('save-form');
+          });
+        } else {
+          apiStub.lock_createLock(null, lockModel).then(() => {
+            this.$refs.form.reset();
+            this.$emit('save-form');
+          });
+        }
       }
     },
     async loadLocations() {

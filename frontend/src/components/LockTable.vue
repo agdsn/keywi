@@ -14,6 +14,22 @@
     <template v-slot:[`item.available_keys`] = "{ item }">
       {{ item.amount_free_keys }} / {{ item.amount_keys }}
     </template>
+
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template>
   </v-data-table>
 </template>
 
@@ -40,6 +56,11 @@ export default {
       {
         text: "Verfügbare Schlüssel",
         value: "available_keys"
+      },
+      {
+        text: "Aktionen",
+        value: "actions",
+        sortable: false
       }
     ],
     tableData: []
@@ -66,6 +87,17 @@ export default {
           this.loading = false;
         });
       }
+    },
+
+    editItem(lock) {
+      this.$emit('editItem', lock);
+    },
+
+    async deleteItem(lock) {
+      // TODO: add confirmation prompt
+      const apiStub = await api;
+      const param = { uuid: lock.id };
+      apiStub.lock_deleteLock(param).then(this.loadData);
     },
   }
 }

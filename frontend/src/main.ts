@@ -2,8 +2,18 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
+import EditLocationForm from './components/EditLocationForm.vue'
+import EditKeyForm from "@/components/EditKeyForm.vue";
+import EditLockForm from "@/components/EditLockForm.vue";
+import EditSafeForm from "@/components/EditSafeForm.vue";
 
 Vue.config.productionTip = false
+
+// Die form Komponenten werden dynamisch geladen und werden daher vorher global registriert
+Vue.component('edit-location-form', EditLocationForm);
+Vue.component('edit-key-form', EditKeyForm);
+Vue.component('edit-lock-form', EditLockForm);
+Vue.component('edit-safe-form', EditSafeForm);
 
 new Vue({
   router,

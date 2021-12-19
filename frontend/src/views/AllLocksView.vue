@@ -2,11 +2,14 @@
   <div class="home">
     <app-title view-title="Schlösser"></app-title>
     <app-nav-bar></app-nav-bar>
-    <lock-table ref="lockTable"></lock-table>
+    <lock-table ref="lockTable" @editItem="editLock" class="mx-7 mt-7"/>
     <v-divider class="mx-8"></v-divider>
-    <form-popup text="Schloss hinzufügen">
-      <edit-lock-form @submit="$refs.lockTable.loadData();" class="mx-8 my-4 "></edit-lock-form>
-    </form-popup>
+    <form-popup text="Schloss hinzufügen"
+                form="edit-lock-form"
+                @save-form="$refs.lockTable.loadData();"
+                ref="popup"
+                @mounted="mountedEvent"
+                @button-add-clicked="buttonAddClicked"/>
   </div>
 </template>
 
@@ -25,8 +28,43 @@ export default Vue.extend({
       AppNavBar,
       AppTitle,
       LockTable,
-      FormPopup,
-      EditLockForm
+      FormPopup
+    },
+    data() {
+      return {
+        editedLock: undefined
+      }
+    },
+    methods: {
+        editLock(editedLock : any) {
+          this.editedLock = editedLock;
+
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          this.$refs.popup.openDialog();
+  
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          if(this.$refs.popup.$refs.form) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            this.$refs.popup.$refs.form.fillForm(this.editedLock);
+          }
+        },
+  
+      mountedEvent() {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          this.$refs.popup.$refs.form.fillForm(this.editedLock);
+      },
+  
+      buttonAddClicked() {
+          this.editedLock = undefined;
+  
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          if(this.$refs.popup.$refs.form) this.$refs.popup.$refs.form.fillForm(this.editedLock);
+      }
     }
   })
 
@@ -34,7 +72,5 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-  .v-data-table {
-    margin: 30px 30px 0 30px;
-  }
+
 </style>

@@ -89,7 +89,7 @@ export default {
       // TODO: add confirmation prompt
       const apiStub = await api;
       const param = { uuid: safe.id };
-      apiStub.safe_deleteSafe(param);
+      apiStub.safe_deleteSafe(param).then(this.loadData);
     },
 
   }

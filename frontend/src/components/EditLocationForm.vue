@@ -18,16 +18,36 @@ export default {
   data() {
     return {
       name: '',
-      address: undefined,
+      address: '',
       lat: undefined,
       lon: undefined,
+      locationId: undefined,
 
       nameRules: [
           v => !!v || 'Name erforderlich'
       ]
     }
   },
+  mounted() {
+    this.$emit('mounted');
+  },
   methods: {
+    fillForm(locationTemplate) {
+      if(locationTemplate){
+        this.name = locationTemplate.name;
+        this.address = locationTemplate.addresses;
+        this.lat = locationTemplate.lat;
+        this.lon = locationTemplate.lon;
+      } else {
+        this.name = '';
+        this.address = '';
+        this.lat = undefined;
+        this.lon = undefined;
+      }
+
+      this.$refs.form.resetValidation();
+    },
+    
     async save() {
       if (this.$refs.form.validate()) {
         const apiStub = await api;
@@ -38,12 +58,20 @@ export default {
           latitude: this.lat,
           longitude: this.log
         }
+        
+        if(this.locationId) {
+          const param = { uuid: this.locationId };
 
-        apiStub.location_createLocation(null, locationModel).then(() => {
-          this.$refs.form.reset();
-          this.$emit('submit');
-          this.$parent.$emit('save-form');
-        });
+          apiStub.location_editLocation(param, locationModel).then(() => {
+            this.$refs.form.reset();
+            this.$emit('save-form');
+          });
+        } else {
+          apiStub.location_createLocation(null, locationModel).then(() => {
+            this.$refs.form.reset();
+            this.$emit('save-form');
+          });
+        }
       }
     }
   }
