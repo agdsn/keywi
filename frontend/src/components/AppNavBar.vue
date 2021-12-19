@@ -36,10 +36,6 @@ export default {
       setTimeout(() => {
         this.loggedIn = localStorage.getItem('access_token') != null;
       }, 200);
-
-
-      console.log(this.loggedIn);
-      console.log(localStorage.getItem('access_token'));
     },
     logout() {
       AuthService.logout();

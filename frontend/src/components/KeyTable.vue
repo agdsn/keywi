@@ -1,47 +1,58 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="tableData"
-    :items-per-page="25"
-    class="elevation-1"
-    :loading="loading"
-    loading-text="Lade Daten..."
-    ref="table"
-    :item-class="row_classes"
-  >
-<!--    TODO: umschreiben als Komponente-->
-    <template v-slot:[`item.lock.name`] = "{ item }">
-      <router-link :to="`/lock/${ item.lock.id }`">{{ item.lock.name }}</router-link>
-    </template>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="tableData"
+      :items-per-page="25"
+      class="elevation-1"
+      :loading="loading"
+      loading-text="Lade Daten..."
+      ref="table"
+      :item-class="row_classes"
+    >
+      <template v-slot:[`item.lock.name`] = "{ item }">
+        <router-link :to="`/lock/${ item.lock.id }`">{{ item.lock.name }}</router-link>
+      </template>
 
-    <template v-slot:[`item.safe.name`] = "{ item }">
-      <router-link :to="`/safe/${ item.safe.id }`">{{ item.safe.name }}</router-link>
-    </template>
+      <template v-slot:[`item.safe.name`] = "{ item }">
+        <router-link :to="`/safe/${ item.safe.id }`">{{ item.safe.name }}</router-link>
+      </template>
 
-    <template v-slot:[`item.location.name`] = "{ item }">
-      <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
-    </template>
+      <template v-slot:[`item.location.name`] = "{ item }">
+        <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
+      </template>
 
-    <template v-slot:[`item.rental`] = "{ item }">
-      {{ getRentalStatus(item) }}
-    </template>
+      <template v-slot:[`item.rental`] = "{ item }">
+        {{ getRentalStatus(item) }}
+      </template>
 
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
-  </v-data-table>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="editItem(item)"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          small
+          @click="openDeletePrompt(item)"
+        >
+          mdi-delete
+        </v-icon>
+      </template>
+    </v-data-table>
+
+    <v-dialog v-model="dialog" width="500px">
+      <v-card class="pb-1">
+        <v-card-title>Schlüssel {{keyToDeleteNumber}} wirklich löschen?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -50,6 +61,8 @@ import api from "@/api/api";
 export default {
   name: "KeyTable",
   data: () => ({
+    keyToDelete: undefined,
+    dialog: false,
     loading: true,
     headers: [
       {
@@ -108,13 +121,19 @@ export default {
       this.$emit('editItem', key);
     },
 
-    async deleteItem(key) {
-      // TODO: add confirmation prompt
-      const apiStub = await api;
-      const param = { uuid: key.id };
-      apiStub.key_deleteKey(param).then(this.loadData);
+    openDeletePrompt(keyToDelete) {
+      this.keyToDelete = keyToDelete;
+      this.dialog = true;
     },
 
+    async deleteItem() {
+      const apiStub = await api;
+      const param = { uuid: this.keyToDelete.id };
+      apiStub.key_deleteKey(param).then(() => {
+        this.dialog = false;
+        this.loadData();
+      });
+    },
 
     getRentalStatus(key) {
       if(key.active_rental) {
@@ -135,7 +154,10 @@ export default {
     }
   },
   computed: {
-
+    keyToDeleteNumber() {
+      if(!this.keyToDelete) return '';
+      return this.keyToDelete.number;
+    }
   }
 }
 </script>

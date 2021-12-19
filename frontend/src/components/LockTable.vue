@@ -1,36 +1,48 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="tableData"
-    :items-per-page="25"
-    class="elevation-1"
-    :loading="loading"
-    loading-text="Lade Daten..."
-    ref="table"
-  >
-    <template v-slot:[`item.location.name`] = "{ item }">
-      <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
-    </template>
-    <template v-slot:[`item.available_keys`] = "{ item }">
-      {{ item.amount_free_keys }} / {{ item.amount_keys }}
-    </template>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="tableData"
+      :items-per-page="25"
+      class="elevation-1"
+      :loading="loading"
+      loading-text="Lade Daten..."
+      ref="table"
+    >
+      <template v-slot:[`item.location.name`] = "{ item }">
+        <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
+      </template>
+      <template v-slot:[`item.available_keys`] = "{ item }">
+        {{ item.amount_free_keys }} / {{ item.amount_keys }}
+      </template>
 
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
-  </v-data-table>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="editItem(item)"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          small
+          @click="openDeletePrompt(item)"
+        >
+          mdi-delete
+        </v-icon>
+      </template>
+    </v-data-table>
+
+    <v-dialog v-model="dialog" width="500px">
+      <v-card class="pb-1">
+        <v-card-title>Schloss {{lockToDeleteName}} wirklich löschen?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -39,6 +51,8 @@ import api from "@/api/api";
 export default {
   name: "LockTable",
   data: () => ({
+    dialog: false,
+    lockToDelete: undefined,
     loading: true,
     headers: [
       {
@@ -65,6 +79,12 @@ export default {
     ],
     tableData: []
   }),
+  computed: {
+    lockToDeleteName() {
+      if(!this.lockToDelete) return '';
+      return this.lockToDelete.name;
+    }
+  },
   mounted() { this.loadData(); },
   methods: {
     async loadData() {
@@ -93,11 +113,18 @@ export default {
       this.$emit('editItem', lock);
     },
 
-    async deleteItem(lock) {
-      // TODO: add confirmation prompt
+    openDeletePrompt(lockToDelete) {
+      this.lockToDelete = lockToDelete;
+      this.dialog = true;
+    },
+
+    async deleteItem() {
       const apiStub = await api;
-      const param = { uuid: lock.id };
-      apiStub.lock_deleteLock(param).then(this.loadData);
+      const param = { uuid: this.lockToDelete.id };
+      apiStub.lock_deleteLock(param).then(() => {
+        this.dialog = false;
+        this.loadData();
+      });
     },
   }
 }

@@ -1,29 +1,41 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="tableData"
-    :items-per-page="25"
-    class="elevation-1"
-    :loading="loading"
-    loading-text="Lade Daten..."
-    ref="table"
-  >
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
-  </v-data-table>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="tableData"
+      :items-per-page="25"
+      class="elevation-1"
+      :loading="loading"
+      loading-text="Lade Daten..."
+      ref="table"
+    >
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="editItem(item)"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          small
+          @click="openDeletePrompt(item)"
+        >
+          mdi-delete
+        </v-icon>
+      </template>
+    </v-data-table>
+
+    <v-dialog v-model="dialog" width="500px">
+      <v-card class="pb-1">
+        <v-card-title>Ort {{locationToDeleteName}} wirklich löschen?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -32,7 +44,9 @@ import api from "@/api/api";
 export default {
   name: "LocationTable",
   data: () => ({
+    dialog: false,
     loading: true,
+    locationToDelete: undefined,
     headers: [
       {
         text: 'Ort',
@@ -59,6 +73,12 @@ export default {
     tableData: []
   }),
   mounted() { this.loadData(); },
+  computed: {
+    locationToDeleteName() {
+      if(!this.locationToDelete) return '';
+      return this.locationToDelete.name;
+    }
+  },
   methods: {
     async loadData() {
       let paramId = this.$route.params.id;
@@ -87,11 +107,18 @@ export default {
       this.$emit('editItem', location);
     },
 
-    async deleteItem(location) {
-      // TODO: add confirmation prompt
+    openDeletePrompt(locationToDelete) {
+      this.locationToDelete = locationToDelete;
+      this.dialog = true;
+    },
+
+    async deleteItem() {
       const apiStub = await api;
-      const param = { uuid: location.id };
-      apiStub.location_deleteLocation(param).then(this.loadData);
+      const param = { uuid: this.locationToDelete.id };
+      apiStub.location_deleteLocation(param).then(() => {
+        this.dialog = false;
+        this.loadData();
+      });
     },
   }
 }
