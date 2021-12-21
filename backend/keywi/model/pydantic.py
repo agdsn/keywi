@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import inspect
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 
 from pydantic import EmailStr, constr
@@ -22,7 +22,7 @@ def optional(*fields):
         return dec(cls)
     return dec
 
-# User (1/2)
+# User
 
 
 class UserModelBase(PydModel):
@@ -46,7 +46,7 @@ class UserModelPatch(UserModelCreate):
 
 class UserModel(UserModelShort):
     email: EmailStr
-    active_rentals: RentalModelShort
+    active_rentals: List[RentalModelShort]
 
 
 # Location

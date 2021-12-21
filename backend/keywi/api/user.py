@@ -16,11 +16,11 @@ def get_users():
     return db.session.query(User).all()
 
 
-@router.get("/{uuid}", response_model=UserModel)
-def get_user(user: User = Depends(PathModelGetter(User))):
-    return user
-
-
 @router.get("/current", response_model=UserModel)
 def get_current(c_user: User = Depends(get_current_user)):
     return c_user
+
+
+@router.get("/{uuid}", response_model=UserModel)
+def get_user(user: User = Depends(PathModelGetter(User))):
+    return user

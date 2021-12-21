@@ -10,7 +10,7 @@ from lib.app_config import app_config
 from model.helper import init_data
 from model.session import session
 
-app = FastAPI(title="Keywi", version="0.0.1", root_path=app_config.get('general', 'root_path'),
+app = FastAPI(title="Keywi", version="0.0.1", root_path=app_config.get('general', 'root_path', fallback=''),
               servers=[{"url": app_config.get('general', 'url'),
                         "description": "main"}])
 app.add_middleware(DBSessionMiddleware, db_url=app_config.get('database', 'url'))

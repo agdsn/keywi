@@ -98,6 +98,7 @@ class Key(UUIDModel):
     def location(self):
         return self.lock.location
 
+
 class Rental(UUIDModel):
     __tablename__ = "rental"
     __table_args__ = (
