@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import AppTitle from "@/components/AppTitle.vue";
 import AppNavBar from "@/components/AppNavBar.vue";
@@ -36,38 +36,27 @@ export default Vue.extend({
     },
 
   methods: {
-      editSafe(editedSafe : any) {
-        this.editedSafe = editedSafe;
+    editSafe(editedSafe) {
+      this.editedSafe = editedSafe;
 
-        // Sind schlecht konfigurierte linter nicht eine tolle Erfindung
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        this.$refs.popup.openDialog();
+      this.$refs.popup.openDialog();
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        if(this.$refs.popup.$refs.form) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          this.$refs.popup.$refs.form.fillForm(this.editedSafe);
-        }
-      },
+      if(this.$refs.popup.$refs.form) {
+        this.$refs.popup.$refs.form.fillForm(this.editedSafe);
+      }
+    },
 
     mountedEvent() {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         this.$refs.popup.$refs.form.fillForm(this.editedSafe);
     },
 
     buttonAddClicked() {
         this.editedSafe = undefined;
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         if(this.$refs.popup.$refs.form) this.$refs.popup.$refs.form.fillForm(this.editedSafe);
     }
   }
-  })
+})
 
 </script>
 

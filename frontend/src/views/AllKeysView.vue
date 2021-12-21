@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import AppTitle from "@/components/AppTitle.vue";
 import AppNavBar from "@/components/AppNavBar.vue";
@@ -35,33 +35,23 @@ export default Vue.extend({
       }
     },
     methods: {
-        editKey(editedKey : any) {
+        editKey(editedKey) {
           this.editedKey = editedKey;
-          
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
+
           this.$refs.popup.openDialog();
-  
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
+
           if(this.$refs.popup.$refs.form) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             this.$refs.popup.$refs.form.fillForm(this.editedKey);
           }
         },
   
       mountedEvent() {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           this.$refs.popup.$refs.form.fillForm(this.editedKey);
       },
   
       buttonAddClicked() {
           this.editedKey = undefined;
-  
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
+
           if(this.$refs.popup.$refs.form) this.$refs.popup.$refs.form.fillForm(this.editedKey);
       }
     }
