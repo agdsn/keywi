@@ -19,7 +19,6 @@ import AppTitle from "@/components/AppTitle.vue";
 import AppNavBar from "@/components/AppNavBar.vue";
 import LockTable from "@/components/LockTable.vue";
 import FormPopup from "@/components/FormPopup.vue";
-import EditLockForm from "@/components/EditLockForm.vue";
 
 export default Vue.extend({
     name: 'AllLocksView',

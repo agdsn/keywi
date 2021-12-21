@@ -6,6 +6,7 @@ import EditLocationForm from './components/EditLocationForm.vue'
 import EditKeyForm from "@/components/EditKeyForm.vue";
 import EditLockForm from "@/components/EditLockForm.vue";
 import EditSafeForm from "@/components/EditSafeForm.vue";
+import LoginForm from "@/components/LoginForm.vue";
 
 Vue.config.productionTip = false
 
@@ -14,6 +15,7 @@ Vue.component('edit-location-form', EditLocationForm);
 Vue.component('edit-key-form', EditKeyForm);
 Vue.component('edit-lock-form', EditLockForm);
 Vue.component('edit-safe-form', EditSafeForm);
+Vue.component('login-form', LoginForm);
 
 new Vue({
   router,

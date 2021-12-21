@@ -33,7 +33,7 @@ export default {
       AuthService.login(this.username, this.password).then(() => {
         this.error = null;
         this.$refs.form.reset();
-        this.$parent.$emit('save-form');
+        this.$emit('save-form');
         this.$emit('submit');
       }).catch((err) => {
         this.error = "Wrong username or password.";

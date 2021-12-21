@@ -43,7 +43,7 @@ export default {
       this.dialog = false;
     },
 
-    openDialog: function () {
+    openDialog() {
       this.dialog = true;
     },
 

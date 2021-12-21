@@ -7,26 +7,33 @@
       <li><router-link to="/location">Orte</router-link></li>
     </ul>
     <ul class="list">
-      <li v-if="loggedIn"><a @click="logout">Logout</a></li>
+      <li v-if="loggedIn">
+        <router-link :to="`/user/${user.id}`" v-if="user != null" href="#" class="mr-2">{{ user.login }}</router-link>
+        <a @click="logout">Logout</a>
+      </li>
       <li v-else ><a @click="$refs.loginDialog.openDialog()">Login</a></li>
     </ul>
-    <form-popup ref="loginDialog" text="Login" :render-btn="false">
-      <LoginForm @submit="this.checkLogin"></LoginForm>
+    <form-popup
+        ref="loginDialog"
+        text="Login"
+        form="login-form"
+        @save-form="checkLogin"
+        :render-btn="false">
     </form-popup>
   </div>
 </template>
 
 <script>
 import FormPopup from "@/components/FormPopup";
-import LoginForm from "@/components/LoginForm";
 import AuthService from "@/services/AuthService";
 
 export default {
   name: "AppNavBar",
-  components: {LoginForm, FormPopup},
+  components: {FormPopup},
   data() {
     return {
       loggedIn: false,
+      user: null,
     };
   },
   methods: {
@@ -41,6 +48,11 @@ export default {
       AuthService.logout();
       this.checkLogin();
     }
+  },
+  watch: {
+    loggedIn() {
+      this.user = AuthService.getUser();
+    },
   },
   beforeMount() {
     this.checkLogin();

@@ -19,14 +19,13 @@ export default {
         apiClient.auth_login(null, undefined, options).then((rsp) => {
             const access_token = rsp.data.access_token;
 
-            localStorage.setItem('access_token', access_token);
-
             const header = `Bearer ${access_token}`;
             axios.defaults.headers.common.Authorization = header;
             apiClient.defaults.headers.Authorization = header;
 
             apiClient.user_getCurrent().then((rsp) => {
                 localStorage.setItem('user', JSON.stringify(rsp.data));
+                localStorage.setItem('access_token', access_token);
             });
 
             return true;
@@ -39,15 +38,12 @@ export default {
         const apiClient = await api;
 
         localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
         delete axios.defaults.headers.common.Authorization;
         delete apiClient.defaults.headers.Authorization;
     },
     isLoggedIn() {
-        const loggedIn = localStorage.getItem('access_token') != null;
-
-        console.log("Logged in:" + loggedIn)
-
-        return loggedIn
+        return localStorage.getItem('access_token') != null;
     },
     getUser() {
         const userData = localStorage.getItem('user');
