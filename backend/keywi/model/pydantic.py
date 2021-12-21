@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, List
 from uuid import UUID
 
-from pydantic import EmailStr, constr
+from pydantic import EmailStr, constr, Field
 
 from model.base import PydModel
 
@@ -173,7 +173,7 @@ class KeyModelPatch(KeyModelCreate):
 class RentalModelBase(PydModel):
     begin: datetime
     end: datetime = None
-    allowed_by: str = None
+    allowed_by: str = Field(None, description="Name of the document that allows the user to rent this key.")
 
 
 class RentalModel(RentalModelBase):
