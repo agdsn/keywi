@@ -1,6 +1,7 @@
 from typing import List
+from uuid import UUID
 
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, Query
 from fastapi_sqlalchemy import db
 
 from api.auth import get_current_user
@@ -14,8 +15,22 @@ router = APIRouter(prefix="/rental", tags=["rental"])
 
 
 @router.get("/", response_model=List[RentalModel])
-def get_rentals():
-    return db.session.query(Rental).all()
+def get_rentals(key_id: UUID = Query(None),
+                user_id: UUID = Query(None),
+                issuing_user_id: UUID = Query(None),
+                ):
+    rentals = db.session.query(Rental)
+
+    if key_id is not None:
+        rentals = rentals.filter_by(key_id=key_id)
+
+    if user_id is not None:
+        rentals = rentals.filter_by(user_id=user_id)
+
+    if issuing_user_id is not None:
+        rentals = rentals.filter_by(issuing_user_id=issuing_user_id)
+
+    return rentals.all()
 
 
 @router.get("/{uuid}", response_model=RentalModel)
