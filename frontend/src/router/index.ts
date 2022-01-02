@@ -6,6 +6,7 @@ import AllLocksView from "@/views/all/AllLocksView.vue";
 import AllLocationsView from "@/views/all/AllLocationsView.vue";
 import AllUsersView from "@/views/all/AllUsersView.vue";
 import UserView from "@/views/detail/DetailUserView.vue";
+import DetailLocationView from"@/views/detail/DetailLocationView.vue";
 
 Vue.use(VueRouter)
 
@@ -27,9 +28,14 @@ const routes: Array<RouteConfig> = [
     component: AllLocksView
   },
   {
-    path: '/location/:id?',
-    name: 'location',
+    path: '/location',
+    name: 'locationAll',
     component: AllLocationsView
+  },
+  {
+    path: '/location/:id',
+    name: 'location',
+    component: DetailLocationView
   },
   {
     path: '/user',

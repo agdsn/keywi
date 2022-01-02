@@ -3,7 +3,6 @@
     <app-title view-title="Orte"></app-title>
     <app-nav-bar></app-nav-bar>
     <location-table class="mx-7 mt-7" ref="locationTable" @editItem="editLocation"/>
-    <v-divider class="mx-8"></v-divider>
     <form-popup text="Ort hinzufügen"
                 form="edit-location-form"
                 @save-form="$refs.locationTable.loadData();"

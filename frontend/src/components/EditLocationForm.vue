@@ -35,14 +35,16 @@ export default {
     fillForm(locationTemplate) {
       if(locationTemplate){
         this.name = locationTemplate.name;
-        this.address = locationTemplate.addresses;
-        this.lat = locationTemplate.lat;
-        this.lon = locationTemplate.lon;
+        this.address = locationTemplate.address;
+        this.lat = locationTemplate.latitude;
+        this.lon = locationTemplate.longitude;
+        this.locationId = locationTemplate.id;
       } else {
         this.name = '';
         this.address = '';
         this.lat = undefined;
         this.lon = undefined;
+        this.locationId = undefined;
       }
 
       this.$refs.form.resetValidation();
