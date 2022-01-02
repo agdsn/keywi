@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import AllKeysView from '../views/AllKeysView.vue'
-import AllSafesView from "@/views/AllSafesView.vue";
-import AllLocksView from "@/views/AllLocksView.vue";
-import AllLocationsView from "@/views/AllLocationsView.vue";
-import AllUsersView from "@/views/AllUsersView.vue";
-import UserView from "@/views/UserView.vue";
+import AllKeysView from '../views/all/AllKeysView.vue'
+import AllSafesView from "@/views/all/AllSafesView.vue";
+import AllLocksView from "@/views/all/AllLocksView.vue";
+import AllLocationsView from "@/views/all/AllLocationsView.vue";
+import AllUsersView from "@/views/all/AllUsersView.vue";
+import UserView from "@/views/detail/DetailUserView.vue";
 
 Vue.use(VueRouter)
 
