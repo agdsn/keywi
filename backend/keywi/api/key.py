@@ -1,6 +1,7 @@
 from typing import List
+from uuid import UUID
 
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, Query
 from fastapi_sqlalchemy import db
 
 from api.auth import get_current_user
@@ -14,8 +15,16 @@ router = APIRouter(prefix="/key", tags=["key"])
 
 
 @router.get("/", response_model=List[KeyModel])
-def get_keys():
-    return db.session.query(Key).all()
+def get_keys(safe_id: UUID = Query(None), lock_id: UUID = Query(None)):
+    keys = db.session.query(Key)
+
+    if safe_id is not None:
+        keys = keys.filter_by(safe_id=safe_id)
+
+    if lock_id is not None:
+        keys = keys.filter_by(lock_id=lock_id)
+
+    return keys.all()
 
 
 @router.get("/{uuid}", response_model=KeyModel)

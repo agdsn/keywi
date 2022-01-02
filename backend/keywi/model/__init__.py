@@ -46,7 +46,7 @@ class Lock(UUIDModel):
     location = relationship("Location", backref=backref("locks"))
 
     free_keys = relationship("Key", primaryjoin="and_(Key.lock_id == Lock.id,"
-                                                "     Key.free)")
+                                                "     Key.free)", overlaps="keys")
 
     @property
     def amount_keys(self):
@@ -80,7 +80,7 @@ class Key(UUIDModel):
     checked = Column(Boolean, nullable=False, server_default="False",
                      comment="Has been checked to be in the correct location. Reset all to false for a new inventory.")
 
-    lock = relationship("Lock", backref=backref("keys"))
+    lock = relationship("Lock", backref=backref("keys"), overlaps="free_keys")
     safe = relationship("Safe", backref=backref("keys"))
 
     active_rental = relationship("Rental", uselist=False,

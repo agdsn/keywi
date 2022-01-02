@@ -1,6 +1,7 @@
 from typing import List
+from uuid import UUID
 
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, Query
 from fastapi_sqlalchemy import db
 
 from api.auth import get_current_user
@@ -14,8 +15,13 @@ router = APIRouter(prefix="/lock", tags=["lock"])
 
 
 @router.get("/", response_model=List[LockModel])
-def get_locks():
-    return db.session.query(Lock).all()
+def get_locks(location_id: UUID = Query(None)):
+    locks = db.session.query(Lock)
+
+    if location_id is not None:
+        locks = locks.filter_by(location_id=location_id)
+
+    return locks.all()
 
 
 @router.get("/{uuid}", response_model=LockModel)

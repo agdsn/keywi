@@ -1,6 +1,7 @@
 from typing import List
+from uuid import UUID
 
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, Query
 from fastapi_sqlalchemy import db
 
 from api.auth import get_current_user
@@ -14,8 +15,13 @@ router = APIRouter(prefix="/safe", tags=["safe"])
 
 
 @router.get("/", response_model=List[SafeModel])
-def get_safes():
-    return db.session.query(Safe).all()
+def get_safes(location_id: UUID = Query(None)):
+    safes = db.session.query(Safe)
+
+    if location_id is not None:
+        safes = safes.filter_by(location_id=location_id)
+
+    return safes.all()
 
 
 @router.get("/{uuid}", response_model=SafeModel)
