@@ -65,12 +65,12 @@ export default {
 </script>
 
 <style scoped>
-  .v-dialog {
-    position: relative;
-  }
+  /*.v-dialog {*/
+  /*  position: relative;*/
+  /*}*/
 
-  .v-btn {
-    position: absolute;
-    right: 0;
-  }
+  /*.v-btn {*/
+  /*  position: absolute;*/
+  /*  right: 0;*/
+  /*}*/
 </style>

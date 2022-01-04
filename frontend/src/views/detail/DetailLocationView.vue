@@ -33,18 +33,38 @@
       </v-simple-table>
       <v-divider></v-divider>
 
-      <form-popup text="Bearbeiten"
-            form="edit-location-form"
-            @save-form="loadLocation()"
-            ref="popup"
-            @mounted="mountedEvent"
-            @button-add-clicked="mountedEvent"/>
+      <div class="buttons">
+        <form-popup text="Bearbeiten"
+              form="edit-location-form"
+              @save-form="loadLocation()"
+              ref="popup"
+              @mounted="mountedEvent"
+              @button-add-clicked="mountedEvent"/>
 
-      <h2 class="mt-10 mb-2">Schlösser</h2>
-      <detail-table-locks ref="lockTable"></detail-table-locks>
+  <!--      DELETE BUTTON-->
+        <v-dialog width="500px" v-model="deleteDialog">
+          <template v-slot:activator="{ on: clickEvent }">
+            <div class="tooltip" :title="tooltip">
+              <v-btn text class="primary-color mx-8 my-4" v-on="clickEvent" :disabled="deleteDisabled">
+                Löschen
+              </v-btn>
+            </div>
+          </template>
+          <v-card class="pb-1">
+            <v-card-title>Ort {{location.name}} wirklich löschen?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
+
+      <h2 class="mb-2">Schlösser</h2>
+      <detail-table-locks ref="lockTable" @empty="locksEmpty=true"></detail-table-locks>
 
       <h2 class="mt-3 mb-2">Tresore</h2>
-      <detail-table-safes ref="safeTable"></detail-table-safes>
+      <detail-table-safes ref="safeTable" @empty="safesEmpty=true"></detail-table-safes>
     </div>
   </div>
 </template>
@@ -70,7 +90,10 @@ export default {
   data() {
     return {
       location: {},
-      locationId: undefined
+      locationId: undefined,
+      deleteDialog: false,
+      locksEmpty: false,
+      safesEmpty: false
     }
   },
   mounted() {
@@ -96,11 +119,45 @@ export default {
     },
     mountedEvent() {
       if(this.$refs.popup.$refs.form) this.$refs.popup.$refs.form.fillForm(this.location);
+    },
+    async deleteItem() {
+      const apiStub = await api;
+      const param = { uuid: this.location.id };
+      apiStub.location_deleteLocation(param).then(() => {
+        this.$router.push('/location');
+      });
+    }
+  },
+  computed: {
+    deleteDisabled() {
+      return !this.safesEmpty || !this.locksEmpty;
+    },
+    tooltip() {
+      if(this.deleteDisabled) return "Ort kann nur gelöscht werden, wenn ihm keine Schlösser oder Ort zugewiesen sind";
+      return "";
     }
   }
 }
 </script>
 
 <style scoped>
+ .buttons {
+   text-align: end;
+ }
 
+ .buttons >>> .v-btn {
+   margin-right: 0!important;
+   margin-left: 16px!important;
+   margin-bottom: 0 !important;
+ }
+
+ .buttons .tooltip {
+   display: inline-block;
+ }
+
+ .buttons .tooltip .v-btn {
+   margin-right: 0!important;
+   margin-left: 16px!important;
+   margin-bottom: 0 !important;
+ }
 </style>

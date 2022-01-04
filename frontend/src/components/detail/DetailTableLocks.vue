@@ -53,6 +53,8 @@ export default {
         this.tableData = response.data;
       }).finally(() => {
         this.loading = false;
+
+        if(this.tableData.length == 0) this.$emit('empty');
       });
     }
   }
