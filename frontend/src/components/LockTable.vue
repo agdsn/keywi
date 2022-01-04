@@ -12,6 +12,9 @@
       <template v-slot:[`item.location.name`] = "{ item }">
         <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
       </template>
+      <template v-slot:[`item.name`] = "{ item }">
+        <router-link :to="`/lock/${ item.id }`">{{ item.name }}</router-link>
+      </template>
       <template v-slot:[`item.available_keys`] = "{ item }">
         {{ item.amount_free_keys }} / {{ item.amount_keys }}
       </template>

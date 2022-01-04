@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <app-title view-title="Tresor"></app-title>
+    <app-title view-title="Tresore"></app-title>
     <app-nav-bar></app-nav-bar>
     <safe-table ref="safeTable" @editItem="editSafe" class="mx-7 mt-7"/>
     <v-divider class="mx-8"></v-divider>

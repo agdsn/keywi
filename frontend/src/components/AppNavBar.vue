@@ -1,7 +1,7 @@
 <template>
   <div class="nav-bar">
     <ul class="list left">
-      <li><router-link to="/keys">Schlüssel</router-link></li>
+      <li><router-link to="/key">Schlüssel</router-link></li>
       <li><router-link to="/safe">Tresore</router-link></li>
       <li><router-link to="/lock">Schlösser</router-link></li>
       <li><router-link to="/location">Orte</router-link></li>

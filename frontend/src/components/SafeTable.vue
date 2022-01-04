@@ -13,6 +13,10 @@
         <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
       </template>
 
+      <template v-slot:[`item.name`] = "{ item }">
+        <router-link :to="`/safe/${ item.id }`">{{ item.name }}</router-link>
+      </template>
+
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon
           small

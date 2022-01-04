@@ -27,4 +27,8 @@ export default Vue.extend({
     background-color: var(--primary-color) !important;
     color: #ffffff !important;
   }
+
+  a {
+    text-decoration: none;
+  }
 </style>

@@ -10,6 +10,10 @@
       ref="table"
       :item-class="row_classes"
     >
+      <template v-slot:[`item.number`] = "{ item }">
+        <router-link :to="`/key/${ item.id }`">{{ item.number }}</router-link>
+      </template>
+
       <template v-slot:[`item.lock.name`] = "{ item }">
         <router-link :to="`/lock/${ item.lock.id }`">{{ item.lock.name }}</router-link>
       </template>
@@ -214,18 +218,14 @@ export default {
 }
 </script>
 
-<style>
-  .red-cell td:nth-last-child(2) {
+<style scoped>
+  div >>> .red-cell td:nth-last-child(2) {
     background-color: #DDC1BB;
     border-radius: 5px;
   }
 
-  .green-cell td:nth-last-child(2) {
+  div >>> .green-cell td:nth-last-child(2) {
     background-color: #ABCC9F;
     border-radius: 5px;
-  }
-
-  td a {
-    text-decoration: none;
   }
 </style>
