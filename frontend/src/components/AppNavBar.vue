@@ -1,10 +1,22 @@
 <template>
   <div class="nav-bar">
     <ul class="list left">
-      <li><router-link to="/key">Schlüssel</router-link></li>
-      <li><router-link to="/safe">Tresore</router-link></li>
-      <li><router-link to="/lock">Schlösser</router-link></li>
-      <li><router-link to="/location">Orte</router-link></li>
+      <li><router-link to="/key">
+        <v-icon color="white" left>mdi-key-chain</v-icon>
+        Schlüssel
+      </router-link></li>
+      <li><router-link to="/safe">
+        <v-icon color="white" left>mdi-safe-square</v-icon>
+        Tresore
+      </router-link></li>
+      <li><router-link to="/lock">
+        <v-icon color="white" left>mdi-lock</v-icon>
+        Schlösser
+      </router-link></li>
+      <li><router-link to="/location">
+        <v-icon color="white" left>mdi-map-marker</v-icon>
+        Orte
+      </router-link></li>
     </ul>
     <ul class="list">
       <li v-if="loggedIn">
