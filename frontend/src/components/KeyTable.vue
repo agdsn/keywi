@@ -86,6 +86,7 @@
 
 <script>
 import api from "@/api/api";
+import AuthService from "@/services/AuthService";
 
 export default {
   name: "KeyTable",
@@ -171,12 +172,18 @@ export default {
     },
 
     async rentItem() {
+      const user = AuthService.getUser();
+
+      if (user == null) {
+        return;
+      }
+
       const apiStub = await api;
       const rentalModel = {
         key_id: this.keyInDialog.id,
         begin: new Date().toISOString(),
         // TODO: change
-        user_id: '96c5f55a-b098-4100-8999-8a4591199e78'
+        user_id: user.id,
       }
 
       apiStub.rental_createRental(null, rentalModel).then(() => {
