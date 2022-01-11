@@ -59,6 +59,7 @@
 
 <script>
 import api from "@/api/api";
+import AuthService from "@/services/AuthService";
 
 export default {
   name: "DetailTableKeys",
@@ -112,7 +113,7 @@ export default {
         if(this.tableData.length == 0) this.$emit('empty');
       });
     },
-    
+
     async loadDataByLockId(lockId) {
       // remove lock column
       let lockColumn = this.headers.find(column => column.value == 'lock.name');
@@ -161,12 +162,18 @@ export default {
     },
 
     async rentItem() {
+      const user = AuthService.getUser();
+
+      if (user == null) {
+        return;
+      }
+
       const apiStub = await api;
       const rentalModel = {
         key_id: this.keyInDialog.id,
         begin: new Date().toISOString(),
         // TODO: change
-        user_id: '79d9d0f6-d424-4992-872c-4f257d9ae5c5'
+        user_id: user.id
       }
 
       apiStub.rental_createRental(null, rentalModel).then(() => {

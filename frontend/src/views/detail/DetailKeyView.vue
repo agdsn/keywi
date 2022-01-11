@@ -14,11 +14,15 @@
           </tr>
           <tr>
             <td>Schloss</td>
-            <td><router-link :to="`/lock/${ key.lock.id }`">{{ key.lock.name }}</router-link></td>
+            <td>
+              <router-link :to="`/lock/${ key.lock.id }`">{{ key.lock.name }}</router-link>
+            </td>
           </tr>
           <tr>
             <td>Tresor</td>
-            <td><router-link :to="`/safe/${ key.safe.id }`">{{ key.safe.name }}</router-link></td>
+            <td>
+              <router-link :to="`/safe/${ key.safe.id }`">{{ key.safe.name }}</router-link>
+            </td>
           </tr>
           <tr>
             <td>Ausleihe</td>
@@ -34,24 +38,39 @@
       <v-divider></v-divider>
 
       <div class="buttons">
-        <form-popup text="Bearbeiten"
-              form="edit-key-form"
-              @save-form="loadKey()"
-              ref="popup"
-              @mounted="mountedEvent"
-              @button-add-clicked="mountedEvent"/>
-
-  <!--      DELETE BUTTON-->
-        <v-dialog width="500px" v-model="deleteDialog">
+        <v-dialog v-model="rentDialog" width="500px">
           <template v-slot:activator="{ on: clickEvent }">
-            <div class="tooltip" :title="tooltip">
-              <v-btn text class="primary-color mx-8 my-4" v-on="clickEvent" :disabled="deleteDisabled">
+              <v-btn class="primary-color mx-8 my-4" text v-on="clickEvent">
+                Ausleihen
+              </v-btn>
+          </template>
+          <v-card class="pb-1">
+            <v-card-title>Schlüssel {{ key.name }} wirklich ausleihen?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn class="primary-color" @click="rentItem">Bestätigen</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <form-popup ref="popup"
+                    form="edit-key-form"
+                    text="Bearbeiten"
+                    @mounted="mountedEvent"
+                    @save-form="loadKey()"
+                    @button-add-clicked="mountedEvent"/>
+
+        <!--      DELETE BUTTON-->
+        <v-dialog v-model="deleteDialog" width="500px">
+          <template v-slot:activator="{ on: clickEvent }">
+            <div :title="tooltip" class="tooltip">
+              <v-btn :disabled="deleteDisabled" class="primary-color mx-8 my-4" text v-on="clickEvent">
                 Löschen
               </v-btn>
             </div>
           </template>
           <v-card class="pb-1">
-            <v-card-title>Schlüssel {{key.name}} wirklich löschen?</v-card-title>
+            <v-card-title>Schlüssel {{ key.name }} wirklich löschen?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
@@ -73,6 +92,7 @@ import AppTitle from "@/components/AppTitle";
 import api from "@/api/api";
 import DetailTableRentals from "@/components/detail/DetailTableRentals";
 import FormPopup from "@/components/FormPopup";
+import AuthService from "@/services/AuthService";
 
 export default {
   name: "DetailKeyView",
@@ -85,9 +105,10 @@ export default {
 
   data() {
     return {
-      key: { location: {}, safe: {}, lock: {} },
+      key: {location: {}, safe: {}, lock: {}},
       keyId: undefined,
-      deleteDialog: false
+      deleteDialog: false,
+      rentDialog: false
     }
   },
   mounted() {
@@ -97,11 +118,11 @@ export default {
   },
   methods: {
     async loadKey() {
-      if(!this.keyId) return;
+      if (!this.keyId) return;
 
       const apiStub = await api;
       apiStub.key_getKey(this.keyId).then(response => {
-          this.key = response.data;
+        this.key = response.data;
       });
     },
 
@@ -110,23 +131,44 @@ export default {
     },
 
     mountedEvent() {
-      if(this.$refs.popup.$refs.form) this.$refs.popup.$refs.form.fillForm(this.key);
+      if (this.$refs.popup.$refs.form) this.$refs.popup.$refs.form.fillForm(this.key);
     },
 
     async deleteItem() {
       const apiStub = await api;
-      const param = { uuid: this.key.id };
+      const param = {uuid: this.key.id};
       apiStub.key_deleteKey(param).then(() => {
         this.$router.push('/key');
       });
+    },
+
+    async rentItem() {
+      const user = AuthService.getUser();
+
+      if (user == null) {
+        return;
+      }
+
+      const apiStub = await api;
+      const rentalModel = {
+        key_id: this.key.id,
+        begin: new Date().toISOString(),
+        // TODO: change
+        user_id: user.id
+      }
+
+      apiStub.rental_createRental(null, rentalModel).then(() => {
+        this.rentDialog = false;
+        this.$emit('rented');
+      })
     }
   },
   computed: {
     rentalStatus() {
-      if(!this.key) return '';
-      if(this.key.active_rental) {
+      if (!this.key) return '';
+      if (this.key.active_rental) {
         return "Ausgeliehen";
-      } else if(!this.key.rentable) {
+      } else if (!this.key.rentable) {
         return "Nicht ausleihbar";
       } else {
         return "Ausleihbar";
@@ -134,7 +176,7 @@ export default {
     },
 
     rentalColor() {
-      if(this.key.active_rental == null && this.key.rentable) {
+      if (this.key.active_rental == null && this.key.rentable) {
         return "green-cell"
       } else {
         return "red-cell";
@@ -146,7 +188,7 @@ export default {
     },
 
     tooltip() {
-      if(this.deleteDisabled) return "Schlüssel kann nur gelöscht werden, wenn er momentan nicht verliehen ist";
+      if (this.deleteDisabled) return "Schlüssel kann nur gelöscht werden, wenn er momentan nicht verliehen ist";
       return "";
     }
   }
@@ -154,33 +196,33 @@ export default {
 </script>
 
 <style scoped>
- .buttons {
-   text-align: end;
- }
+.buttons {
+  text-align: end;
+}
 
- .buttons >>> .v-btn {
-   margin-right: 0!important;
-   margin-left: 16px!important;
-   margin-bottom: 0 !important;
- }
+.buttons >>> .v-btn {
+  margin-right: 0 !important;
+  margin-left: 16px !important;
+  margin-bottom: 0 !important;
+}
 
- .buttons .tooltip {
-   display: inline-block;
- }
+.buttons .tooltip {
+  display: inline-block;
+}
 
- .buttons .tooltip .v-btn {
-   margin-right: 0!important;
-   margin-left: 16px!important;
-   margin-bottom: 0 !important;
- }
+.buttons .tooltip .v-btn {
+  margin-right: 0 !important;
+  margin-left: 16px !important;
+  margin-bottom: 0 !important;
+}
 
- .red-cell {
-    background-color: #DDC1BB;
-    border-radius: 5px;
-  }
+.red-cell {
+  background-color: #DDC1BB;
+  border-radius: 5px;
+}
 
-  .green-cell {
-    background-color: #ABCC9F;
-    border-radius: 5px;
-  }
+.green-cell {
+  background-color: #ABCC9F;
+  border-radius: 5px;
+}
 </style>
