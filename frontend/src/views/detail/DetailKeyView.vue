@@ -6,7 +6,7 @@
         <template v-slot:default>
           <tbody>
           <tr>
-            <td>Schlüsselnummer</td>
+            <td style="width: 20%;">Schlüsselnummer</td>
             <td><b>{{ key.number }}</b></td>
           </tr>
           <tr>

@@ -6,7 +6,7 @@
         <template v-slot:default>
           <tbody>
           <tr>
-            <td>Name</td>
+            <td style="width: 20%;">Name</td>
             <td><b>{{ lock.name }}</b></td>
           </tr>
           <tr>
