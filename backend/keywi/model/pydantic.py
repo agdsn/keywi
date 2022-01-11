@@ -28,6 +28,7 @@ def optional(*fields):
 class UserModelBase(PydModel):
     login: constr(max_length=30, min_length=2)
     name: str
+    note: Optional[str]
 
 
 class UserModelShort(UserModelBase):
@@ -57,6 +58,7 @@ class LocationModelBase(PydModel):
     address: str = None
     latitude: float = None
     longitude: float = None
+    note: Optional[str]
 
 
 class LocationModelShort(PydModel):
@@ -84,6 +86,7 @@ class LocationModelPatch(LocationModelBase):
 class LockModelBase(PydModel):
     name: str
     owner: str = None
+    note: Optional[str]
 
 
 class LockModelShort(PydModel):
@@ -111,6 +114,7 @@ class LockModelPatch(LockModelCreate):
 
 class SafeModelBase(PydModel):
     name: str
+    note: Optional[str]
 
 
 class SafeModel(SafeModelBase):
@@ -139,6 +143,7 @@ class KeyModelBase(PydModel):
     number: str
     rentable: bool = False
     checked: bool = False
+    note: Optional[str]
 
 
 class KeyModel(KeyModelBase):
@@ -174,6 +179,7 @@ class RentalModelBase(PydModel):
     begin: datetime
     end: datetime = None
     allowed_by: str = Field(None, description="Name of the document that allows the user to rent this key.")
+    note: Optional[str]
 
 
 class RentalModel(RentalModelBase):

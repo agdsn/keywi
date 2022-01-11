@@ -14,7 +14,7 @@ class RentalRangeOverlapException(Exception):
 
 @with_transaction
 def create_rental(key: Key, user: User, issuing_user: User, processor: User, begin: datetime = None,
-                  end: datetime = None, allowed_by: str = None):
+                  end: datetime = None, allowed_by: str = None, note: str = None):
     args = locals()
 
     begin = begin if begin else utcnow()

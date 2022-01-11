@@ -4,7 +4,7 @@ from model.session import with_transaction
 
 
 @with_transaction
-def create_user(name: str, login: str, email: str, password: str, processor: User):
+def create_user(name: str, login: str, email: str, password: str, processor: User, note: str = None):
     return create_object(User,
                          log_keys=['name', 'login', 'email'],
                          log_params={'user': REFERENCED_OBJ},
