@@ -1,7 +1,7 @@
 from typing import List
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Body, Query
+from fastapi import APIRouter, Depends, Body, Query, HTTPException
 from fastapi_sqlalchemy import db
 
 from api.auth import get_current_user
@@ -46,7 +46,10 @@ def create_rental(rental_create: RentalModelCreate,
     args['user'] = get_or_404(User, args.pop('user_id'))
     args['key'] = get_or_404(Key, args.pop('key_id'))
 
-    rental = lib.rental.create_rental(**args, issuing_user=c_user, processor=c_user, _commit=True)
+    try:
+        rental = lib.rental.create_rental(**args, issuing_user=c_user, processor=c_user, _commit=True)
+    except lib.rental.RentalRangeOverlapException as e:
+        raise HTTPException(400, str(e))
 
     return rental
 
@@ -57,7 +60,10 @@ def edit_rental(rental: Rental = Depends(PathModelGetter(Rental)),
                 c_user: User = Depends(get_current_user)):
     args = rental_patch.dict(exclude_unset=True)
 
-    rental = lib.rental.edit_rental(rental, processor=c_user, **args, _commit=True)
+    try:
+        rental = lib.rental.edit_rental(rental, processor=c_user, **args, _commit=True)
+    except lib.rental.RentalRangeOverlapException as e:
+        raise HTTPException(400, str(e))
 
     return rental
 

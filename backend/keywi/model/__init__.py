@@ -119,11 +119,11 @@ class Rental(UUIDModel):
 
     @hybrid_property
     def active(self):
-        return self.end is None or self.end > utcnow()
+        return self.begin >= utcnow() and (self.end is None or self.end >= utcnow())
 
     @active.expression
     def active(self):
-        return or_(self.end.is_(None), self.end > func.now())
+        return and_(self.begin >= func.now(), or_(self.end.is_(None), self.end >= func.now()))
 
 
 class LogEntry(UUIDModel):
