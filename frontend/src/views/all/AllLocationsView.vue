@@ -1,7 +1,5 @@
 <template>
   <div class="home pb-5">
-    <app-title view-title="Orte"></app-title>
-    <app-nav-bar></app-nav-bar>
     <location-table class="mx-7 mt-7" ref="locationTable" @editItem="editLocation"/>
     <form-popup text="Ort hinzufügen"
                 form="edit-location-form"
@@ -14,8 +12,6 @@
 
 <script>
 import Vue from 'vue'
-import AppTitle from "@/components/AppTitle.vue";
-import AppNavBar from "@/components/AppNavBar.vue";
 import LocationTable from "@/components/LocationTable.vue";
 import FormPopup from "@/components/FormPopup.vue";
 
@@ -24,8 +20,6 @@ export default Vue.extend({
 
     components: {
       FormPopup,
-      AppNavBar,
-      AppTitle,
       LocationTable
     },
   data() {

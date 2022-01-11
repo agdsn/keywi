@@ -1,7 +1,5 @@
 <template>
   <div class="home">
-    <app-title view-title="Tresore"></app-title>
-    <app-nav-bar></app-nav-bar>
     <safe-table ref="safeTable" @editItem="editSafe" class="mx-7 mt-7"/>
     <v-divider class="mx-8"></v-divider>
     <form-popup text="Tresor hinzufügen"
@@ -15,8 +13,6 @@
 
 <script>
 import Vue from 'vue'
-import AppTitle from "@/components/AppTitle.vue";
-import AppNavBar from "@/components/AppNavBar.vue";
 import SafeTable from "@/components/SafeTable.vue";
 import FormPopup from "@/components/FormPopup.vue";
 
@@ -25,8 +21,6 @@ export default Vue.extend({
 
     components: {
       SafeTable,
-      AppNavBar,
-      AppTitle,
       FormPopup
     },
     data() {

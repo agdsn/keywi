@@ -18,53 +18,63 @@ const routes: Array<RouteConfig> = [
     path: '/key',
       alias: '/',
     name: 'keyAll',
-    component: AllKeysView
+    component: AllKeysView,
+    meta: { title: "Alle Schlüssel" }
   },
   {
     path: '/key/:id',
-      alias: '/',
+    alias: '/',
     name: 'key',
-    component: DetailKeyView
+    component: DetailKeyView,
+    meta: { title: "Schlüssel Details" },
   },
   {
     path: '/safe/',
     name: 'safeAll',
-    component: AllSafesView
+    component: AllSafesView,
+    meta: { title: "Alle Tresore" }
   },
   {
     path: '/safe/:id',
     name: 'safe',
-    component: DetailSafeView
+    component: DetailSafeView,
+    meta: { title: "Tresor Details" }
   },
   {
     path: '/lock',
     name: 'lockAll',
-    component: AllLocksView
+    component: AllLocksView,
+    meta: { title: "Alle Schlösser" }
   },
   {
     path: '/lock/:id',
     name: 'lock',
-    component: DetailLockView
+    component: DetailLockView,
+    meta: { title: "Schloss Details" }
   },
   {
     path: '/location',
     name: 'locationAll',
-    component: AllLocationsView
+    component: AllLocationsView,
+    meta: { title: "Alle Orte" }
   },
   {
     path: '/location/:id',
     name: 'location',
-    component: DetailLocationView
+    component: DetailLocationView,
+    meta: { title: "Ort Details" }
   },
   {
     path: '/user',
     name: 'users',
-    component: AllUsersView
+    component: AllUsersView,
+    meta: { title: "Alle Benutzer" }
   },
   {
     path: '/user/:id',
     name: 'user',
-    component: UserView
+    component: UserView,
+    meta: { title: "Benutzer Details" }
   },
 ]
 
