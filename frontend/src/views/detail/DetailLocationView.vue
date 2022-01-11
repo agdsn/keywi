@@ -1,15 +1,12 @@
 <template>
   <div class="home pb-5">
-    <app-title view-title="Ort"></app-title>
-    <app-nav-bar></app-nav-bar>
-
     <div class="mx-8">
       <h2 class="my-2">Daten</h2>
       <v-simple-table>
         <template v-slot:default>
           <tbody>
           <tr>
-            <td>Name</td>
+            <td style="width: 20%;">Name</td>
             <td><b>{{ location.name }}</b></td>
           </tr>
           <tr>
@@ -70,8 +67,6 @@
 </template>
 
 <script>
-import AppNavBar from "@/components/AppNavBar";
-import AppTitle from "@/components/AppTitle";
 import api from "@/api/api";
 import DetailTableLocks from "@/components/detail/DetailTableLocks";
 import DetailTableSafes from "@/components/detail/DetailTableSafes";
@@ -82,8 +77,6 @@ export default {
   components: {
     DetailTableLocks,
     DetailTableSafes,
-    AppNavBar,
-    AppTitle,
     FormPopup
   },
 

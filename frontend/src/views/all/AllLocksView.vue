@@ -1,7 +1,5 @@
 <template>
   <div class="home">
-    <app-title view-title="Schlösser"></app-title>
-    <app-nav-bar></app-nav-bar>
     <lock-table ref="lockTable" @editItem="editLock" class="mx-7 mt-7"/>
     <v-divider class="mx-8"></v-divider>
     <form-popup text="Schloss hinzufügen"
@@ -15,8 +13,6 @@
 
 <script>
 import Vue from 'vue'
-import AppTitle from "@/components/AppTitle.vue";
-import AppNavBar from "@/components/AppNavBar.vue";
 import LockTable from "@/components/LockTable.vue";
 import FormPopup from "@/components/FormPopup.vue";
 
@@ -24,8 +20,6 @@ export default Vue.extend({
     name: 'AllLocksView',
 
     components: {
-      AppNavBar,
-      AppTitle,
       LockTable,
       FormPopup
     },

@@ -1,15 +1,12 @@
 <template>
   <div class="home pb-5">
-    <app-title view-title="Schloss"></app-title>
-    <app-nav-bar></app-nav-bar>
-
     <div class="mx-8">
       <h2 class="my-2">Daten</h2>
       <v-simple-table>
         <template v-slot:default>
           <tbody>
           <tr>
-            <td>Name</td>
+            <td style="width: 20%;">Name</td>
             <td><b>{{ lock.name }}</b></td>
           </tr>
           <tr>
@@ -68,8 +65,6 @@
 </template>
 
 <script>
-import AppNavBar from "@/components/AppNavBar";
-import AppTitle from "@/components/AppTitle";
 import api from "@/api/api";
 import DetailTableKeys from "@/components/detail/DetailTableKeys";
 import FormPopup from "@/components/FormPopup";
@@ -78,8 +73,6 @@ export default {
   name: "DetailLockView",
   components: {
     DetailTableKeys,
-    AppNavBar,
-    AppTitle,
     FormPopup
   },
 

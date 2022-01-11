@@ -1,15 +1,12 @@
 <template>
   <div class="home pb-5">
-    <app-title view-title="Schlüssel"></app-title>
-    <app-nav-bar></app-nav-bar>
-
     <div class="mx-8">
       <h2 class="my-2">Daten</h2>
       <v-simple-table>
         <template v-slot:default>
           <tbody>
           <tr>
-            <td>Schlüsselnummer</td>
+            <td style="width: 20%;">Schlüsselnummer</td>
             <td><b>{{ key.number }}</b></td>
           </tr>
           <tr>
@@ -87,8 +84,6 @@
 </template>
 
 <script>
-import AppNavBar from "@/components/AppNavBar";
-import AppTitle from "@/components/AppTitle";
 import api from "@/api/api";
 import DetailTableRentals from "@/components/detail/DetailTableRentals";
 import FormPopup from "@/components/FormPopup";
@@ -98,8 +93,6 @@ export default {
   name: "DetailKeyView",
   components: {
     DetailTableRentals,
-    AppNavBar,
-    AppTitle,
     FormPopup
   },
 

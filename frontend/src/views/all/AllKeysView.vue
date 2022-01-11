@@ -1,7 +1,5 @@
 <template>
   <div class="home">
-    <app-title view-title="Schlüssel"></app-title>
-    <app-nav-bar></app-nav-bar>
     <key-table ref="keyTable" @editItem="editKey" class="mx-7 mt-7"/>
     <v-divider class="mx-8"></v-divider>
     <form-popup text="Schlüssel hinzufügen"
@@ -15,8 +13,6 @@
 
 <script>
 import Vue from 'vue'
-import AppTitle from "@/components/AppTitle.vue";
-import AppNavBar from "@/components/AppNavBar.vue";
 import KeyTable from "@/components/KeyTable.vue";
 import FormPopup from "@/components/FormPopup.vue";
 
@@ -25,8 +21,6 @@ export default Vue.extend({
 
     components: {
       KeyTable,
-      AppNavBar,
-      AppTitle,
       FormPopup
     },
   data() {

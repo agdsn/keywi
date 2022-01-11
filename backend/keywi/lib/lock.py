@@ -4,7 +4,7 @@ from model.session import with_transaction
 
 
 @with_transaction
-def create_lock(name: str, owner: str, location: Location, processor: User):
+def create_lock(name: str, owner: str, location: Location, processor: User, note: str = None):
     return create_object(Lock,
                          log_keys=['name', 'owner', 'location_id'],
                          log_params={'lock': REFERENCED_OBJ, 'location': location},

@@ -14,6 +14,7 @@ class User(UUIDModel):
     name = Column(String, nullable=False)
     email = Column(EmailType, nullable=False)
     password = Column(PasswordType(schemes=['pbkdf2_sha512']))
+    note = Column(String, nullable=True)
 
     active_rentals = relationship("Rental", primaryjoin="and_(Rental.user_id == User.id,"
                                                         "     Rental.active)",)
@@ -26,6 +27,7 @@ class Location(UUIDModel):
     address = Column(String)
     latitude = Column(Float)
     longitude = Column(Float)
+    note = Column(String, nullable=True)
 
     @property
     def amount_locks(self):
@@ -42,6 +44,7 @@ class Lock(UUIDModel):
     name = Column(String, nullable=False)
     owner = Column(String, nullable=True, comment="The organization/person who owns the lock.")
     location_id = Column(ForeignKey("location.id", ondelete="CASCADE"), nullable=False)
+    note = Column(String, nullable=True)
 
     location = relationship("Location", backref=backref("locks"))
 
@@ -62,6 +65,7 @@ class Safe(UUIDModel):
 
     name = Column(String, nullable=False)
     location_id = Column(ForeignKey("location.id", ondelete="CASCADE"), nullable=False)
+    note = Column(String, nullable=True)
 
     location = relationship("Location", backref=backref("safes"))
 
@@ -79,6 +83,7 @@ class Key(UUIDModel):
     safe_id = Column(ForeignKey("safe.id", ondelete="SET NULL"))
     checked = Column(Boolean, nullable=False, server_default="False",
                      comment="Has been checked to be in the correct location. Reset all to false for a new inventory.")
+    note = Column(String, nullable=True)
 
     lock = relationship("Lock", backref=backref("keys"), overlaps="free_keys")
     safe = relationship("Safe", backref=backref("keys"))
@@ -111,6 +116,7 @@ class Rental(UUIDModel):
     key_id = Column(ForeignKey("key.id", ondelete="CASCADE"), nullable=False)
     user_id = Column(ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     issuing_user_id = Column(ForeignKey("user.id", ondelete="SET NULL"), nullable=True)
+    note = Column(String, nullable=True)
 
     key = relationship("Key", backref=backref("rentals", overlaps="active_rental"), overlaps="active_rental")
     user = relationship("User", backref=backref("rentals", overlaps="active_rentals"), primaryjoin="Rental.user_id == User.id",

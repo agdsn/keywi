@@ -4,7 +4,8 @@ from model.session import with_transaction
 
 
 @with_transaction
-def create_key(number: str, lock: Lock, safe: Safe, processor: User, rentable: bool = False, checked: bool = False):
+def create_key(number: str, lock: Lock, safe: Safe, processor: User, rentable: bool = False, checked: bool = False,
+               note: str = None):
     return create_object(Key,
                          log_keys=['number', 'lock_id', 'safe_id'],
                          log_params={'key': REFERENCED_OBJ, 'safe': safe},
