@@ -1,5 +1,5 @@
 <template>
-  <div class="home pb-5">
+  <v-card class="home pb-5 pt-1">
     <div class="mx-8">
       <h2 class="my-2">Daten</h2>
       <v-simple-table>
@@ -35,20 +35,12 @@
       <v-divider></v-divider>
 
       <div class="buttons">
-        <v-dialog v-model="rentDialog" width="500px">
-          <template v-slot:activator="{ on: clickEvent }">
-              <v-btn class="primary-color mx-8 my-4" text v-on="clickEvent">
-                Ausleihen
-              </v-btn>
-          </template>
-          <v-card class="pb-1">
-            <v-card-title>Schlüssel {{ key.name }} wirklich ausleihen?</v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn class="primary-color" @click="rentItem">Bestätigen</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        <form-popup form="rent-key-form"
+                    text="Ausleihen"
+                    @save-form="loadKey()"
+                    @mounted="rentalFormMountedEvent"
+                    ref="rentalPopup"
+        />
 
         <form-popup ref="popup"
                     form="edit-key-form"
@@ -80,7 +72,7 @@
       <detail-table-rentals ref="rentalTable"></detail-table-rentals>
 
     </div>
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -121,6 +113,10 @@ export default {
 
     async loadRentals() {
       this.$refs.rentalTable.loadData(this.keyId);
+    },
+
+    rentalFormMountedEvent() {
+      if (this.$refs.rentalPopup.$refs.form) this.$refs.rentalPopup.$refs.form.setKeyId(this.key.id);
     },
 
     mountedEvent() {
