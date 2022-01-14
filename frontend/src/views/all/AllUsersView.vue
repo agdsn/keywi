@@ -1,22 +1,24 @@
 <template>
-  <div>
-
+  <div class="home">
+    <user-table class="mx-7 mt-7"/>
   </div>
 </template>
 
 <script>
-export default {
-  name: "AllUsersView"
-}
+import Vue from 'vue'
+import UserTable from "@/components/UserTable";
+
+export default Vue.extend({
+    name: 'AllUsersView',
+
+    components: {
+      UserTable
+    }
+  })
+
+
 </script>
 
 <style scoped>
-  .home {
-    position: relative;
-  }
 
-  .home >>> .v-btn.primary-color {
-    position: absolute;
-    right: 0;
-  }
 </style>

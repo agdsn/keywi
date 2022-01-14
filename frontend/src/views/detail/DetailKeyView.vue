@@ -120,7 +120,7 @@ export default {
     },
 
     async loadRentals() {
-      this.$refs.rentalTable.loadData(this.keyId);
+      this.$refs.rentalTable.loadDataByKeyId(this.keyId);
     },
 
     rentalFormMountedEvent() {
