@@ -1,7 +1,8 @@
 <template>
   <v-dialog max-width="600px" v-model="dialog">
     <template v-slot:activator="{ on: activationEvent }">
-      <v-btn text class="primary-color mx-8 my-4" v-on="activationEvent" @click="$emit('button-add-clicked')" v-if="renderBtn">
+      <v-btn :title="tooltip" :disabled="disabled" text class="primary-color mx-8 my-4" v-on="activationEvent" @click="$emit('button-add-clicked')" v-if="renderBtn">
+        <v-icon v-if="icon">{{ icon}}</v-icon>
         {{ text }}
       </v-btn>
     </template>
@@ -31,7 +32,14 @@ export default {
       type: Boolean,
       default: true,
     },
-    form: String
+    form: String,
+    disabled: {
+      default: false
+    },
+    tooltip: {
+      default: ''
+    },
+    icon: String
   },
   data() {
     return {
@@ -73,4 +81,8 @@ export default {
   /*  position: absolute;*/
   /*  right: 0;*/
   /*}*/
+  .v-icon {
+    margin-left: -4px;
+    margin-right: 4px;
+  }
 </style>

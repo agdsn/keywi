@@ -1,17 +1,20 @@
 <template>
     <v-form ref="form">
-      <v-select :items="locks" label="Schloss" item-text="displayName" item-value="id" :rules="lockRule" v-model="selectedLockId"></v-select>
-      <v-text-field label="Schlüsselnummer" v-model="number" :rules="numberRules" required/>
-      <v-select :items="safes" label="Tresor" item-text="displayName" item-value="id" :rules="safeRule" v-model="selectedSafeId"></v-select>
+      <v-autocomplete prepend-icon="mdi-lock" :items="locks" label="Schloss" :item-text="item => getDisplayName(item)" :item-value="item => item.id" :rules="lockRule" v-model="selectedLock" return-object></v-autocomplete>
+      <v-text-field prepend-icon="mdi-key" label="Schlüsselnummer" v-model="number" :rules="numberRules" required/>
+      <v-autocomplete prepend-icon="mdi-safe-square-outline" :items="safes" label="Tresor" :item-text="item => getDisplayName(item)" :item-value="item => item.id" :rules="safeRule" v-model="selectedSafe" return-object></v-autocomplete>
       <v-checkbox v-model="rentable" label="Ausleihbar"></v-checkbox>
+      <v-textarea prepend-icon="mdi-note-text-outline" rows="1" label="Notiz" v-model="note"></v-textarea>
+
       <v-btn color="validate" @click="save">
+        <v-icon>mdi-content-save-outline</v-icon>
         Speichern
       </v-btn>
    </v-form>
 </template>
 
 <script>
-import api from "@/api/api";
+import api from "@/api/api"
 
 export default {
   name: "EditKeyForm",
@@ -20,9 +23,10 @@ export default {
       number: '',
       locks: [],
       safes: [],
-      selectedLockId: undefined,
-      selectedSafeId: undefined,
+      selectedLock: undefined,
+      selectedSafe: undefined,
       rentable: true,
+      note: '',
       keyId: undefined,
 
       numberRules: [
@@ -47,29 +51,36 @@ export default {
         this.keyId = keyTemplate.id;
         this.number = keyTemplate.number;
         this.rentable = keyTemplate.rentable;
-        this.selectedSafeId = keyTemplate.safe.id;
-        this.selectedLockId = keyTemplate.lock.id;
+        this.selectedSafe = keyTemplate.safe;
+        this.selectedLock = keyTemplate.lock;
+        this.note = keyTemplate.note;
       } else {
         this.keyId = undefined;
         this.number = '';
         this.rentable = true;
-        this.selectedSafeId = undefined;
-        this.selectedLockId = undefined;
+        this.selectedSafe = undefined;
+        this.selectedLock = undefined;
+        this.note = '';
       }
 
       this.$refs.form.resetValidation();
     },
 
+    getDisplayName(item) {
+      if(!item.location) return item.name;
+      return item.name + " (" + item.location.name + ")";
+    },
     
     async save() {
-      if (this.$refs.form.validate() && this.selectedLockId && this.selectedSafeId) {
+      if (this.$refs.form.validate() && this.selectedLock && this.selectedSafe) {
         const apiStub = await api;
 
         let keyModel = {
           number: this.number,
-          lock_id: this.selectedLockId,
-          safe_id: this.selectedSafeId,
-          rentable: this.rentable
+          lock_id: this.selectedLock.id,
+          safe_id: this.selectedSafe.id,
+          rentable: this.rentable,
+          note: this.note
         }
         
         if(this.keyId) {
@@ -91,15 +102,9 @@ export default {
       const apiStub = await api;
       apiStub.lock_getLocks().then(response => {
         this.locks = response.data;
-        this.locks.forEach(lock => {
-          lock.displayName = lock.name + " (" + lock.location.name + ")";
-        })
       }).then(apiStub.safe_getSafes
       ).then(response => {
         this.safes = response.data;
-        this.safes.forEach(safe => {
-          safe.displayName = safe.name + " (" + safe.location.name + ")";
-        })
       })
     }
   }

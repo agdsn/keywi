@@ -5,6 +5,7 @@
                     prepend-icon="mdi-account" :rules="userRules"></v-autocomplete>
 
     <v-btn class="primary-color" color="validate" @click="save">
+      <v-icon>mdi-content-save-outline</v-icon>
       Speichern
     </v-btn>
   </v-form>

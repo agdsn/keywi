@@ -37,9 +37,11 @@
       <div class="buttons">
         <form-popup form="rent-key-form"
                     text="Ausleihen"
-                    @save-form="loadKey()"
+                    @save-form="loadKey(); loadRentals()"
                     @mounted="rentalFormMountedEvent"
                     ref="rentalPopup"
+                    v-if="rentalEnabled"
+                    icon="mdi-key"
         />
 
         <form-popup ref="popup"
@@ -47,13 +49,16 @@
                     text="Bearbeiten"
                     @mounted="mountedEvent"
                     @save-form="loadKey()"
-                    @button-add-clicked="mountedEvent"/>
+                    @button-add-clicked="mountedEvent"
+                    icon="mdi-pencil"
+        />
 
         <!--      DELETE BUTTON-->
         <v-dialog v-model="deleteDialog" width="500px">
           <template v-slot:activator="{ on: clickEvent }">
             <div :title="tooltip" class="tooltip">
               <v-btn :disabled="deleteDisabled" class="primary-color mx-8 my-4" text v-on="clickEvent">
+                <v-icon>mdi-delete</v-icon>
                 Löschen
               </v-btn>
             </div>
@@ -62,7 +67,10 @@
             <v-card-title>Schlüssel {{ key.name }} wirklich löschen?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
+              <v-btn class="primary-color" @click="deleteItem">
+                <v-icon>mdi-delete</v-icon>
+                Bestätigen
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -129,27 +137,6 @@ export default {
       apiStub.key_deleteKey(param).then(() => {
         this.$router.push('/key');
       });
-    },
-
-    async rentItem() {
-      const user = AuthService.getUser();
-
-      if (user == null) {
-        return;
-      }
-
-      const apiStub = await api;
-      const rentalModel = {
-        key_id: this.key.id,
-        begin: new Date().toISOString(),
-        // TODO: change
-        user_id: user.id
-      }
-
-      apiStub.rental_createRental(null, rentalModel).then(() => {
-        this.rentDialog = false;
-        this.$emit('rented');
-      })
     }
   },
   computed: {
@@ -173,13 +160,17 @@ export default {
     },
 
     deleteDisabled() {
-      return this.key.active_rental;
+      return this.key.active_rental != undefined;
+    },
+
+    rentalEnabled() {
+      return this.rentalStatus == "Ausleihbar"
     },
 
     tooltip() {
       if (this.deleteDisabled) return "Schlüssel kann nur gelöscht werden, wenn er momentan nicht verliehen ist";
       return "";
-    }
+    },
   }
 }
 </script>

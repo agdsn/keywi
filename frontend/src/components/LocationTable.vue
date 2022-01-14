@@ -34,7 +34,10 @@
         <v-card-title>Ort {{locationToDeleteName}} wirklich löschen?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
+          <v-btn class="primary-color" @click="deleteItem">
+            <v-icon>mdi-delete</v-icon>
+            Bestätigen
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

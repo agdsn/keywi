@@ -36,13 +36,15 @@
               @save-form="loadLock()"
               ref="popup"
               @mounted="mountedEvent"
-              @button-add-clicked="mountedEvent"/>
+              @button-add-clicked="mountedEvent"
+              icon="mdi-pencil"/>
 
   <!--      DELETE BUTTON-->
         <v-dialog width="500px" v-model="deleteDialog">
           <template v-slot:activator="{ on: clickEvent }">
             <div class="tooltip" :title="tooltip">
               <v-btn text class="primary-color mx-8 my-4" v-on="clickEvent" :disabled="deleteDisabled">
+                <v-icon>mdi-delete</v-icon>
                 Löschen
               </v-btn>
             </div>
@@ -51,7 +53,10 @@
             <v-card-title>Schloss {{lock.name}} wirklich löschen?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
+              <v-btn class="primary-color" @click="deleteItem">
+                <v-icon>mdi-delete</v-icon>
+                Bestätigen
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>

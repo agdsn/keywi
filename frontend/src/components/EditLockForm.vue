@@ -1,9 +1,11 @@
 <template>
     <v-form ref="form">
-      <v-text-field label="Name" v-model="name" :rules="nameRules" required/>
-      <v-text-field label="Besitzer" v-model="owner"/>
-      <v-select :items="locations" label="Ort" item-text="name" item-value="id" :rules="selectRule" v-model="selectedLocationId"></v-select>
+      <v-text-field prepend-icon="mdi-lock" label="Name" v-model="name" :rules="nameRules" required/>
+      <v-text-field prepend-icon="mdi-account" label="Besitzer" v-model="owner"/>
+      <v-autocomplete prepend-icon="mdi-map-marker" :items="locations" label="Ort" item-text="name" item-value="id" :rules="selectRule" v-model="selectedLocation" return-object></v-autocomplete>
+      <v-textarea prepend-icon="mdi-note-text-outline" rows="1" label="Notiz" v-model="note"></v-textarea>
       <v-btn color="validate" @click="save">
+        <v-icon>mdi-content-save-outline</v-icon>
         Speichern
       </v-btn>
    </v-form>
@@ -19,7 +21,8 @@ export default {
       name: '',
       owner: undefined,
       locations: [],
-      selectedLocationId: undefined,
+      selectedLocation: undefined,
+      note: '',
 
       nameRules: [
           v => !!v || 'Name erforderlich'
@@ -40,25 +43,28 @@ export default {
         this.lockId = lockTemplate.id;
         this.name = lockTemplate.name;
         this.owner = lockTemplate.owner;
-        this.selectedLocationId = lockTemplate.location.id;
+        this.selectedLocation = lockTemplate.location;
+        this.note = lockTemplate.note;
       } else {
         this.lockId = undefined;
         this.name = '';
         this.owner = '';
-        this.selectedLocationId = undefined;
+        this.selectedLocation = undefined;
+        this.note = '';
       }
 
       this.$refs.form.resetValidation();
     },
 
     async save() {
-      if (this.$refs.form.validate() && this.selectedLocationId) {
+      if (this.$refs.form.validate() && this.selectedLocation) {
         const apiStub = await api;
 
         const lockModel = {
             name: this.name,
             owner: this.owner,
-            location_id: this.selectedLocationId
+            location_id: this.selectedLocation.id,
+            note: this.note
           }
 
         if(this.lockId) {

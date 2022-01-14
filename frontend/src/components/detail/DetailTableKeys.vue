@@ -1,40 +1,40 @@
 <template>
   <div>
-  <v-data-table
-      :headers="headers"
-      :items="tableData"
-      :items-per-page="25"
-      class="elevation-1"
-      :loading="loading"
-      loading-text="Lade Daten..."
-      ref="table"
-      :item-class="row_classes"
-  >
-    <template v-slot:[`item.number`] = "{ item }">
+    <v-data-table
+        ref="table"
+        :headers="headers"
+        :item-class="row_classes"
+        :items="tableData"
+        :items-per-page="25"
+        :loading="loading"
+        class="elevation-1"
+        loading-text="Lade Daten..."
+    >
+      <template v-slot:[`item.number`]="{ item }">
         <router-link :to="`/key/${ item.id }`">{{ item.number }}</router-link>
-    </template>
+      </template>
 
-    <template v-slot:[`item.safe.name`] = "{ item }">
+      <template v-slot:[`item.safe.name`]="{ item }">
         <router-link :to="`/safe/${ item.safe.id }`">{{ item.safe.name }}</router-link>
-    </template>
+      </template>
 
-    <template v-slot:[`item.lock.name`] = "{ item }">
+      <template v-slot:[`item.lock.name`]="{ item }">
         <router-link :to="`/lock/${ item.lock.id }`">{{ item.lock.name }}</router-link>
-    </template>
+      </template>
 
-    <template v-slot:[`item.rental`] = "{ item }">
+      <template v-slot:[`item.rental`]="{ item }">
         {{ getRentalStatus(item) }}
-    </template>
+      </template>
 
-    <template v-slot:[`item.actions`]="{ item }">
-        <v-tooltip top>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-tooltip v-if="rentable(item)" top>
           <template v-slot:activator="{on}">
             <v-icon
-              class="ml-2"
-              :color="getKeyColor(item)"
-              small
-              @click="openRentPrompt(item)"
-              v-on="on"
+                :color="getKeyColor(item)"
+                class="ml-2"
+                small
+                @click="openRentPrompt(item)"
+                v-on="on"
             >
               mdi-key
             </v-icon>
@@ -43,14 +43,24 @@
           <span>Schlüssel ausleihen</span>
         </v-tooltip>
       </template>
-  </v-data-table>
+    </v-data-table>
 
-  <v-dialog v-model="rentDialog" width="500px">
+    <v-dialog v-model="rentDialog" width="500px">
       <v-card class="pb-1">
-        <v-card-title>Schlüssel {{keyInDialogNumber}} wirklich ausleihen?</v-card-title>
+        <v-card-title>Schlüssel {{ keyInDialogNumber }} wirklich ausleihen?</v-card-title>
+        <v-card-text>
+          <v-form ref="form">
+            <v-autocomplete v-model="pickedUser" :item-text="item => item.name" :items="users"
+                            :rules="userRules" label="Ausleihender Nutzer"
+                            prepend-icon="mdi-account" return-object></v-autocomplete>
+            </v-form>
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="primary-color" @click="rentItem">Bestätigen</v-btn>
+          <v-btn class="primary-color" color="validate" @click="rentKey">
+            <v-icon>mdi-content-save-outline</v-icon>
+            Speichern
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -90,14 +100,21 @@ export default {
         sortable: false
       }
     ],
-    tableData: []
+    tableData: [],
+    usersLoaded: false,
+    users: [],
+    pickedUser: undefined,
+
+    userRules: [
+      v => !!v || 'Bitte Nutzer auswählen'
+    ]
   }),
   methods: {
     async loadDataBySafeId(safeId) {
       // remove safe column
       let safeColumn = this.headers.find(column => column.value == 'safe.name');
       let index = this.headers.indexOf(safeColumn);
-      if(index > -1) this.headers.splice(index, 1);
+      if (index > -1) this.headers.splice(index, 1);
 
       const apiStub = await api;
       // load safes attached to location id
@@ -110,7 +127,7 @@ export default {
       }).finally(() => {
         this.loading = false;
 
-        if(this.tableData.length == 0) this.$emit('empty');
+        if (this.tableData.length == 0) this.$emit('empty');
       });
     },
 
@@ -118,7 +135,7 @@ export default {
       // remove lock column
       let lockColumn = this.headers.find(column => column.value == 'lock.name');
       let index = this.headers.indexOf(lockColumn);
-      if(index > -1) this.headers.splice(index, 1);
+      if (index > -1) this.headers.splice(index, 1);
 
       const apiStub = await api;
       // load locks attached to location id
@@ -131,13 +148,13 @@ export default {
       }).finally(() => {
         this.loading = false;
 
-        if(this.tableData.length == 0) this.$emit('empty');
+        if (this.tableData.length == 0) this.$emit('empty');
       });
     },
     getRentalStatus(key) {
-      if(key.active_rental) {
+      if (key.active_rental) {
         return "Ausgeliehen";
-      } else if(!key.rentable) {
+      } else if (!key.rentable) {
         return "Nicht ausleihbar";
       } else {
         return "Ausleihbar";
@@ -145,7 +162,7 @@ export default {
     },
 
     row_classes(item) {
-      if(item.active_rental == null && item.rentable) {
+      if (item.active_rental == null && item.rentable) {
         return "green-cell"
       } else {
         return "red-cell";
@@ -157,34 +174,45 @@ export default {
     },
 
     openRentPrompt(keyInDialog) {
+      this.loadUsers();
       this.keyInDialog = keyInDialog;
       this.rentDialog = true;
     },
 
-    async rentItem() {
-      const user = AuthService.getUser();
+    async loadUsers() {
+      if (this.usersLoaded) return;
 
-      if (user == null) {
-        return;
-      }
-
+      this.usersLoaded = true;
       const apiStub = await api;
-      const rentalModel = {
-        key_id: this.keyInDialog.id,
-        begin: new Date().toISOString(),
-        // TODO: change
-        user_id: user.id
-      }
 
-      apiStub.rental_createRental(null, rentalModel).then(() => {
-        this.rentDialog = false;
-        this.$emit('rented');
+      apiStub.user_getUsers().then(response => {
+        this.users = response.data;
       })
+    },
+
+    async rentKey() {
+      if (this.$refs.form.validate()) {
+        const apiStub = await api;
+
+        const rental = {
+          key_id: this.keyInDialog.id,
+          user_id: this.pickedUser.id
+        };
+
+        apiStub.rental_createRental(null, rental).then(() => {
+          this.rentDialog = false;
+          this.$emit('rented');
+        })
+      }
+      },
+
+    rentable(key) {
+      return this.getRentalStatus(key) == "Ausleihbar";
     }
   },
   computed: {
     keyInDialogNumber() {
-      if(!this.keyInDialog) return '';
+      if (!this.keyInDialog) return '';
       return this.keyInDialog.number;
     }
   }
@@ -192,13 +220,13 @@ export default {
 </script>
 
 <style scoped>
-  .v-data-table >>> .red-cell td:nth-last-child(2) {
-    background-color: #DDC1BB;
-    border-radius: 5px;
-  }
+.v-data-table >>> .red-cell td:nth-last-child(2) {
+  background-color: #DDC1BB;
+  border-radius: 5px;
+}
 
-  .v-data-table >>> .green-cell td:nth-last-child(2) {
-    background-color: #ABCC9F;
-    border-radius: 5px;
-  }
+.v-data-table >>> .green-cell td:nth-last-child(2) {
+  background-color: #ABCC9F;
+  border-radius: 5px;
+}
 </style>

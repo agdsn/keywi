@@ -16,7 +16,7 @@ export default {
             data: payload
         };
 
-        apiClient.auth_login(null, undefined, options).then((rsp) => {
+        apiClient.auth_getToken(null, credentials, options).then((rsp) => {
             const access_token = rsp.data.access_token;
 
             const header = `Bearer ${access_token}`;

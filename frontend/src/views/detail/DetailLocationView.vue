@@ -6,23 +6,32 @@
         <template v-slot:default>
           <tbody>
           <tr>
-            <td style="width: 20%;">Name</td>
+            <td style="width: 20%;">
+              <span>Name</span>
+            </td>
             <td><b>{{ location.name }}</b></td>
           </tr>
           <tr>
-            <td>Adresse</td>
+            <td>
+              Adresse</td>
             <td>{{ location.address }}</td>
           </tr>
           <tr>
-            <td>Anzahl Schlösser</td>
+            <td>
+              Anzahl Schlösser
+            </td>
             <td>{{ location.amount_locks }}</td>
           </tr>
           <tr>
-            <td>Anzahl Tresore</td>
+            <td>
+              Anzahl Tresore
+            </td>
             <td>{{ location.amount_safes }}</td>
           </tr>
           <tr>
-            <td>Notiz</td>
+            <td>
+              Notiz
+            </td>
             <td>{{ location.note }}</td>
           </tr>
           </tbody>
@@ -36,13 +45,15 @@
               @save-form="loadLocation()"
               ref="popup"
               @mounted="mountedEvent"
-              @button-add-clicked="mountedEvent"/>
+              @button-add-clicked="mountedEvent"
+              icon="mdi-pencil"/>
 
   <!--      DELETE BUTTON-->
         <v-dialog width="500px" v-model="deleteDialog">
           <template v-slot:activator="{ on: clickEvent }">
             <div class="tooltip" :title="tooltip">
               <v-btn text class="primary-color mx-8 my-4" v-on="clickEvent" :disabled="deleteDisabled">
+                <v-icon>mdi-delete</v-icon>
                 Löschen
               </v-btn>
             </div>
@@ -51,7 +62,10 @@
             <v-card-title>Ort {{location.name}} wirklich löschen?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
+              <v-btn class="primary-color" @click="deleteItem">
+                <v-icon>mdi-delete</v-icon>
+                Bestätigen
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -153,4 +167,5 @@ export default {
    margin-left: 16px!important;
    margin-bottom: 0 !important;
  }
+
 </style>

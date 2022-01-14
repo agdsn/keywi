@@ -1,8 +1,10 @@
 <template>
     <v-form ref="form">
-      <v-text-field label="Name" v-model="name" :rules="nameRules" required/>
-      <v-select :items="locations" label="Ort" item-text="name" item-value="id" :rules="selectRule" v-model="selectedLocationId"></v-select>
+      <v-text-field prepend-icon="mdi-safe-square-outline" label="Name" v-model="name" :rules="nameRules" required/>
+      <v-autocomplete prepend-icon="mdi-map-marker" :items="locations" label="Ort" item-text="name" item-value="id" :rules="selectRule" v-model="selectedLocation" return-object></v-autocomplete>
+      <v-textarea prepend-icon="mdi-note-text-outline" rows="1" label="Notiz" v-model="note"></v-textarea>
       <v-btn color="validate" @click="save">
+        <v-icon>mdi-content-save-outline</v-icon>
         Speichern
       </v-btn>
    </v-form>
@@ -18,7 +20,8 @@ export default {
       safeId : null,
       name: '',
       locations: [],
-      selectedLocationId: undefined,
+      selectedLocation: undefined,
+      note: '',
 
       nameRules: [
           v => !!v || 'Name erforderlich'
@@ -38,23 +41,26 @@ export default {
       if(safeTemplate){
         this.safeId = safeTemplate.id;
         this.name = safeTemplate.name;
-        this.selectedLocationId = safeTemplate.location.id;
+        this.selectedLocation = safeTemplate.location;
+        this.note = safeTemplate.note;
       } else {
         this.safeId = undefined;
         this.name = '';
-        this.selectedLocationId = undefined;
+        this.selectedLocation = undefined;
+        this.note = '';
       }
 
       this.$refs.form.resetValidation();
     },
 
     async save() {
-      if (this.$refs.form.validate() && this.selectedLocationId) {
+      if (this.$refs.form.validate() && this.selectedLocation) {
         const apiStub = await api;
 
         const safeModel = {
             name: this.name,
-            location_id: this.selectedLocationId
+            location_id: this.selectedLocation.id,
+            note: this.note
           }
 
         if(this.safeId) {

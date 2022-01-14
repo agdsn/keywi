@@ -1,57 +1,57 @@
 <template>
   <div>
     <v-data-table
-      :headers="headers"
-      :items="tableData"
-      :items-per-page="25"
-      class="elevation-1"
-      :loading="loading"
-      loading-text="Lade Daten..."
-      ref="table"
-      :item-class="row_classes"
+        ref="table"
+        :headers="headers"
+        :item-class="row_classes"
+        :items="tableData"
+        :items-per-page="25"
+        :loading="loading"
+        class="elevation-1"
+        loading-text="Lade Daten..."
     >
-      <template v-slot:[`item.number`] = "{ item }">
+      <template v-slot:[`item.number`]="{ item }">
         <router-link :to="`/key/${ item.id }`">{{ item.number }}</router-link>
       </template>
 
-      <template v-slot:[`item.lock.name`] = "{ item }">
+      <template v-slot:[`item.lock.name`]="{ item }">
         <router-link :to="`/lock/${ item.lock.id }`">{{ item.lock.name }}</router-link>
       </template>
 
-      <template v-slot:[`item.safe.name`] = "{ item }">
+      <template v-slot:[`item.safe.name`]="{ item }">
         <router-link :to="`/safe/${ item.safe.id }`">{{ item.safe.name }}</router-link>
       </template>
 
-      <template v-slot:[`item.location.name`] = "{ item }">
+      <template v-slot:[`item.location.name`]="{ item }">
         <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
       </template>
 
-      <template v-slot:[`item.rental`] = "{ item }">
+      <template v-slot:[`item.rental`]="{ item }">
         {{ getRentalStatus(item) }}
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
+            class="mr-2"
+            small
+            @click="editItem(item)"
         >
           mdi-pencil
         </v-icon>
         <v-icon
-          small
-          @click="openDeletePrompt(item)"
+            small
+            @click="openDeletePrompt(item)"
         >
           mdi-delete
         </v-icon>
-        <v-tooltip top>
+        <v-tooltip v-if="rentable(item)" top>
           <template v-slot:activator="{on}">
             <v-icon
-              class="ml-2"
-              :color="getKeyColor(item)"
-              small
-              @click="openRentPrompt(item)"
-              v-on="on"
+                :color="getKeyColor(item)"
+                class="ml-2"
+                small
+                @click="openRentPrompt(item)"
+                v-on="on"
             >
               mdi-key
             </v-icon>
@@ -64,20 +64,33 @@
 
     <v-dialog v-model="deleteDialog" width="500px">
       <v-card class="pb-1">
-        <v-card-title>Schlüssel {{keyInDialogNumber}} wirklich löschen?</v-card-title>
+        <v-card-title>Schlüssel {{ keyInDialogNumber }} wirklich löschen?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="primary-color" @click="deleteItem">Bestätigen</v-btn>
+          <v-btn class="primary-color" @click="deleteItem">
+            <v-icon>mdi-delete</v-icon>
+            Bestätigen
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    
+
     <v-dialog v-model="rentDialog" width="500px">
       <v-card class="pb-1">
-        <v-card-title>Schlüssel {{keyInDialogNumber}} wirklich ausleihen?</v-card-title>
+        <v-card-title>Schlüssel {{ keyInDialogNumber }} wirklich ausleihen?</v-card-title>
+        <v-card-text>
+          <v-form ref="form">
+            <v-autocomplete v-model="pickedUser" :item-text="item => item.name" :items="users"
+                            :rules="userRules" label="Ausleihender Nutzer"
+                            prepend-icon="mdi-account" return-object></v-autocomplete>
+          </v-form>
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="primary-color" @click="rentItem">Bestätigen</v-btn>
+          <v-btn class="primary-color" color="validate" @click="rentKey">
+            <v-icon>mdi-content-save-outline</v-icon>
+            Speichern
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -122,16 +135,26 @@ export default {
         sortable: false
       }
     ],
-    tableData: []
+    tableData: [],
+    usersLoaded: false,
+    users: [],
+    pickedUser: undefined,
+
+    userRules: [
+      v => !!v || 'Bitte Nutzer auswählen'
+    ],
+    keyId: undefined
   }),
-  mounted() { this.loadData(); },
+  mounted() {
+    this.loadData();
+  },
   methods: {
     async loadData() {
       let paramId = this.$route.params.id;
 
       const apiStub = await api;
       // load specific key if uuid is given in path parameter. load all keys if not
-      if(paramId) {
+      if (paramId) {
         apiStub.key_getKey(paramId).then(response => {
           this.tableData = [response.data];
 
@@ -158,52 +181,63 @@ export default {
     },
 
     openRentPrompt(keyInDialog) {
+      this.loadUsers();
       this.keyInDialog = keyInDialog;
       this.rentDialog = true;
     },
 
+    async loadUsers() {
+      if (this.usersLoaded) return;
+
+      this.usersLoaded = true;
+      const apiStub = await api;
+
+      apiStub.user_getUsers().then(response => {
+        this.users = response.data;
+      })
+    },
+
     async deleteItem() {
       const apiStub = await api;
-      const param = { uuid: this.keyInDialog.id };
+      const param = {uuid: this.keyInDialog.id};
       apiStub.key_deleteKey(param).then(() => {
         this.deleteDialog = false;
         this.loadData();
       });
     },
 
-    async rentItem() {
-      const user = AuthService.getUser();
+    async rentKey() {
+      if (this.$refs.form.validate()) {
+        const apiStub = await api;
 
-      if (user == null) {
-        return;
+        const rental = {
+          key_id: this.keyInDialog.id,
+          user_id: this.pickedUser.id
+        };
+
+        apiStub.rental_createRental(null, rental).then(() => {
+          this.rentDialog = false;
+          this.loadData();
+        })
       }
-
-      const apiStub = await api;
-      const rentalModel = {
-        key_id: this.keyInDialog.id,
-        begin: new Date().toISOString(),
-        // TODO: change
-        user_id: user.id,
-      }
-
-      apiStub.rental_createRental(null, rentalModel).then(() => {
-        this.rentDialog = false;
-        this.loadData();
-      })
     },
 
     getRentalStatus(key) {
-      if(key.active_rental) {
+      if (key.active_rental) {
         return "Ausgeliehen";
-      } else if(!key.rentable) {
+      } else if (!key.rentable) {
         return "Nicht ausleihbar";
       } else {
         return "Ausleihbar";
       }
     },
 
+    rentable(key) {
+      return this.getRentalStatus(key) == "Ausleihbar";
+    },
+
     row_classes(item) {
-      if(item.active_rental == null && item.rentable) {
+      if (item.active_rental == null && item.rentable) {
         return "green-cell"
       } else {
         return "red-cell";
@@ -218,7 +252,7 @@ export default {
   },
   computed: {
     keyInDialogNumber() {
-      if(!this.keyInDialog) return '';
+      if (!this.keyInDialog) return '';
       return this.keyInDialog.number;
     }
   }
@@ -226,13 +260,13 @@ export default {
 </script>
 
 <style scoped>
-  div >>> .red-cell td:nth-last-child(2) {
-    background-color: #DDC1BB;
-    border-radius: 5px;
-  }
+div >>> .red-cell td:nth-last-child(2) {
+  background-color: #DDC1BB;
+  border-radius: 5px;
+}
 
-  div >>> .green-cell td:nth-last-child(2) {
-    background-color: #ABCC9F;
-    border-radius: 5px;
-  }
+div >>> .green-cell td:nth-last-child(2) {
+  background-color: #ABCC9F;
+  border-radius: 5px;
+}
 </style>

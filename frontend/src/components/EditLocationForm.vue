@@ -1,10 +1,12 @@
 <template>
     <v-form ref="form">
-      <v-text-field label="Name" v-model="name" :rules="nameRules" required/>
-      <v-text-field label="Adresse" v-model="address"/>
-      <v-text-field label="Breitengrad (latitude)" v-model="lat"/>
-      <v-text-field label="Längengrad (longitude)" v-model="lon"/>
+      <v-text-field prepend-icon="mdi-text" label="Name" v-model="name" :rules="nameRules" required/>
+      <v-text-field prepend-icon="mdi-map-marker" label="Adresse" v-model="address"/>
+      <v-text-field prepend-icon="mdi-latitude" label="Breitengrad (latitude)" v-model="lat"/>
+      <v-text-field prepend-icon="mdi-longitude" label="Längengrad (longitude)" v-model="lon"/>
+      <v-textarea prepend-icon="mdi-note-text-outline" rows="1" label="Notiz" v-model="note"></v-textarea>
       <v-btn color="validate" @click="save">
+        <v-icon>mdi-content-save-outline</v-icon>
         Speichern
       </v-btn>
    </v-form>
@@ -22,6 +24,7 @@ export default {
       lat: undefined,
       lon: undefined,
       locationId: undefined,
+      note: '',
 
       nameRules: [
           v => !!v || 'Name erforderlich'
@@ -39,12 +42,14 @@ export default {
         this.lat = locationTemplate.latitude;
         this.lon = locationTemplate.longitude;
         this.locationId = locationTemplate.id;
+        this.note = locationTemplate.note;
       } else {
         this.name = '';
         this.address = '';
         this.lat = undefined;
         this.lon = undefined;
         this.locationId = undefined;
+        this.note = '';
       }
 
       this.$refs.form.resetValidation();
@@ -58,7 +63,8 @@ export default {
           name: this.name,
           address: this.address,
           latitude: this.lat,
-          longitude: this.log
+          longitude: this.log,
+          note: this.note
         }
         
         if(this.locationId) {
