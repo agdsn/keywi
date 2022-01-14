@@ -30,7 +30,7 @@ export default {
         value: "name"
       },
       {
-        text: "Username",
+        text: "Nutzername",
         value: "login"
       },
       {

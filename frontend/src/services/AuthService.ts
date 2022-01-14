@@ -16,7 +16,7 @@ export default {
             data: payload
         };
 
-        apiClient.auth_getToken(null, credentials, options).then((rsp) => {
+        return apiClient.auth_getToken(null, credentials, options).then((rsp) => {
             const access_token = rsp.data.access_token;
 
             const header = `Bearer ${access_token}`;
@@ -27,11 +27,6 @@ export default {
                 localStorage.setItem('user', JSON.stringify(rsp.data));
                 localStorage.setItem('access_token', access_token);
             });
-
-            return true;
-        }).catch((err) => {
-            console.log(err);
-            throw err;
         });
     },
     async logout() {

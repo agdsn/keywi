@@ -10,7 +10,7 @@
             <td><b>{{ user.name }}</b></td>
           </tr>
           <tr>
-            <td>Username</td>
+            <td>Nutzername</td>
             <td>
               {{ user.login }}
             </td>

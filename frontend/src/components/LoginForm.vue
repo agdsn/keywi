@@ -1,15 +1,17 @@
 <template>
   <div>
     <v-alert
-        v-if="error != null"
+        v-if="error"
         color="red"
-        type="success"
-    ></v-alert>
+        type="error"
+    >
+      Nutzername oder Passwort falsch!
+    </v-alert>
 
     <v-form ref="form">
-      <v-text-field label="Nutzername" v-model="username" required/>
-      <v-text-field label="Passwort" v-model="password" required/>
-      <v-btn color="validate" @click="login">
+      <v-text-field v-model="username" :rules="nameRules" label="Nutzername" prepend-icon="mdi-account" required/>
+      <v-text-field v-model="password" :rules="passwordRules" label="Passwort" prepend-icon="mdi-key" required type="password"/>
+      <v-btn @click="login">
         Login
       </v-btn>
     </v-form>
@@ -25,20 +27,27 @@ export default {
     return {
       username: null,
       password: null,
-      error: null,
+      error: false,
+      nameRules: [
+        v => !!v || 'Bitte Nutzernamen eingeben'
+      ],
+      passwordRules: [
+       v => !!v || 'Bitte Password eingeben'
+      ],
     }
   },
   methods: {
     async login() {
-      AuthService.login(this.username, this.password).then(() => {
-        this.error = null;
+      if(!this.$refs.form.validate()) return;
+
+      try {
+        await AuthService.login(this.username, this.password);
         this.$refs.form.reset();
         this.$emit('save-form');
         this.$emit('submit');
-      }).catch((err) => {
-        this.error = "Wrong username or password.";
-        this.$emit('submit');
-      });
+      } catch(err) {
+        this.error = true;
+      }
     },
   }
 }
