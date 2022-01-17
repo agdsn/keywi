@@ -6,7 +6,7 @@ from fastapi_sqlalchemy import db
 
 from api.auth import get_current_user
 from api.helpers import PathModelGetter, get_or_404, SuccessModel
-from model import Rental, User, Key
+from model import Rental, User, Key, utcnow
 from model.pydantic import RentalModel, RentalModelCreate, RentalModelPatch
 
 import lib.rental
@@ -74,3 +74,11 @@ def delete_rental(rental: Rental = Depends(PathModelGetter(Rental)),
     lib.rental.delete_rental(rental, processor=c_user, _commit=True)
 
     return SuccessModel()
+
+
+@router.post("/{uuid}/end", response_model=RentalModel)
+def delete_rental(rental: Rental = Depends(PathModelGetter(Rental)),
+                  c_user: User = Depends(get_current_user)):
+    rental = lib.rental.edit_rental(rental, processor=c_user, end=utcnow(), _commit=True)
+
+    return rental
