@@ -14,7 +14,6 @@
 <script>
 import api from "@/api/api";
 import AuthService from "@/services/AuthService";
-import DatetimePicker from 'vuetify-datetime-picker'
 
 export default {
 name: "RentKeyForm",

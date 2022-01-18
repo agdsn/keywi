@@ -14,21 +14,30 @@
       {{ new Date(item.begin).toLocaleString('de') }}
     </template>
 
+    <template v-slot:[`item.end`]="{ item }">
+      <span v-if="item.end != null">
+        {{ new Date(item.end).toLocaleString('de') }}
+      </span>
+      <span v-else>
+        -
+      </span>
+    </template>
+
+    <template v-slot:[`item.key.lock.location`]="{ item }">
+      <router-link :to="`/location/${ item.key.lock.location.id }`">{{ item.key.lock.location.name }}</router-link>
+    </template>
+
     <template v-slot:[`item.key.lock`]="{ item }">
-        <router-link :to="`/lock/${ item.key.lock.id }`">{{ item.key.lock.name }}</router-link>
-      </template>
+      <router-link :to="`/lock/${ item.key.lock.id }`">{{ item.key.lock.name }}</router-link>
+    </template>
 
     <template v-slot:[`item.key`]="{ item }">
-        <router-link :to="`/key/${ item.key.id }`">{{ item.key.number }}</router-link>
-      </template>
-
-    <template v-slot:[`item.key.safe`]="{ item }">
-        <router-link :to="`/safe/${ item.key.safe.id }`">{{ item.key.safe.name }}</router-link>
-      </template>
-
-        <template v-slot:[`item.user.name`]="{ item }">
-        <router-link :to="`/user/${ item.user.id }`">{{ item.user.name }}</router-link>
-      </template>
+      <router-link :to="`/key/${ item.key.id }`">{{ item.key.number }}</router-link>
+    </template>
+    
+    <template v-slot:[`item.user.name`]="{ item }">
+      <router-link :to="`/user/${ item.user.id }`">{{ item.user.name }}</router-link>
+    </template>
   </v-data-table>
 </template>
 
@@ -41,16 +50,16 @@ export default {
     loading: true,
     headers: [
       {
+        text: 'Ort',
+        value: "key.lock.location"
+      },
+      {
         text: 'Schloss',
         value: "key.lock"
       },
       {
         text: 'Schlüsselnummer',
         value: "key"
-      },
-      {
-        text: 'Tresor',
-        value: "key.safe"
       },
       {
         text: 'Ausgeliehen von',

@@ -9,9 +9,9 @@ import type {
 declare namespace Components {
     namespace Schemas {
         /**
-         * Body_login_auth_token_post
+         * Body_get_token_auth_token_post
          */
-        export interface BodyLoginAuthTokenPost {
+        export interface BodyGetTokenAuthTokenPost {
             /**
              * Grant Type
              */
@@ -63,6 +63,10 @@ declare namespace Components {
              */
             checked?: boolean;
             /**
+             * Note
+             */
+            note?: string;
+            /**
              * Id
              */
             id: string; // uuid
@@ -88,6 +92,10 @@ declare namespace Components {
              */
             checked?: boolean;
             /**
+             * Note
+             */
+            note?: string;
+            /**
              * Lock Id
              */
             lock_id: string; // uuid
@@ -112,6 +120,10 @@ declare namespace Components {
              * Checked
              */
             checked?: boolean;
+            /**
+             * Note
+             */
+            note?: string;
             /**
              * Lock Id
              */
@@ -157,6 +169,10 @@ declare namespace Components {
              */
             longitude?: number;
             /**
+             * Note
+             */
+            note?: string;
+            /**
              * Id
              */
             id: string; // uuid
@@ -189,6 +205,10 @@ declare namespace Components {
              * Longitude
              */
             longitude?: number;
+            /**
+             * Note
+             */
+            note?: string;
         }
         /**
          * LocationModelPatch
@@ -210,6 +230,10 @@ declare namespace Components {
              * Longitude
              */
             longitude?: number;
+            /**
+             * Note
+             */
+            note?: string;
         }
         /**
          * LocationModelShort
@@ -236,6 +260,10 @@ declare namespace Components {
              * Owner
              */
             owner?: string;
+            /**
+             * Note
+             */
+            note?: string;
             location: /* LocationModelShort */ LocationModelShort;
             /**
              * Id
@@ -263,6 +291,10 @@ declare namespace Components {
              */
             owner?: string;
             /**
+             * Note
+             */
+            note?: string;
+            /**
              * Location Id
              */
             location_id: string; // uuid
@@ -279,6 +311,10 @@ declare namespace Components {
              * Owner
              */
             owner?: string;
+            /**
+             * Note
+             */
+            note?: string;
             /**
              * Location Id
              */
@@ -335,6 +371,10 @@ declare namespace Components {
              */
             allowed_by?: string;
             /**
+             * Note
+             */
+            note?: string;
+            /**
              * Id
              */
             id: string; // uuid
@@ -364,6 +404,10 @@ declare namespace Components {
              */
             allowed_by?: string;
             /**
+             * Note
+             */
+            note?: string;
+            /**
              * Key Id
              */
             key_id: string; // uuid
@@ -389,6 +433,10 @@ declare namespace Components {
              * Name of the document that allows the user to rent this key.
              */
             allowed_by?: string;
+            /**
+             * Note
+             */
+            note?: string;
         }
         /**
          * RentalModelShort
@@ -416,6 +464,10 @@ declare namespace Components {
              */
             name: string;
             /**
+             * Note
+             */
+            note?: string;
+            /**
              * Id
              */
             id: string; // uuid
@@ -434,6 +486,10 @@ declare namespace Components {
              */
             name: string;
             /**
+             * Note
+             */
+            note?: string;
+            /**
              * Location Id
              */
             location_id: string; // uuid
@@ -446,6 +502,10 @@ declare namespace Components {
              * Name
              */
             name?: string;
+            /**
+             * Note
+             */
+            note?: string;
             /**
              * Location Id
              */
@@ -486,6 +546,10 @@ declare namespace Components {
              */
             name: string;
             /**
+             * Note
+             */
+            note?: string;
+            /**
              * Id
              */
             id: string; // uuid
@@ -511,6 +575,10 @@ declare namespace Components {
              */
             name: string;
             /**
+             * Note
+             */
+            note?: string;
+            /**
              * Id
              */
             id: string; // uuid
@@ -535,8 +603,8 @@ declare namespace Components {
     }
 }
 declare namespace Paths {
-    namespace AuthLogin {
-        export type RequestBody = /* Body_login_auth_token_post */ Components.Schemas.BodyLoginAuthTokenPost;
+    namespace AuthGetToken {
+        export type RequestBody = /* Body_get_token_auth_token_post */ Components.Schemas.BodyGetTokenAuthTokenPost;
         namespace Responses {
             export type $200 = any;
             export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
@@ -1190,6 +1258,14 @@ export interface OperationMethods {
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.RentalDeleteRental.Responses.$200>
   /**
+   * rental_deleteRental - Delete Rental
+   */
+  'rental_deleteRental'(
+    parameters?: Parameters<Paths.RentalDeleteRental.PathParameters> | null,
+    data?: any,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.RentalDeleteRental.Responses.$200>
+  /**
    * safe_getSafes - Get Safes
    */
   'safe_getSafes'(
@@ -1254,13 +1330,13 @@ export interface OperationMethods {
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.UserGetUser.Responses.$200>
   /**
-   * auth_login - Login
+   * auth_getToken - Get Token
    */
-  'auth_login'(
+  'auth_getToken'(
     parameters?: Parameters<UnknownParamsObject> | null,
-    data?: Paths.AuthLogin.RequestBody,
+    data?: Paths.AuthGetToken.RequestBody,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.AuthLogin.Responses.$200>
+  ): OperationResponse<Paths.AuthGetToken.Responses.$200>
 }
 
 export interface PathsDictionary {
@@ -1450,6 +1526,16 @@ export interface PathsDictionary {
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.RentalEditRental.Responses.$200>
   }
+  ['/rental/{uuid}/end']: {
+    /**
+     * rental_deleteRental - Delete Rental
+     */
+    'post'(
+      parameters?: Parameters<Paths.RentalDeleteRental.PathParameters> | null,
+      data?: any,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.RentalDeleteRental.Responses.$200>
+  }
   ['/safe/']: {
     /**
      * safe_getSafes - Get Safes
@@ -1526,13 +1612,13 @@ export interface PathsDictionary {
   }
   ['/auth/token']: {
     /**
-     * auth_login - Login
+     * auth_getToken - Get Token
      */
     'post'(
       parameters?: Parameters<UnknownParamsObject> | null,
-      data?: Paths.AuthLogin.RequestBody,
+      data?: Paths.AuthGetToken.RequestBody,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.AuthLogin.Responses.$200>
+    ): OperationResponse<Paths.AuthGetToken.Responses.$200>
   }
 }
 

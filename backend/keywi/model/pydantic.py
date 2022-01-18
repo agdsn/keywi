@@ -92,7 +92,7 @@ class LockModelBase(PydModel):
 class LockModelShort(PydModel):
     id: UUID
     name: str
-
+    location: LocationModelShort
 
 class LockModel(LockModelBase):
     location: LocationModelShort
