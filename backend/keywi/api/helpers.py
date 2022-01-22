@@ -65,3 +65,6 @@ def get_or_404(model: Type[ModelBase], ident: any):
 
 class SuccessModel(PydModel):
     success: bool = True
+
+def raise_permission_error():
+    raise HTTPException(403, "No access to this resource.")

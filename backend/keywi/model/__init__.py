@@ -15,9 +15,13 @@ class User(UUIDModel):
     email = Column(EmailType, nullable=False)
     password = Column(PasswordType(schemes=['pbkdf2_sha512']))
     note = Column(String, nullable=True)
+    group = Column(String, nullable=False, server_default='user')
 
     active_rentals = relationship("Rental", primaryjoin="and_(Rental.user_id == User.id,"
                                                         "     Rental.active)",)
+
+    scopes = []
+
 
 
 class Location(UUIDModel):

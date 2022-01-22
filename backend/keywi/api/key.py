@@ -1,10 +1,10 @@
 from typing import List
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Body, Query
+from fastapi import APIRouter, Depends, Body, Query, Security
 from fastapi_sqlalchemy import db
 
-from api.auth import get_current_user
+from api.auth import CurrentUser
 from api.helpers import PathModelGetter, get_or_404, SuccessModel
 from model import Key, User, Lock, Safe
 from model.pydantic import KeyModel, KeyModelCreate, KeyModelPatch
@@ -14,7 +14,8 @@ import lib.key
 router = APIRouter(prefix="/key", tags=["key"])
 
 
-@router.get("/", response_model=List[KeyModel])
+@router.get("/", response_model=List[KeyModel],
+            dependencies=[Security(CurrentUser(), scopes=['key:read'])])
 def get_keys(safe_id: UUID = Query(None), lock_id: UUID = Query(None)):
     keys = db.session.query(Key)
 
@@ -27,14 +28,14 @@ def get_keys(safe_id: UUID = Query(None), lock_id: UUID = Query(None)):
     return keys.all()
 
 
-@router.get("/{uuid}", response_model=KeyModel)
+@router.get("/{uuid}", response_model=KeyModel, dependencies=[Security(CurrentUser(), scopes=['key:read'])])
 def get_key(key: Key = Depends(PathModelGetter(Key))):
     return key
 
 
 @router.post("/", response_model=KeyModel)
 def create_key(key_create: KeyModelCreate,
-               c_user: User = Depends(get_current_user)):
+               c_user: User = Security(CurrentUser(), scopes=['key:write'])):
     args = key_create.dict()
 
     args['lock'] = get_or_404(Lock, args.pop('lock_id'))
@@ -48,7 +49,7 @@ def create_key(key_create: KeyModelCreate,
 @router.patch("/{uuid}", response_model=KeyModel)
 def edit_key(key: Key = Depends(PathModelGetter(Key)),
              key_patch: KeyModelPatch = Body(...),
-             c_user: User = Depends(get_current_user)):
+             c_user: User = Security(CurrentUser(), scopes=['key:write'])):
     args = key_patch.dict(exclude_unset=True)
 
     if 'lock' in args:
@@ -64,7 +65,7 @@ def edit_key(key: Key = Depends(PathModelGetter(Key)),
 
 @router.delete("/{uuid}", response_model=SuccessModel,)
 def delete_key(key: Key = Depends(PathModelGetter(Key)),
-               c_user: User = Depends(get_current_user)):
+               c_user: User = Security(CurrentUser(), scopes=['key:write'])):
     lib.key.delete_key(key, processor=c_user, _commit=True)
 
     return SuccessModel

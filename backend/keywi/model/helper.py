@@ -4,10 +4,21 @@ from model.session import with_transaction, session
 
 @with_transaction
 def init_data():
+    admin = User(
+        login='admin',
+        name="Admin",
+        email="root@lists.agdsn.de",
+        group="rw-admin",
+        password='admin',
+    )
+    session.add(admin)
+
     user = User(
-        login='test',
-        name="Test User",
-        email="test@test.test"
+        login='user',
+        name="User",
+        email="user@test.de",
+        group="user",
+        password='user',
     )
     session.add(user)
 

@@ -11,3 +11,6 @@ url = postgresql://keywi:password@dev-db/keywi
 config_url = https://alf.agdsn.de/auth/realms/internal/.well-known/openid-configuration
 client_id = keywi
 client_secret = hidden
+rw_admin_roles = vorstand
+ro_admin_roles = roots
+user_roles = aktiv
