@@ -77,7 +77,7 @@ def delete_rental(rental: Rental = Depends(PathModelGetter(Rental)),
 
 
 @router.post("/{uuid}/end", response_model=RentalModel)
-def delete_rental(rental: Rental = Depends(PathModelGetter(Rental)),
+def end_rental(rental: Rental = Depends(PathModelGetter(Rental)),
                   c_user: User = Depends(get_current_user)):
     rental = lib.rental.edit_rental(rental, processor=c_user, end=utcnow(), _commit=True)
 

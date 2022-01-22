@@ -332,6 +332,7 @@ declare namespace Components {
              * Name
              */
             name: string;
+            location: /* LocationModelShort */ LocationModelShort;
         }
         /**
          * LogEntryModel
@@ -454,6 +455,10 @@ declare namespace Components {
              * End
              */
             end?: string; // date-time
+            /**
+             * User Id
+             */
+            user_id: string; // uuid
         }
         /**
          * SafeModel
@@ -603,8 +608,38 @@ declare namespace Components {
     }
 }
 declare namespace Paths {
+    namespace AuthFinish {
+        namespace Parameters {
+            /**
+             * Return Url
+             */
+            export type ReturnUrl = string;
+        }
+        export interface QueryParameters {
+            return_url: /* Return Url */ Parameters.ReturnUrl;
+        }
+        namespace Responses {
+            export type $200 = any;
+            export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
+        }
+    }
     namespace AuthGetToken {
         export type RequestBody = /* Body_get_token_auth_token_post */ Components.Schemas.BodyGetTokenAuthTokenPost;
+        namespace Responses {
+            export type $200 = any;
+            export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
+        }
+    }
+    namespace AuthLogin {
+        namespace Parameters {
+            /**
+             * Return Url
+             */
+            export type ReturnUrl = string;
+        }
+        export interface QueryParameters {
+            return_url: /* Return Url */ Parameters.ReturnUrl;
+        }
         namespace Responses {
             export type $200 = any;
             export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
@@ -914,6 +949,26 @@ declare namespace Paths {
             Parameters.Uuid;
         }
         export type RequestBody = /* RentalModelPatch */ Components.Schemas.RentalModelPatch;
+        namespace Responses {
+            export type $200 = /* RentalModel */ Components.Schemas.RentalModel;
+            export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
+        }
+    }
+    namespace RentalEndRental {
+        namespace Parameters {
+            /**
+             * Uuid
+             * The UUID of the referenced object.
+             */
+            export type Uuid = any;
+        }
+        export interface PathParameters {
+            uuid: /**
+             * Uuid
+             * The UUID of the referenced object.
+             */
+            Parameters.Uuid;
+        }
         namespace Responses {
             export type $200 = /* RentalModel */ Components.Schemas.RentalModel;
             export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
@@ -1258,13 +1313,13 @@ export interface OperationMethods {
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.RentalDeleteRental.Responses.$200>
   /**
-   * rental_deleteRental - Delete Rental
+   * rental_endRental - End Rental
    */
-  'rental_deleteRental'(
-    parameters?: Parameters<Paths.RentalDeleteRental.PathParameters> | null,
+  'rental_endRental'(
+    parameters?: Parameters<Paths.RentalEndRental.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
-  ): OperationResponse<Paths.RentalDeleteRental.Responses.$200>
+  ): OperationResponse<Paths.RentalEndRental.Responses.$200>
   /**
    * safe_getSafes - Get Safes
    */
@@ -1337,6 +1392,22 @@ export interface OperationMethods {
     data?: Paths.AuthGetToken.RequestBody,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.AuthGetToken.Responses.$200>
+  /**
+   * auth_login - Login
+   */
+  'auth_login'(
+    parameters?: Parameters<Paths.AuthLogin.QueryParameters> | null,
+    data?: any,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.AuthLogin.Responses.$200>
+  /**
+   * auth_finish - Finish
+   */
+  'auth_finish'(
+    parameters?: Parameters<Paths.AuthFinish.QueryParameters> | null,
+    data?: any,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.AuthFinish.Responses.$200>
 }
 
 export interface PathsDictionary {
@@ -1528,13 +1599,13 @@ export interface PathsDictionary {
   }
   ['/rental/{uuid}/end']: {
     /**
-     * rental_deleteRental - Delete Rental
+     * rental_endRental - End Rental
      */
     'post'(
-      parameters?: Parameters<Paths.RentalDeleteRental.PathParameters> | null,
+      parameters?: Parameters<Paths.RentalEndRental.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
-    ): OperationResponse<Paths.RentalDeleteRental.Responses.$200>
+    ): OperationResponse<Paths.RentalEndRental.Responses.$200>
   }
   ['/safe/']: {
     /**
@@ -1619,6 +1690,26 @@ export interface PathsDictionary {
       data?: Paths.AuthGetToken.RequestBody,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.AuthGetToken.Responses.$200>
+  }
+  ['/auth/start']: {
+    /**
+     * auth_login - Login
+     */
+    'get'(
+      parameters?: Parameters<Paths.AuthLogin.QueryParameters> | null,
+      data?: any,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.AuthLogin.Responses.$200>
+  }
+  ['/auth/finish']: {
+    /**
+     * auth_finish - Finish
+     */
+    'get'(
+      parameters?: Parameters<Paths.AuthFinish.QueryParameters> | null,
+      data?: any,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.AuthFinish.Responses.$200>
   }
 }
 

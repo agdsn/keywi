@@ -48,3 +48,5 @@ Thumbs.db
 
 
 backend/keywi/config.ini
+
+frontend/src/api/api.d.ts
