@@ -19,17 +19,15 @@ export default Vue.extend({
   data: () => ({
     //
   }),
+  mounted() {
+    this.$vuetify.theme.currentTheme.secondary = '#41A6A0';
+  }
 });
 </script>
 
 <style type="text/css">
   :root {
     --primary-color: #41A6A0;
-  }
-
-  .primary-color {
-    background-color: var(--primary-color) !important;
-    color: #ffffff !important;
   }
 
   a {

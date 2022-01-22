@@ -4,7 +4,7 @@
                     :items="users" label="Ausleihender Nutzer"
                     prepend-icon="mdi-account" :rules="userRules"></v-autocomplete>
 
-    <v-btn class="primary-color" color="validate" @click="save">
+    <v-btn color="secondary" @click="save">
       <v-icon>mdi-content-save-outline</v-icon>
       Speichern
     </v-btn>

@@ -67,7 +67,7 @@
         <v-card-title>Schlüssel {{ keyInDialogNumber }} wirklich löschen?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="primary-color" @click="deleteItem">
+          <v-btn color="secondary" @click="deleteItem">
             <v-icon>mdi-delete</v-icon>
             Bestätigen
           </v-btn>
@@ -87,7 +87,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="primary-color" color="validate" @click="rentKey">
+          <v-btn color="secondary" @click="rentKey">
             <v-icon>mdi-content-save-outline</v-icon>
             Speichern
           </v-btn>

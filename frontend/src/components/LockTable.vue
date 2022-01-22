@@ -41,7 +41,7 @@
         <v-card-title>Schloss {{lockToDeleteName}} wirklich löschen?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="primary-color" @click="deleteItem">
+          <v-btn color="secondary" @click="deleteItem">
             <v-icon>mdi-delete</v-icon>
             Bestätigen
           </v-btn>

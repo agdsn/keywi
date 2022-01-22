@@ -57,7 +57,7 @@ export default Vue.extend({
     position: relative;
   }
 
-  .home >>> .v-btn.primary-color {
+  .home >>> .v-btn.secondary {
     position: absolute;
     right: 0;
   }
