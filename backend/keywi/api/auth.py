@@ -136,7 +136,7 @@ class CurrentUser:
 @router.post("/token")
 async def get_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = db.session.query(User).filter_by(login=form_data.username).scalar()
-    if not user or user.password != form_data.password:
+    if not user or user.password is None or user.password != form_data.password:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     scopes = groups_to_scopes([user.group])
