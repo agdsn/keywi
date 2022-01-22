@@ -66,6 +66,8 @@
             <v-autocomplete v-model="pickedUser" :item-text="item => item.name" :items="users"
                             :rules="userRules" label="Ausleihender Nutzer"
                             prepend-icon="mdi-account" return-object></v-autocomplete>
+            <v-text-field v-model="grantingDocument" label="Dokument" prepend-icon="mdi-file-document"/>
+            <v-textarea v-model="note" label="Notiz" prepend-icon="mdi-note-text-outline" rows="1"></v-textarea>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -91,6 +93,8 @@ export default {
     keyInDialog: undefined,
     rentDialog: false,
     returnDialog: false,
+    grantingDocument: '',
+    note: '',
     headers: [
       {
         text: 'Schlüsselnummer',
@@ -193,7 +197,7 @@ export default {
     openRentPrompt(keyInDialog) {
       this.keyInDialog = keyInDialog;
 
-      if(this.rentedByUser(keyInDialog)) {
+      if (this.rentedByUser(keyInDialog)) {
         this.returnDialog = true;
       } else {
         this.loadUsers();
@@ -239,7 +243,9 @@ export default {
 
         const rental = {
           key_id: this.keyInDialog.id,
-          user_id: this.pickedUser.id
+          user_id: this.pickedUser.id,
+          allowed_by: this.grantingDocument,
+          note: this.note
         };
 
         apiStub.rental_createRental(null, rental).then(() => {
