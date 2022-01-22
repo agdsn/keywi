@@ -5,7 +5,7 @@
       <v-autocomplete prepend-icon="mdi-map-marker" :items="locations" label="Ort" item-text="name" item-value="id" :rules="selectRule" v-model="selectedLocation" return-object></v-autocomplete>
       <v-textarea prepend-icon="mdi-note-text-outline" rows="1" label="Notiz" v-model="note"></v-textarea>
       <v-btn color="validate" @click="save">
-        <v-icon>mdi-content-save-outline</v-icon>
+        <v-icon left size="24">mdi-content-save-outline</v-icon>
         Speichern
       </v-btn>
    </v-form>

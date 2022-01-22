@@ -58,7 +58,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="secondary" @click="rentKey">
-            <v-icon>mdi-content-save-outline</v-icon>
+            <v-icon left size="24">mdi-content-save-outline</v-icon>
             Speichern
           </v-btn>
         </v-card-actions>

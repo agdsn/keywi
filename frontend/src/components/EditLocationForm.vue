@@ -6,7 +6,7 @@
       <v-text-field prepend-icon="mdi-longitude" label="Längengrad (longitude)" v-model="lon"/>
       <v-textarea prepend-icon="mdi-note-text-outline" rows="1" label="Notiz" v-model="note"></v-textarea>
       <v-btn color="validate" @click="save">
-        <v-icon>mdi-content-save-outline</v-icon>
+        <v-icon left size="24">mdi-content-save-outline</v-icon>
         Speichern
       </v-btn>
    </v-form>

@@ -42,7 +42,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="secondary" @click="deleteItem">
-            <v-icon>mdi-delete</v-icon>
+            <v-icon left size="24">mdi-delete</v-icon>
             Bestätigen
           </v-btn>
         </v-card-actions>

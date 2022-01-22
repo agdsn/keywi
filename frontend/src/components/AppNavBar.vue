@@ -39,12 +39,12 @@
           {{ user.login }}
         </router-link>
         <a @click="logout">
-          <v-icon color="white">mdi-logout</v-icon>
+          <v-icon color="white" left>mdi-logout</v-icon>
           Logout
         </a>
       </li>
       <li v-else><a @click="$refs.loginDialog.openDialog()">
-        <v-icon color="white">mdi-login</v-icon>
+        <v-icon color="white" left>mdi-login</v-icon>
         Login
       </a></li>
     </ul>

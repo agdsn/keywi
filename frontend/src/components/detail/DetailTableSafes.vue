@@ -8,6 +8,9 @@
       loading-text="Lade Daten..."
       ref="table"
   >
+    <template v-slot:[`item.name`]="{ item }">
+      <router-link :to="`/safe/${ item.id }`">{{ item.name }}</router-link>
+    </template>
   </v-data-table>
 </template>
 
