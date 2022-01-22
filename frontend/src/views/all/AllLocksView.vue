@@ -1,13 +1,14 @@
 <template>
   <div class="home">
-    <lock-table ref="lockTable" @editItem="editLock" class="mx-7 mt-7"/>
+    <lock-table ref="lockTable" class="mx-7 mt-7" @editItem="editLock"/>
     <v-divider class="mx-8"></v-divider>
-    <form-popup text="Schloss hinzufügen"
+    <form-popup ref="popup"
                 form="edit-lock-form"
-                @save-form="$refs.lockTable.loadData();"
-                ref="popup"
+                icon="mdi-plus"
+                text="Schloss hinzufügen"
                 @mounted="mountedEvent"
-                @button-add-clicked="buttonAddClicked"/>
+                @save-form="$refs.lockTable.loadData();"
+    @button-add-clicked="buttonAddClicked"/>
   </div>
 </template>
 

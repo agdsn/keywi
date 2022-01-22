@@ -7,7 +7,8 @@
                 form="edit-safe-form"
                 @save-form="$refs.safeTable.loadData();"
                 @mounted="mountedEvent"
-                @button-add-clicked="buttonAddClicked"/>
+                @button-add-clicked="buttonAddClicked"
+                icon="mdi-plus"/>
   </div>
 </template>
 

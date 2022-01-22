@@ -7,7 +7,8 @@
                 @save-form="$refs.keyTable.loadData();"
                 ref="popup"
                 @mounted="mountedEvent"
-                @button-add-clicked="buttonAddClicked"/>
+                @button-add-clicked="buttonAddClicked"
+                icon="mdi-plus"/>
   </div>
 </template>
 

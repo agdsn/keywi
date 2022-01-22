@@ -30,6 +30,14 @@
         <v-divider></v-divider>
 
         <div class="buttons">
+          <form-popup ref="popup_add"
+                      form="edit-key-form"
+                      icon="mdi-plus"
+                      text="Schlüssel hinzufügen"
+                      @mounted="addMountedEvent"
+                      @save-form="keyAdded()"
+                      @button-add-clicked="addMountedEvent"/>
+
           <form-popup ref="popup"
                       form="edit-safe-form"
                       icon="mdi-pencil"
@@ -111,6 +119,16 @@ export default {
 
     mountedEvent() {
       if (this.$refs.popup.$refs.form) this.$refs.popup.$refs.form.fillForm(this.safe);
+    },
+
+    addMountedEvent() {
+      let payload = { selectedSafe: this.safe };
+      if (this.$refs.popup_add.$refs.form) this.$refs.popup_add.$refs.form.fillForm(payload);
+    },
+
+    keyAdded() {
+      let keyId = this.$refs.popup_add.$refs.form.keyId;
+      this.$router.push('/key/'+keyId);
     },
 
     async deleteItem() {

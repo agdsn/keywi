@@ -54,6 +54,8 @@ export default {
         this.selectedSafe = keyTemplate.safe;
         this.selectedLock = keyTemplate.lock;
         this.note = keyTemplate.note;
+        this.selectedLock = keyTemplate.selectedLock;
+        this.selectedSafe = keyTemplate.selectedSafe;
       } else {
         this.keyId = undefined;
         this.number = '';
@@ -91,8 +93,9 @@ export default {
             this.$emit('save-form');
           });
         } else {
-          apiStub.key_createKey(null, keyModel).then(() => {
+          apiStub.key_createKey(null, keyModel).then((response) => {
             this.$refs.form.reset();
+            this.keyId = response.data.id;
             this.$emit('save-form');
           });
         }
