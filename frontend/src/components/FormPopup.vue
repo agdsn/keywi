@@ -1,7 +1,7 @@
 <template>
   <v-dialog max-width="600px" v-model="dialog">
     <template v-slot:activator="{ on: activationEvent }">
-      <v-btn :title="tooltip" :disabled="disabled" color="secondary" class="mx-8 my-4" v-on="activationEvent" @click="$emit('button-add-clicked')" v-if="renderBtn">
+      <v-btn :title="tooltip" :disabled="disabled" color="secondary" class="mx-8 my-4" v-on="activationEvent" @click="$emit('button-add-clicked')" v-if="!hideBtn">
         <v-icon v-if="icon" left size="24">{{ icon}}</v-icon>
         {{ text }}
       </v-btn>
@@ -28,9 +28,9 @@ export default {
   name: "FormPopup",
   props: {
     text: String,
-    renderBtn: {
+    hideBtn: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     form: String,
     disabled: {

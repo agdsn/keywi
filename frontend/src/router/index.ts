@@ -12,6 +12,8 @@ import DetailLockView from"@/views/detail/DetailLockView.vue";
 import DetailKeyView from"@/views/detail/DetailKeyView.vue";
 import StartView from "@/views/StartView.vue";
 import AuthService from "@/services/AuthService";
+import DetailRentalView from "@/views/detail/DetailRentalView.vue";
+import AllRentalsView from "@/views/all/AllRentalsView.vue";
 
 Vue.use(VueRouter)
 
@@ -81,6 +83,18 @@ const routes: Array<RouteConfig> = [
     name: 'user',
     component: UserView,
     meta: { title: "Benutzer Details" }
+  },
+  {
+    path: '/rental',
+    name: 'rentals',
+    component: AllRentalsView,
+    meta: { title: "Alle Ausleihen" }
+  },
+  {
+    path: '/rental/:id',
+    name: 'rental',
+    component: DetailRentalView,
+    meta: { title: "Ausleihe Details" }
   },
 ]
 

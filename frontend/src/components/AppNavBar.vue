@@ -31,6 +31,12 @@
           Benutzer
         </router-link>
       </li>
+      <li>
+        <router-link to="/rental">
+          <v-icon color="white" left>mdi-key</v-icon>
+          Ausleihen
+        </router-link>
+      </li>
     </ul>
     <ul class="list">
       <li v-if="loggedIn">
@@ -50,7 +56,7 @@
     </ul>
     <form-popup
         ref="loginDialog"
-        :render-btn="false"
+        hide-btn
         form="login-form"
         text="Login"
         @save-form="checkLogin">
