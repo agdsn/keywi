@@ -8,13 +8,32 @@
       Nutzername oder Passwort falsch!
     </v-alert>
 
-    <v-form ref="form">
-      <v-text-field v-model="username" :rules="nameRules" label="Nutzername" prepend-icon="mdi-account" required/>
-      <v-text-field v-model="password" :rules="passwordRules" label="Passwort" prepend-icon="mdi-key" required type="password"/>
-      <v-btn @click="login">
-        Login
-      </v-btn>
-    </v-form>
+    <v-row>
+      <v-col class="text-center">
+        <v-btn block color="primary" @click="loginWithOAuth">
+          <v-icon left>mdi-key</v-icon>
+          Mit AG DSN Konto anmelden
+        </v-btn>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
+        <v-divider></v-divider>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
+        <v-form ref="form">
+          <v-text-field v-model="username" :rules="nameRules" label="Nutzername" prepend-icon="mdi-account" required/>
+          <v-text-field v-model="password" :rules="passwordRules" label="Passwort" prepend-icon="mdi-key" required type="password"/>
+          <v-btn @click="login" class="mt-3" color="success">
+            Login
+          </v-btn>
+        </v-form>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -49,18 +68,14 @@ export default {
         this.error = true;
       }
     },
-  }
+    async loginWithOAuth() {
+      window.location.href = AuthService.getOAuthUrl(this.$route.query.return_url);
+    }
+  },
 }
 </script>
 
 <style scoped>
-  .v-btn {
-    background-color: var(--primary-color) !important;
-    color: white;
-    position: absolute;
-    right: 0;
-  }
-
   .v-form {
     position: relative;
   }

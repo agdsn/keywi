@@ -10,3 +10,6 @@ wrapt
 python-multipart
 passlib
 python-jose[cryptography]~=3.3.0
+authlib~=0.15.5
+httpx~=0.21.3
+itsdangerous

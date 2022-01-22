@@ -61,6 +61,7 @@
 <script>
 import FormPopup from "@/components/FormPopup";
 import AuthService from "@/services/AuthService";
+import router from "@/router";
 
 export default {
   name: "AppNavBar",
@@ -82,15 +83,28 @@ export default {
     logout() {
       AuthService.logout();
       this.checkLogin();
+      router.push({
+        name: 'start',
+      });
     }
   },
   watch: {
     loggedIn() {
       this.user = AuthService.getUser();
     },
+    $route(to) {
+      if (to.query.login === 'true') {
+        this.$refs.loginDialog.openDialog()
+      } else {
+        this.$refs.loginDialog.closeDialog()
+      }
+    }
   },
   beforeMount() {
     this.checkLogin();
+    window.addEventListener('keywi-auth-change', (event) => {
+      this.checkLogin();
+    });
   }
 }
 </script>

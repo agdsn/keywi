@@ -10,20 +10,26 @@ import DetailLocationView from"@/views/detail/DetailLocationView.vue";
 import DetailSafeView from"@/views/detail/DetailSafeView.vue";
 import DetailLockView from"@/views/detail/DetailLockView.vue";
 import DetailKeyView from"@/views/detail/DetailKeyView.vue";
+import StartView from "@/views/StartView.vue";
+import AuthService from "@/services/AuthService";
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
+    path: '/',
+    name: 'start',
+    component: StartView,
+    meta: { title: "Start" }
+  },
+  {
     path: '/key',
-      alias: '/',
     name: 'keyAll',
     component: AllKeysView,
     meta: { title: "Alle Schlüssel" }
   },
   {
     path: '/key/:id',
-    alias: '/',
     name: 'key',
     component: DetailKeyView,
     meta: { title: "Schlüssel Details" },
@@ -83,5 +89,36 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  const accessToken = to.query.access_token;
+  const user = AuthService.getUser()
+
+  function pushLogin() {
+    router.push({
+      name: 'start',
+      query: { login: 'true', return_url: window.location.origin + to.fullPath },
+    });
+  }
+
+  if (user != null) {
+    next();
+  } else if (accessToken != null && typeof accessToken === 'string') {
+    AuthService.setAccessToken(accessToken).then(() => {
+      console.log('Successful login!');
+      router.push({
+        path: to.path,
+        query: {},
+      });
+    }).catch((e) => {
+      console.log(e);
+      pushLogin();
+    });
+  } else if (to.query.login === 'true' && to.name == 'start') {
+    next();
+  } else {
+    pushLogin()
+  }
+});
 
 export default router

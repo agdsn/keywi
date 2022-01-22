@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi_sqlalchemy import DBSessionMiddleware, db
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
 import model, model.base
 from api import user, safe, rental, log, lock, location, key, auth
@@ -23,6 +24,8 @@ app.add_middleware(
     allow_headers=["*"],
     allow_credentials=True
 )
+
+app.add_middleware(SessionMiddleware, secret_key=app_config.get('general', 'session_secret'))
 
 with db():
     model.base.ModelBase.metadata.create_all(session.get_bind())

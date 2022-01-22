@@ -3,6 +3,22 @@ import api from "@/api/api";
 import axios from "axios";
 
 export default {
+    async setAccessToken(access_token: string) {
+        const apiClient = await api;
+
+        const header = `Bearer ${access_token}`;
+        axios.defaults.headers.common.Authorization = header;
+        apiClient.defaults.headers.Authorization = header;
+
+        const user = (await apiClient.user_getCurrent()).data
+
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('access_token', access_token);
+
+        window.dispatchEvent(new CustomEvent('keywi-auth-change', {}));
+
+        return true;
+    },
     async login(username: string, password: string) {
         const apiClient = await api;
 
@@ -16,18 +32,11 @@ export default {
             data: payload
         };
 
-        return apiClient.auth_getToken(null, credentials, options).then((rsp) => {
-            const access_token = rsp.data.access_token;
+        const access_token = (await apiClient.auth_getToken(null, credentials, options)).data.access_token;
 
-            const header = `Bearer ${access_token}`;
-            axios.defaults.headers.common.Authorization = header;
-            apiClient.defaults.headers.Authorization = header;
+        await this.setAccessToken(access_token)
 
-            apiClient.user_getCurrent().then((rsp) => {
-                localStorage.setItem('user', JSON.stringify(rsp.data));
-                localStorage.setItem('access_token', access_token);
-            });
-        });
+        return true;
     },
     async logout() {
         const apiClient = await api;
@@ -36,6 +45,22 @@ export default {
         localStorage.removeItem('user');
         delete axios.defaults.headers.common.Authorization;
         delete apiClient.defaults.headers.Authorization;
+
+        window.dispatchEvent(new CustomEvent('keywi-auth-change', {}));
+    },
+    getOAuthUrl(returnUrl: string) {
+        let newRetURL = returnUrl;
+
+        let redirectUrl = `${process.env.VUE_APP_KEYWI_API_URL}/auth/start`;
+
+        if (returnUrl == null) {
+            newRetURL = window.location.origin;
+        }
+
+        const returnUrlEnc = encodeURIComponent(newRetURL);
+        redirectUrl = redirectUrl.concat(`?return_url=${returnUrlEnc}`);
+
+        return redirectUrl;
     },
     isLoggedIn() {
         return localStorage.getItem('access_token') != null;

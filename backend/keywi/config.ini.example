@@ -1,0 +1,13 @@
+[general]
+# root_path =
+url = http://localhost:6080
+jwt_secret = fooquooPaike2Zo0ieGaCoo2iequ3cohNaeF3bee7aot4fiWeiCohk6chaekoh7m
+session_secret = oongee9ieyahgh2ouph7neefa6aiv7maeth9equ5bahTh8Ush2xuucheo7oug3ThooP9ahghee0Bo9Lahceeda3hoj9dienohgh8eishaixiiLeewusoobie5OV1phoo
+
+[database]
+url = postgresql://keywi:password@dev-db/keywi
+
+[auth]
+config_url = https://alf.agdsn.de/auth/realms/internal/.well-known/openid-configuration
+client_id = keywi
+client_secret = hidden

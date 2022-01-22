@@ -34,7 +34,7 @@
     <template v-slot:[`item.key`]="{ item }">
       <router-link :to="`/key/${ item.key.id }`">{{ item.key.number }}</router-link>
     </template>
-    
+
     <template v-slot:[`item.user.name`]="{ item }">
       <router-link :to="`/user/${ item.user.id }`">{{ item.user.name }}</router-link>
     </template>
