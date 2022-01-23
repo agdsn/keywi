@@ -7,6 +7,7 @@
         :items="tableData"
         :items-per-page="25"
         :loading="loading"
+        sort-by="number"
         class="elevation-1"
         loading-text="Lade Daten..."
     >

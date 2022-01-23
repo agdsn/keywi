@@ -6,6 +6,7 @@
       :items-per-page="25"
       class="elevation-1"
       :loading="loading"
+      sort-by="name"
       loading-text="Lade Daten..."
       ref="table"
     >

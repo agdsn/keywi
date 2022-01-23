@@ -7,6 +7,8 @@
         :items="tableData"
         :items-per-page="25"
         :loading="loading"
+        multisort
+        :sort-by="['location.name', 'lock.name', 'number']"
         class="elevation-1"
         loading-text="Lade Daten..."
     >

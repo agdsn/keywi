@@ -5,6 +5,7 @@
       :items="tableData"
       :items-per-page="25"
       class="elevation-1"
+      sort-by="name"
       :loading="loading"
       loading-text="Lade Daten..."
       ref="table"

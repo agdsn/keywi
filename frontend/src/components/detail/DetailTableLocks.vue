@@ -6,6 +6,7 @@
       class="elevation-1"
       :loading="loading"
       loading-text="Lade Daten..."
+      sort-by="name"
       ref="table"
   >
     <template v-slot:[`item.available_keys`]="{ item }">

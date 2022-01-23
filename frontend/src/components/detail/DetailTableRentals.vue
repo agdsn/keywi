@@ -5,7 +5,7 @@
       :items="tableData"
       :items-per-page="25"
       :loading="loading"
-      :sort-by="['begin']"
+      sort-by="begin"
       :sort-desc="true"
       class="elevation-1"
       loading-text="Lade Daten..."

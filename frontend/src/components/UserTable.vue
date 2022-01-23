@@ -7,6 +7,7 @@
         :items-per-page="25"
         :loading="loading"
         class="elevation-1"
+        sort-by="name"
         loading-text="Lade Daten..."
     >
       <template v-slot:[`item.name`]="{ item }">

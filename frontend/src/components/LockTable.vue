@@ -6,6 +6,8 @@
       :items-per-page="25"
       class="elevation-1"
       :loading="loading"
+      multisort
+      :sort-by="['location.name', 'name']"
       loading-text="Lade Daten..."
       ref="table"
     >
@@ -64,12 +66,12 @@ export default {
     loading: true,
     headers: [
       {
-        text: 'Schloss',
-        value: "name"
-      },
-      {
         text: "Ort",
         value: "location.name"
+      },
+      {
+        text: 'Schloss',
+        value: "name"
       },
       {
         text: "Besitzer",
