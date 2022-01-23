@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-data-table
+    <DataTable
         ref="table"
         :headers="headers"
         :item-class="row_classes"
@@ -43,7 +43,7 @@
           <span>{{ getTooltip(item) }}</span>
         </v-tooltip>
       </template>
-    </v-data-table>
+    </DataTable>
 
     <v-dialog v-model="returnDialog" width="500px">
       <v-card class="pb-1">
@@ -85,9 +85,11 @@
 <script>
 import api from "@/api/api";
 import AuthService from "@/services/AuthService";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "DetailTableKeys",
+  components: {DataTable},
   data: () => ({
     loading: true,
     keyInDialog: undefined,

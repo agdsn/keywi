@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-data-table
+    <DataTable
         ref="table"
         :headers="headers"
         :items="tableData"
@@ -12,16 +12,18 @@
       <template v-slot:[`item.name`]="{ item }">
         <router-link :to="`/user/${ item.id }`">{{ item.name }}</router-link>
       </template>
-    </v-data-table>
+    </DataTable>
   </div>
 </template>
 
 <script>
 import api from "@/api/api";
 import AuthService from "@/services/AuthService";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "UserTable",
+  components: {DataTable},
   data: () => ({
     loading: true,
     headers: [

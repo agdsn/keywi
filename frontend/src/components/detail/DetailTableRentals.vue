@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <DataTable
       ref="table"
       :headers="headers"
       :items="tableData"
@@ -49,14 +49,16 @@
         </v-icon>
       </router-link>
     </template>
-  </v-data-table>
+  </DataTable>
 </template>
 
 <script>
 import api from "@/api/api";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "DetailTableKeys",
+  components: {DataTable},
   data: () => ({
     loading: true,
     headers: [

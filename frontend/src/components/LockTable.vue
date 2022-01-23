@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-data-table
+    <DataTable
       :headers="headers"
       :items="tableData"
       :items-per-page="25"
@@ -34,7 +34,7 @@
           mdi-delete
         </v-icon>
       </template>
-    </v-data-table>
+    </DataTable>
 
     <v-dialog v-model="dialog" width="500px">
       <v-card class="pb-1">
@@ -53,9 +53,11 @@
 
 <script>
 import api from "@/api/api";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "LockTable",
+  components: {DataTable},
   data: () => ({
     dialog: false,
     lockToDelete: undefined,

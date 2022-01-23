@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <DataTable
       :headers="headers"
       :items="tableData"
       :items-per-page="25"
@@ -15,14 +15,16 @@
     <template v-slot:[`item.name`]="{ item }">
       <router-link :to="`/lock/${ item.id }`">{{ item.name }}</router-link>
     </template>
-  </v-data-table>
+  </DataTable>
 </template>
 
 <script>
 import api from "@/api/api";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "DetailTableLocks",
+  components: {DataTable},
   data: () => ({
     loading: true,
     headers: [

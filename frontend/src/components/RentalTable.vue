@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-data-table
+    <DataTable
         ref="table"
         :headers="headers"
         :items="tableData"
@@ -77,7 +77,7 @@
           <span>Schlüssel zurückgeben</span>
         </v-tooltip>
       </template>
-    </v-data-table>
+    </DataTable>
 
     <v-dialog v-model="returnDialog" width="500px">
       <v-card class="pb-1">
@@ -97,9 +97,11 @@
 <script>
 import api from "@/api/api";
 import AuthService from "@/services/AuthService";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "RentalTable",
+  components: {DataTable},
   data: () => ({
     dialog: false,
     loading: true,
