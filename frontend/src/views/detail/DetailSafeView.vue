@@ -2,7 +2,7 @@
   <v-card class="home pb-5 pt-1">
     <div class="home pb-5">
       <div class="mx-8">
-        <h2 class="my-2">Daten</h2>
+        <h2 class="my-2">Tresor Daten</h2>
         <v-simple-table>
           <template v-slot:default>
             <tbody>

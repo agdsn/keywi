@@ -1,7 +1,7 @@
 <template>
   <v-card class="home pb-5 pt-1">
     <div class="mx-8">
-      <h2 class="my-2">Daten</h2>
+      <h2 class="my-2">Ausleihe Daten</h2>
       <v-simple-table>
         <template v-slot:default>
           <tbody>
@@ -10,28 +10,35 @@
             <td><router-link :to="`/key/${rental.key.id}`">{{ rental.key.number }}</router-link></td>
           </tr>
           <tr>
-            <td style="width: 20%;">Ausleihender Nutzer</td>
+            <td>Vergeben an</td>
             <td><router-link :to="`/user/${rental.user.id}`">{{ rental.user.name }}</router-link></td>
           </tr>
           <tr>
-            <td style="width: 20%;">Auftraggeber</td>
+            <td>Ausgegeben von</td>
             <td><router-link :to="`/user/${rental.issuing_user.id}`">{{ rental.issuing_user.name }}</router-link></td>
           </tr>
           <tr>
-            <td style="width: 20%;">Dokument</td>
+            <td>Dokument</td>
             <td>{{ rental.allowed_by }}</td>
           </tr>
           <tr>
-            <td style="width: 20%;">Start</td>
+            <td>Start</td>
             <td>{{ new Date(rental.begin).toLocaleString('de') }}</td>
           </tr>
           <tr>
-            <td style="width: 20%;">Ende</td>
+            <td>Ende</td>
             <td v-if="rental.end">{{ new Date(rental.end).toLocaleString('de') }}</td>
           </tr>
           <tr>
-            <td style="width: 20%;">Aktiv</td>
-            <td>{{ rental.active ? 'Ja' : 'Nein' }}</td>
+            <td>Aktiv</td>
+            <td class="font-weight-bold">
+              <span class="green--text" v-if="rental.active">
+                Ja
+              </span>
+              <span class="red--text" v-else>
+                Nein
+              </span>
+            </td>
           </tr>
           <tr>
             <td>Notiz</td>
@@ -54,10 +61,10 @@
                     @button-add-clicked="rentalEditFormMountedEvent()"
         />
 
-        <v-dialog v-if="rentedByUser" v-model="returnDialog" width="500px">
+        <v-dialog v-model="returnDialog" width="500px" v-if="rental.active">
           <template v-slot:activator="{ on: clickEvent }">
             <v-btn class="mx-8 my-4" color="secondary" v-on="clickEvent">
-              <v-icon left size="24">mdi-key</v-icon>
+              <v-icon left size="24">mdi-arrow-u-left-bottom</v-icon>
               Schlüssel Zurückgeben
             </v-btn>
           </template>
@@ -66,7 +73,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="secondary" @click="returnItem">
-                <v-icon left size="24">mdi-content-save-outline</v-icon>
+                <v-icon left size="24">mdi-check</v-icon>
                 Speichern
               </v-btn>
             </v-card-actions>

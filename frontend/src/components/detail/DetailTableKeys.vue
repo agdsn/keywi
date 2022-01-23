@@ -61,7 +61,7 @@
         <v-card-text>
           <v-form ref="form">
             <v-autocomplete v-model="pickedUser" :item-text="item => item.name" :items="users"
-                            :rules="userRules" label="Ausleihender Nutzer"
+                            :rules="userRules" label="Vergeben an"
                             prepend-icon="mdi-account" return-object></v-autocomplete>
             <v-text-field v-model="grantingDocument" label="Dokument" prepend-icon="mdi-file-document"/>
             <v-textarea v-model="note" label="Notiz" prepend-icon="mdi-note-text-outline" rows="1"></v-textarea>

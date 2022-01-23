@@ -86,6 +86,9 @@ def delete_rental(rental: Rental = Depends(PathModelGetter(Rental)),
 @router.post("/{uuid}/end", response_model=RentalModel)
 def end_rental(rental: Rental = Depends(PathModelGetter(Rental)),
                   c_user: User = Security(CurrentUser(), scopes=['rental:write'])):
+    if rental.end is not None:
+        raise HTTPException(400, "Rental already ended.")
+
     rental = lib.rental.edit_rental(rental, processor=c_user, end=utcnow(), _commit=True)
 
     return rental

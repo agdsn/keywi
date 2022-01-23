@@ -58,7 +58,7 @@
           mdi-pencil
         </v-icon>
 
-        <v-tooltip v-if="rentedByUser(item)" top>
+        <v-tooltip top v-if="item.active">
           <template v-slot:activator="{on}">
             <v-icon
                 class="mr-2"
@@ -66,7 +66,7 @@
                 @click="openReturnPrompt(item)"
                 v-on="on"
             >
-              mdi-key
+              mdi-arrow-u-left-bottom
             </v-icon>
           </template>
 
@@ -81,7 +81,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="secondary" @click="returnItem">
-            <v-icon left size="24">mdi-content-save-outline</v-icon>
+            <v-icon left size="24">mdi-check</v-icon>
             Bestätigen
           </v-btn>
         </v-card-actions>
@@ -119,7 +119,7 @@ export default {
         value: "user.name"
       },
       {
-        text: 'Auftraggeber',
+        text: 'Ausgegeben von',
         value: "issuing_user.name"
       },
       {
