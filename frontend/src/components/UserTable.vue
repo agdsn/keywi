@@ -4,10 +4,7 @@
         ref="table"
         :headers="headers"
         :items="tableData"
-        :loading="loading"
-        class="elevation-1"
         sort-by="name"
-        loading-text="Lade Daten..."
     >
       <template v-slot:[`item.name`]="{ item }">
         <router-link :to="`/user/${ item.id }`">{{ item.name }}</router-link>

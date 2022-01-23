@@ -4,11 +4,8 @@
         ref="table"
         :headers="headers"
         :items="tableData"
-        :loading="loading"
         sort-by="begin"
         :sort-desc="true"
-        class="elevation-1"
-        loading-text="Lade Daten..."
     >
       <template v-slot:[`item.begin`]="{ item }">
         {{ new Date(item.begin).toLocaleString('de') }}

@@ -4,9 +4,7 @@
       :headers="headers"
       :items="tableData"
       class="elevation-1"
-      :loading="loading"
       sort-by="name"
-      loading-text="Lade Daten..."
       ref="table"
     >
       <template v-slot:[`item.name`] = "{ item }">

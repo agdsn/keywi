@@ -3,10 +3,7 @@
     <DataTable
       :headers="headers"
       :items="tableData"
-      class="elevation-1"
       sort-by="name"
-      :loading="loading"
-      loading-text="Lade Daten..."
       ref="table"
     >
       <template v-slot:[`item.location.name`] = "{ item }">

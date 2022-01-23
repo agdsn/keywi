@@ -3,7 +3,9 @@
     :items="realItems"
     :search="externalSearch ? null : searchModel"
     :loading="loading"
+    loading-text="Lade Daten..."
     :items-per-page="15"
+    class="elevation-1"
     :item-key="itemKey"
     :footer-props="footerProps"
     v-bind="$attrs" v-on="$listeners">

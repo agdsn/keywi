@@ -4,7 +4,6 @@
       :headers="headers"
       :items="tableData"
       class="elevation-1"
-      :loading="loading"
       multisort
       :sort-by="['location.name', 'name']"
       loading-text="Lade Daten..."

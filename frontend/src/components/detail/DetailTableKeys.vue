@@ -5,10 +5,7 @@
         :headers="headers"
         :item-class="row_classes"
         :items="tableData"
-        :loading="loading"
         sort-by="number"
-        class="elevation-1"
-        loading-text="Lade Daten..."
     >
       <template v-slot:[`item.number`]="{ item }">
         <router-link :to="`/key/${ item.id }`">{{ item.number }}</router-link>

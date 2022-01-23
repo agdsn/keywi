@@ -2,9 +2,6 @@
   <DataTable
       :headers="headers"
       :items="tableData"
-      class="elevation-1"
-      :loading="loading"
-      loading-text="Lade Daten..."
       sort-by="name"
       ref="table"
   >
