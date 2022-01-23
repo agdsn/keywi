@@ -4,7 +4,6 @@
         ref="table"
         :headers="headers"
         :items="tableData"
-        :items-per-page="25"
         :loading="loading"
         class="elevation-1"
         sort-by="name"
@@ -41,7 +40,7 @@ export default {
         value: "email"
       }
     ],
-    tableData: []
+    tableData: null
   }),
   mounted() {
     this.loadData();
@@ -56,13 +55,10 @@ export default {
       if (paramId) {
         apiStub.user_getUser(paramId).then(response => {
           this.tableData = [response.data];
-
-          this.loading = false;
         });
       } else {
         apiStub.user_getUsers().then(response => {
           this.tableData = response.data;
-          this.loading = false;
         })
       }
     }

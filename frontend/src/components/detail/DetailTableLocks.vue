@@ -2,7 +2,6 @@
   <DataTable
       :headers="headers"
       :items="tableData"
-      :items-per-page="25"
       class="elevation-1"
       :loading="loading"
       loading-text="Lade Daten..."
@@ -42,7 +41,7 @@ export default {
         value: "available_keys"
       }
     ],
-    tableData: []
+    tableData: null
   }),
   methods: {
     async loadDataByLocationId(locationId) {
@@ -59,8 +58,6 @@ export default {
       apiStub.lock_getLocks(params).then(response => {
         this.tableData = response.data;
       }).finally(() => {
-        this.loading = false;
-
         if(this.tableData.length == 0) this.$emit('empty');
       });
     }

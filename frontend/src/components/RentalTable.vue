@@ -4,7 +4,6 @@
         ref="table"
         :headers="headers"
         :items="tableData"
-        :items-per-page="25"
         :loading="loading"
         sort-by="begin"
         :sort-desc="true"
@@ -140,7 +139,7 @@ export default {
         sortable: false
       }
     ],
-    tableData: [],
+    tableData: null,
     rentalInDialog: {key:{}},
     returnDialog: false
   }),
@@ -158,14 +157,10 @@ export default {
       if (paramId) {
         apiStub.rental_getRental(paramId).then(response => {
           this.tableData = [response.data];
-        }).finally(() => {
-          this.loading = false;
         });
       } else {
         apiStub.rental_getRentals().then(response => {
           this.tableData = response.data;
-        }).finally(() => {
-          this.loading = false;
         });
       }
     },

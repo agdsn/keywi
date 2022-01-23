@@ -5,7 +5,6 @@
         :headers="headers"
         :item-class="row_classes"
         :items="tableData"
-        :items-per-page="25"
         :loading="loading"
         multisort
         :sort-by="['location.name', 'lock.name', 'number']"
@@ -158,7 +157,7 @@ export default {
         sortable: false
       }
     ],
-    tableData: [],
+    tableData: null,
     usersLoaded: false,
     users: [],
     pickedUser: undefined,
@@ -180,17 +179,11 @@ export default {
       if (paramId) {
         apiStub.key_getKey(paramId).then(response => {
           this.tableData = [response.data];
-
-          this.loading = false;
-        }).finally(() => {
-          this.loading = false
         });
       } else {
         apiStub.key_getKeys().then(response => {
           this.tableData = response.data;
-        }).finally(() => {
-          this.loading = false;
-        })
+        });
       }
     },
 

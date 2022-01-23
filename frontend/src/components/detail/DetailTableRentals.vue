@@ -3,7 +3,6 @@
       ref="table"
       :headers="headers"
       :items="tableData"
-      :items-per-page="25"
       :loading="loading"
       sort-by="begin"
       :sort-desc="true"
@@ -92,7 +91,7 @@ export default {
         sortable: false
       }
     ],
-    tableData: []
+    tableData: null
   }),
   methods: {
     async loadDataByKeyId(keyId) {
@@ -108,8 +107,6 @@ export default {
 
       apiStub.rental_getRentals(params).then(response => {
         this.tableData = response.data;
-      }).finally(() => {
-        this.loading = false;
       });
     },
 
@@ -124,8 +121,6 @@ export default {
 
       apiStub.rental_getRentals(params).then(response => {
         this.tableData = response.data;
-      }).finally(() => {
-        this.loading = false;
       });
     },
 

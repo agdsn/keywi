@@ -5,7 +5,6 @@
         :headers="headers"
         :item-class="row_classes"
         :items="tableData"
-        :items-per-page="25"
         :loading="loading"
         sort-by="number"
         class="elevation-1"
@@ -121,7 +120,7 @@ export default {
         sortable: false
       }
     ],
-    tableData: [],
+    tableData: null,
     usersLoaded: false,
     users: [],
     pickedUser: undefined,
@@ -146,8 +145,6 @@ export default {
       apiStub.key_getKeys(params).then(response => {
         this.tableData = response.data;
       }).finally(() => {
-        this.loading = false;
-
         if (this.tableData.length == 0) this.$emit('empty');
       });
     },
@@ -167,8 +164,6 @@ export default {
       apiStub.key_getKeys(params).then(response => {
         this.tableData = response.data;
       }).finally(() => {
-        this.loading = false;
-
         if (this.tableData.length == 0) this.$emit('empty');
       });
     },

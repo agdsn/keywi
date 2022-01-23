@@ -3,7 +3,6 @@
     <DataTable
       :headers="headers"
       :items="tableData"
-      :items-per-page="25"
       class="elevation-1"
       sort-by="name"
       :loading="loading"
@@ -80,7 +79,7 @@ export default {
         sortable: false
       }
     ],
-    tableData: []
+    tableData: null
   }),
   mounted() { this.loadData(); },
   computed: {
@@ -98,15 +97,10 @@ export default {
       if(paramId) {
         apiStub.safe_getSafe(paramId).then(response => {
           this.tableData = [response.data];
-        }).finally(() => {
-          this.loading = false;
         });
       } else {
         apiStub.safe_getSafes().then(response => {
           this.tableData = response.data;
-          this.loading = false;
-        }).finally(() => {
-          this.loading = false;
         });
       }
     },

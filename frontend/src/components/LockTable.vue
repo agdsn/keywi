@@ -3,7 +3,6 @@
     <DataTable
       :headers="headers"
       :items="tableData"
-      :items-per-page="25"
       class="elevation-1"
       :loading="loading"
       multisort
@@ -87,7 +86,7 @@ export default {
         sortable: false
       }
     ],
-    tableData: []
+    tableData: null
   }),
   computed: {
     lockToDeleteName() {
@@ -105,16 +104,10 @@ export default {
       if(paramId) {
         apiStub.lock_getLock(paramId).then(response => {
           this.tableData = [response.data];
-        }).finally(() => {
-          this.loading = false;
         });
       } else {
         apiStub.lock_getLocks().then(response => {
           this.tableData = response.data;
-
-          this.loading = false;
-        }).finally(() => {
-          this.loading = false;
         });
       }
     },

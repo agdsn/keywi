@@ -3,6 +3,7 @@
     :items="realItems"
     :search="externalSearch ? null : searchModel"
     :loading="loading"
+    :items-per-page="15"
     :item-key="itemKey"
     :footer-props="footerProps"
     v-bind="$attrs" v-on="$listeners">
@@ -72,7 +73,7 @@ export default {
       type: Object,
       default() {
         return {
-          'items-per-page-options': [5, 10, 25, 50],
+          'items-per-page-options': [5, 10, 15, 25, 50],
         };
       },
     },

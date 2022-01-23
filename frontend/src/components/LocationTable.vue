@@ -3,7 +3,6 @@
     <DataTable
       :headers="headers"
       :items="tableData"
-      :items-per-page="25"
       class="elevation-1"
       :loading="loading"
       sort-by="name"
@@ -54,7 +53,6 @@ export default {
   components: {DataTable},
   data: () => ({
     dialog: false,
-    loading: true,
     locationToDelete: undefined,
     headers: [
       {
@@ -79,7 +77,7 @@ export default {
         sortable: false
       }
     ],
-    tableData: []
+    tableData: null
   }),
   mounted() { this.loadData(); },
   computed: {
@@ -98,16 +96,10 @@ export default {
       if(paramId) {
         apiStub.location_getLocation(paramId).then(response => {
           this.tableData = [response.data];
-        }).finally(() => {
-          this.loading = false;
         });
       } else {
         apiStub.location_getLocations().then(response => {
-          this.tableData = response.data;
-
-          this.loading = false;
-        }).finally(() => {
-          this.loading = false;
+          this.tableData = response.data
         });
       }
     },
