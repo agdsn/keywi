@@ -5,7 +5,7 @@ from model.session import with_transaction
 
 @with_transaction
 def create_location(name: str, address: str, latitude: float, longitude: float, processor: User, note: str = None):
-    return create_object(Location, log_keys=['name'], log_params={'location': REFERENCED_OBJ}, **locals())
+    return create_object(Location, log_keys=['note'], log_params={'location': REFERENCED_OBJ}, **locals())
 
 
 @with_transaction

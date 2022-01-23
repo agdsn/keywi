@@ -38,7 +38,7 @@
                   @click="openRentPrompt(item)"
                   v-on="on"
               >
-                mdi-key
+                mdi-hand-coin
               </v-icon>
             </template>
 
@@ -186,7 +186,9 @@ export default {
 
     row_classes(item) {
       if (item.active_rental == null && item.rentable) {
-        return "green-cell"
+        return "green-cell";
+      } else if (!item.rentable) {
+        return "grey-cell";
       } else {
         return "red-cell";
       }
@@ -260,7 +262,7 @@ export default {
     },
 
     rentable(key) {
-      return this.getRentalStatus(key) == "Ausleihbar";
+      return this.getRentalStatus(key) === "Ausleihbar";
     }
   },
   computed: {
@@ -275,11 +277,13 @@ export default {
 <style scoped>
 .v-data-table >>> .red-cell td:nth-last-child(2) {
   background-color: #DDC1BB;
-  border-radius: 5px;
 }
 
 .v-data-table >>> .green-cell td:nth-last-child(2) {
   background-color: #ABCC9F;
-  border-radius: 5px;
+}
+
+.v-data-table >>> .grey-cell td:nth-last-child(2) {
+  background-color: #c9c9c9;
 }
 </style>

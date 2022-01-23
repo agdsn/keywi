@@ -239,11 +239,9 @@ export default {
 
 .red-cell {
   background-color: #DDC1BB;
-  border-radius: 5px;
 }
 
 .green-cell {
   background-color: #ABCC9F;
-  border-radius: 5px;
 }
 </style>

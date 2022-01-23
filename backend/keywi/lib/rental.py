@@ -29,7 +29,7 @@ def create_rental(key: Key, user: User, issuing_user: User, processor: User, beg
         raise RentalRangeOverlapException("Key has an other rental in this timerange.")
 
     return create_object(Rental,
-                         log_keys=['key_id', 'user_id', 'issuing_user_id', 'begin', 'allowed_by'],
+                         log_keys=['issuing_user_id', 'allowed_by', 'note'],
                          log_params={'rental': REFERENCED_OBJ,
                                      'key': key,
                                      'user': user},

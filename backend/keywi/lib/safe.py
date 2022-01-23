@@ -6,7 +6,7 @@ from model.session import with_transaction
 @with_transaction
 def create_safe(name: str, location: Location, processor: User, note: str = None):
     return create_object(Safe,
-                         log_keys=['name', 'location_id'],
+                         log_keys=['note'],
                          log_params={'safe': REFERENCED_OBJ,
                                      'location': location},
                          **locals())

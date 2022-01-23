@@ -106,7 +106,7 @@ export default {
     this.safeId = this.$route.params.id;
     this.loadSafe();
     this.loadKeys();
-    this.$refs.logTable.loadData({ safe_id: this.safe_id });
+    this.$refs.logTable.loadData({ safe_id: this.safeId });
   },
   methods: {
     async loadSafe() {
