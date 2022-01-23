@@ -5,7 +5,7 @@
         :headers="headers"
         :item-class="row_classes"
         :items="tableData"
-        multisort
+        multi-sort
         :sort-by="['location.name', 'lock.name', 'number']"
         class="elevation-1"
         loading-text="Lade Daten..."

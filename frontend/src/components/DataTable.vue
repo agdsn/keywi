@@ -11,7 +11,7 @@
     v-bind="$attrs" v-on="$listeners">
     <template v-slot:top>
       <v-row>
-        <v-col align-self="left">
+        <v-col align-self="start">
           <slot name="header">
           </slot>
         </v-col>
