@@ -62,7 +62,7 @@
                     icon="mdi-key"
                     text="Ausleihen"
                     @mounted="rentalFormMountedEvent"
-                    @save-form="loadKey(); loadRentals()"
+                    @save-form="loadKey(); loadRentals(); loadLogs()"
         />
 
         <form-popup ref="popup"
@@ -70,7 +70,7 @@
                     icon="mdi-pencil"
                     text="Bearbeiten"
                     @mounted="mountedEvent"
-                    @save-form="loadKey()"
+                    @save-form="loadKey(); loadLogs()"
                     @button-add-clicked="mountedEvent"
         />
 
@@ -128,9 +128,13 @@ export default {
     this.keyId = this.$route.params.id;
     this.loadKey();
     this.loadRentals();
-    this.$refs.logTable.loadData({ key_id: this.keyId });
+    this.loadLogs()
   },
   methods: {
+    loadLogs() {
+      this.$refs.logTable.loadData({ key_id: this.keyId });
+    },
+
     async loadKey() {
       if (!this.keyId) return;
 

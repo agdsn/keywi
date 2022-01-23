@@ -48,7 +48,7 @@
                       icon="mdi-pencil"
                       text="Bearbeiten"
                       @mounted="mountedEvent"
-                      @save-form="loadLock()"
+                      @save-form="loadLock(); loadLogs();"
                       @button-add-clicked="mountedEvent"/>
 
           <!--      DELETE BUTTON-->
@@ -107,10 +107,12 @@ export default {
     this.lockId = this.$route.params.id;
     this.loadLock();
     this.loadKeys();
-
-    this.$refs.logTable.loadData({ lock_id: this.lockId });
+    this.loadLogs();
   },
   methods: {
+    loadLogs() {
+      this.$refs.logTable.loadData({ lock_id: this.lockId });
+    },
     async loadLock() {
       if (!this.lockId) return;
 

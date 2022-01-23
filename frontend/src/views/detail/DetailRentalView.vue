@@ -78,7 +78,7 @@
                     icon="mdi-pencil"
                     text="Bearbeiten"
                     @mounted="rentalEditFormMountedEvent()"
-                    @save-form="loadRental()"
+                    @save-form="loadRental(); loadLogs();"
                     @button-add-clicked="rentalEditFormMountedEvent()"
         />
 
@@ -133,9 +133,12 @@ export default {
   mounted() {
     this.rentalId = this.$route.params.id;
     this.loadRental();
-    this.$refs.logTable.loadData({ rental_id: this.rentalId });
+    this.loadLogs();
   },
   methods: {
+    loadLogs() {
+      this.$refs.logTable.loadData({ rental_id: this.rentalId });
+    },
     async loadRental() {
       if (!this.rentalId) return;
 

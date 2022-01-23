@@ -61,9 +61,12 @@ export default {
     this.userId = this.$route.params.id;
     this.loadUser();
     this.loadRentals();
-    this.$refs.logTable.loadData({ user_id: this.userId });
+    this.loadLogs();
   },
   methods: {
+    loadLogs() {
+      this.$refs.logTable.loadData({ lock_id: this.lockId });
+    },
     async loadUser() {
       if (!this.userId) return;
 

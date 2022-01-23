@@ -48,7 +48,7 @@
                       icon="mdi-pencil"
                       text="Bearbeiten"
                       @mounted="mountedEvent"
-                      @save-form="loadLocation()"
+                      @save-form="loadLocation(); loadLogs();"
                       @button-add-clicked="mountedEvent"/>
 
           <!--      DELETE BUTTON-->
@@ -114,9 +114,12 @@ export default {
     this.loadLocation();
     this.loadLocks();
     this.loadSafes();
-    this.$refs.logTable.loadData({ location_id: this.locationId });
+    this.loadLogs();
   },
   methods: {
+    loadLogs() {
+      this.$refs.logTable.loadData({ location_id: this.locationId });
+    },
     async loadLocation() {
       if (!this.locationId) return;
 

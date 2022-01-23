@@ -44,7 +44,7 @@
                       icon="mdi-pencil"
                       text="Bearbeiten"
                       @mounted="mountedEvent"
-                      @save-form="loadSafe()"
+                      @save-form="loadSafe(); loadLogs();"
                       @button-add-clicked="mountedEvent"/>
 
           <!--      DELETE BUTTON-->
@@ -106,9 +106,12 @@ export default {
     this.safeId = this.$route.params.id;
     this.loadSafe();
     this.loadKeys();
-    this.$refs.logTable.loadData({ safe_id: this.safeId });
+    this.loadLogs();
   },
   methods: {
+    loadLogs() {
+      this.$refs.logTable.loadData({ safe_id: this.safeId });
+    },
     async loadSafe() {
       if (!this.safeId) return;
 
