@@ -34,3 +34,7 @@ export default Vue.extend({
     text-decoration: none;
   }
 </style>
+
+<style lang="sass">
+@import '../node_modules/@fontsource/roboto/latin.css'
+</style>
