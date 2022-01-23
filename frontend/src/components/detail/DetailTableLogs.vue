@@ -3,7 +3,6 @@
     <DataTable
         ref="table"
         :headers="headers"
-        :item-class="row_classes"
         :items="tableData"
         sort-by="timestamp"
         :sort-desc="true"

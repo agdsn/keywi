@@ -70,7 +70,7 @@
           </v-dialog>
         </div>
 
-        <detail-table-keys ref="keyTable" @empty="keysEmpty=true"
+        <detail-table-keys ref="keyTable" @empty="keysEmpty=true" class="mt-10"
                            @rented="$refs.keyTable.loadDataBySafeId(safe.id)"></detail-table-keys>
 
         <detail-table-logs class="mt-10" ref="logTable"></detail-table-logs>

@@ -10,7 +10,7 @@
       ref="table"
     >
       <template v-slot:[`item.link`]="{ item }">
-        <router-link :to="`/rental/${item.id}`">
+        <router-link :to="`/lock/${item.id}`">
           <v-icon small>
             mdi-open-in-new
           </v-icon>
