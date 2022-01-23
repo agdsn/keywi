@@ -6,6 +6,10 @@
       sort-by="name"
       ref="table"
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Tresore</h2>
+      </template>
+
       <template v-slot:[`item.location.name`] = "{ item }">
         <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
       </template>

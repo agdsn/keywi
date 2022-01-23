@@ -7,6 +7,10 @@
         sort-by="begin"
         :sort-desc="true"
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Ausleihen</h2>
+      </template>
+
       <template v-slot:[`item.link`]="{ item }">
         <router-link :to="`/rental/${item.id}`">
           <v-icon small>

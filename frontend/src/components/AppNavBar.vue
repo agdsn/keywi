@@ -37,6 +37,12 @@
           Ausleihen
         </router-link>
       </li>
+      <li>
+        <router-link to="/log">
+          <v-icon color="white" left>mdi-format-list-bulleted-type</v-icon>
+          Logs
+        </router-link>
+      </li>
     </ul>
     <ul class="list">
       <li v-if="loggedIn">

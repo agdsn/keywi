@@ -10,6 +10,10 @@
         class="elevation-1"
         loading-text="Lade Daten..."
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Schlüssel</h2>
+      </template>
+
       <template v-slot:[`item.link`]="{ item }">
         <router-link :to="`/key/${item.id}`">
           <v-icon small>

@@ -9,10 +9,10 @@ from model.session import with_transaction, session
 REFERENCED_OBJ = 'REFERENCED_OBJ'
 
 obj_name = {
-    Key: lambda k: f'{k.lock.location.name} - {k.lock.name} - {k.number}',
-    Rental: lambda r: f'{r.key.lock.location.name} - {r.key.lock.name} - {r.key.number} - {r.user.login}',
-    Lock: lambda l: f'{l.location.name} - {l.name}',
-    User: lambda u: f'{u.name} ({u.login})',
+    Key: lambda k: f'({k.lock.location.name}, {k.lock.name}, {k.number})',
+    Rental: lambda r: f'({r.key.lock.location.name}, {r.key.lock.name}, {r.key.number}, {r.user.name})',
+    Lock: lambda l: f'({l.location.name}, {l.name})',
+    User: lambda u: f'({u.name}, {u.login})',
     'default': lambda x: x.name,
 }
 

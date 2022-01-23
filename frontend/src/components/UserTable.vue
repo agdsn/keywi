@@ -6,6 +6,10 @@
         :items="tableData"
         sort-by="name"
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Benutzer</h2>
+      </template>
+
       <template v-slot:[`item.name`]="{ item }">
         <router-link :to="`/user/${ item.id }`">{{ item.name }}</router-link>
       </template>

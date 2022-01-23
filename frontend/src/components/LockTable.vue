@@ -9,6 +9,10 @@
       loading-text="Lade Daten..."
       ref="table"
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Schlösser</h2>
+      </template>
+
       <template v-slot:[`item.link`]="{ item }">
         <router-link :to="`/lock/${item.id}`">
           <v-icon small>
