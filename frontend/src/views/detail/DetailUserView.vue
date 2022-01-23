@@ -31,9 +31,8 @@
 
       <v-divider class="mb-8"></v-divider>
 
-      <h2 class="mb-2">Ausleihhistorie</h2>
-
-      <detail-table-rentals ref="rentalTable"></detail-table-rentals>
+      <detail-table-rentals class="mt-10" ref="rentalTable"></detail-table-rentals>
+      <detail-table-logs class="mt-10" ref="logTable"></detail-table-logs>
 
     </div>
   </v-card>
@@ -43,10 +42,12 @@
 import api from "@/api/api";
 import DetailTableRentals from "@/components/detail/DetailTableRentals";
 import AuthService from "@/services/AuthService";
+import DetailTableLogs from "@/components/detail/DetailTableLogs";
 
 export default {
   name: "DetailUserView",
   components: {
+    DetailTableLogs,
     DetailTableRentals
   },
 
@@ -60,6 +61,7 @@ export default {
     this.userId = this.$route.params.id;
     this.loadUser();
     this.loadRentals();
+    this.$refs.logTable.loadData({ user_id: this.userId });
   },
   methods: {
     async loadUser() {

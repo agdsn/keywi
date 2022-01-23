@@ -17,7 +17,7 @@ router = APIRouter(prefix="/key", tags=["key"])
 @router.get("/", response_model=List[KeyModel],
             dependencies=[Security(CurrentUser(), scopes=['key:read'])])
 def get_keys(safe_id: UUID = Query(None), lock_id: UUID = Query(None)):
-    keys = db.session.query(Key)
+    keys = db.session.query(Key).filter_by(deleted=False)
 
     if safe_id is not None:
         keys = keys.filter_by(safe_id=safe_id)

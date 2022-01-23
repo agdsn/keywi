@@ -10,6 +10,14 @@
         class="elevation-1"
         loading-text="Lade Daten..."
     >
+      <template v-slot:[`item.link`]="{ item }">
+        <router-link :to="`/key/${item.id}`">
+          <v-icon small>
+            mdi-open-in-new
+          </v-icon>
+        </router-link>
+      </template>
+
       <template v-slot:[`item.number`]="{ item }">
         <router-link :to="`/key/${ item.id }`">{{ item.number }}</router-link>
       </template>
@@ -31,35 +39,37 @@
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-            class="mr-2"
-            small
-            @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-            small
-            @click="openDeletePrompt(item)"
-        >
-          mdi-delete
-        </v-icon>
+        <div class="text-right">
+          <v-icon
+              class="mr-2"
+              small
+              @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+              small
+              @click="openDeletePrompt(item)"
+          >
+            mdi-delete
+          </v-icon>
 
-        <v-tooltip v-if="rentable(item) || rentedByUser(item)" top>
-          <template v-slot:activator="{on}">
-            <v-icon
-                :color="getKeyColor(item)"
-                class="ml-2"
-                small
-                @click="openRentPrompt(item)"
-                v-on="on"
-            >
-              mdi-key
-            </v-icon>
-          </template>
+          <v-tooltip v-if="rentable(item) || rentedByUser(item)" top>
+            <template v-slot:activator="{on}">
+              <v-icon
+                  :color="getKeyColor(item)"
+                  class="ml-2"
+                  small
+                  @click="openRentPrompt(item)"
+                  v-on="on"
+              >
+                mdi-key
+              </v-icon>
+            </template>
 
-          <span>{{ getTooltip(item) }}</span>
-        </v-tooltip>
+            <span>{{ getTooltip(item) }}</span>
+          </v-tooltip>
+        </div>
       </template>
     </DataTable>
 
@@ -126,10 +136,14 @@ export default {
     deleteDialog: false,
     rentDialog: false,
     returnDialog: false,
-    loading: true,
     grantingDocument: '',
     note: '',
     headers: [
+      {
+        width: '5%',
+        text: 'Link',
+        value: "link"
+      },
       {
         text: "Ort",
         value: "location.name"
@@ -153,8 +167,10 @@ export default {
       {
         text: "Aktionen",
         value: "actions",
-        sortable: false
-      }
+        width: '200px',
+        sortable: false,
+        align: 'right',
+      },
     ],
     tableData: null,
     usersLoaded: false,

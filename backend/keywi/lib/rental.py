@@ -60,4 +60,4 @@ def edit_rental(rental: Rental, processor: User, **kwargs):
 
 @with_transaction
 def delete_rental(rental: Rental, processor: User):
-    return delete_object(rental, processor)
+    return delete_object(rental, processor, log_params={'rental': REFERENCED_OBJ})

@@ -6,6 +6,10 @@
       sort-by="begin"
       :sort-desc="true"
   >
+    <template v-slot:header>
+      <h2 class="ml-4">Ausleihen</h2>
+    </template>
+
     <template v-slot:[`item.begin`]="{ item }">
       {{ new Date(item.begin).toLocaleString('de') }}
     </template>
@@ -56,8 +60,13 @@ export default {
   name: "DetailTableKeys",
   components: {DataTable},
   data: () => ({
-    loading: true,
     headers: [
+      {
+        text: "Links",
+        value: "actions",
+        width: '5%',
+        sortable: false,
+      },
       {
         text: 'Ort',
         value: "key.lock.location"
@@ -82,11 +91,6 @@ export default {
         text: 'Ende',
         value: "end"
       },
-      {
-        text: "Aktionen",
-        value: "actions",
-        sortable: false
-      }
     ],
     tableData: null
   }),

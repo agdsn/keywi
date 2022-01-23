@@ -33,7 +33,7 @@
       </li>
       <li>
         <router-link to="/rental">
-          <v-icon color="white" left>mdi-key</v-icon>
+          <v-icon color="white" left>mdi-hand-coin</v-icon>
           Ausleihen
         </router-link>
       </li>

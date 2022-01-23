@@ -7,6 +7,10 @@
         :items="tableData"
         sort-by="number"
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Schlüssel</h2>
+      </template>
+
       <template v-slot:[`item.number`]="{ item }">
         <router-link :to="`/key/${ item.id }`">{{ item.number }}</router-link>
       </template>
@@ -24,21 +28,23 @@
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
-        <v-tooltip v-if="rentable(item) || rentedByUser(item)" top>
-          <template v-slot:activator="{on}">
-            <v-icon
-                :color="getKeyColor(item)"
-                class="ml-2"
-                small
-                @click="openRentPrompt(item)"
-                v-on="on"
-            >
-              mdi-key
-            </v-icon>
-          </template>
+        <div class="text-right">
+          <v-tooltip v-if="rentable(item) || rentedByUser(item)" top>
+            <template v-slot:activator="{on}">
+              <v-icon
+                  :color="getKeyColor(item)"
+                  class="ml-2"
+                  small
+                  @click="openRentPrompt(item)"
+                  v-on="on"
+              >
+                mdi-key
+              </v-icon>
+            </template>
 
-          <span>{{ getTooltip(item) }}</span>
-        </v-tooltip>
+            <span>{{ getTooltip(item) }}</span>
+          </v-tooltip>
+        </div>
       </template>
     </DataTable>
 
@@ -88,7 +94,6 @@ export default {
   name: "DetailTableKeys",
   components: {DataTable},
   data: () => ({
-    loading: true,
     keyInDialog: undefined,
     rentDialog: false,
     returnDialog: false,
@@ -114,8 +119,10 @@ export default {
       {
         text: "Aktionen",
         value: "actions",
-        sortable: false
-      }
+        width: '200px',
+        sortable: false,
+        align: 'right',
+      },
     ],
     tableData: null,
     usersLoaded: false,

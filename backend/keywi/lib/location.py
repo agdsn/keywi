@@ -15,4 +15,5 @@ def edit_location(location: Location, processor: User, **kwargs):
 
 @with_transaction
 def delete_location(location: Location, processor: User):
-    return delete_object(location, processor)
+    return delete_object(location, processor, childs=['locks', 'keys'],
+                         log_params={'location': REFERENCED_OBJ})

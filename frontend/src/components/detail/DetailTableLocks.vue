@@ -5,6 +5,10 @@
       sort-by="name"
       ref="table"
   >
+    <template v-slot:header>
+      <h2 class="ml-4">Schlösser</h2>
+    </template>
+
     <template v-slot:[`item.available_keys`]="{ item }">
       {{ item.amount_free_keys }} / {{ item.amount_keys }}
     </template>
@@ -23,7 +27,6 @@ export default {
   name: "DetailTableLocks",
   components: {DataTable},
   data: () => ({
-    loading: true,
     headers: [
       {
         text: 'Schloss',

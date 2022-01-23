@@ -18,4 +18,6 @@ def edit_lock(lock: Lock, processor: User, **kwargs):
 
 @with_transaction
 def delete_lock(lock: Lock, processor: User):
-    return delete_object(lock, processor, log_params={'location': lock.location})
+    return delete_object(lock, processor, childs=['keys'],
+                         log_params={'location': lock.location,
+                                     'lock': REFERENCED_OBJ,})

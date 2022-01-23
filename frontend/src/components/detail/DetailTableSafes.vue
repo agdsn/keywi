@@ -5,6 +5,10 @@
       sort-by="name"
       ref="table"
   >
+    <template v-slot:header>
+      <h2 class="ml-4">Tresore</h2>
+    </template>
+
     <template v-slot:[`item.name`]="{ item }">
       <router-link :to="`/safe/${ item.id }`">{{ item.name }}</router-link>
     </template>
@@ -19,7 +23,6 @@ export default {
   name: "DetailTableSafes",
   components: {DataTable},
   data: () => ({
-    loading: true,
     headers: [
       {
         text: 'Tresor',

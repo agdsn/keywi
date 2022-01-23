@@ -17,7 +17,7 @@ router = APIRouter(prefix="/lock", tags=["lock"])
 @router.get("/", response_model=List[LockModel],
             dependencies=[Security(CurrentUser(), scopes=['lock:read'])])
 def get_locks(location_id: UUID = Query(None)):
-    locks = db.session.query(Lock)
+    locks = db.session.query(Lock).filter_by(deleted=False)
 
     if location_id is not None:
         locks = locks.filter_by(location_id=location_id)

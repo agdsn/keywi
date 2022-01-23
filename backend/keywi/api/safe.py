@@ -17,7 +17,7 @@ router = APIRouter(prefix="/safe", tags=["safe"])
 @router.get("/", response_model=List[SafeModel],
             dependencies=[Security(CurrentUser(), scopes=['safe:read'])])
 def get_safes(location_id: UUID = Query(None)):
-    safes = db.session.query(Safe)
+    safes = db.session.query(Safe).filter_by(deleted=False)
 
     if location_id is not None:
         safes = safes.filter_by(location_id=location_id)

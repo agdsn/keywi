@@ -11,10 +11,14 @@ from model.pydantic import UserModel
 router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.get("/", response_model=List[UserModel],
-            dependencies=[Security(CurrentUser(), scopes=['user:read'])])
-def get_users():
-    return db.session.query(User).all()
+@router.get("/", response_model=List[UserModel])
+def get_users(c_user: User = Security(CurrentUser(), scopes=['user:read', 'user:self:read'])):
+    users = db.session.query(User)
+
+    if 'user:read' not in c_user.scopes:
+        users = users.filter_by(id=c_user.id)
+
+    return users.all()
 
 
 @router.get("/current", response_model=UserModel)

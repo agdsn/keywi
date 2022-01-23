@@ -11,19 +11,21 @@
         <router-link :to="`/location/${ item.id }`">{{ item.name }}</router-link>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-          small
-          @click="openDeletePrompt(item)"
-        >
-          mdi-delete
-        </v-icon>
+        <div class="text-right">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="openDeletePrompt(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </div>
       </template>
     </DataTable>
 
@@ -72,8 +74,10 @@ export default {
       {
         text: "Aktionen",
         value: "actions",
-        sortable: false
-      }
+        width: '200px',
+        sortable: false,
+        align: 'right',
+      },
     ],
     tableData: null
   }),

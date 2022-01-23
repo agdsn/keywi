@@ -19,7 +19,7 @@ def get_rentals(key_id: UUID = Query(None),
                 user_id: UUID = Query(None),
                 issuing_user_id: UUID = Query(None),
                 c_user = Security(CurrentUser(), scopes=['rental:read', 'rental:self:read'])):
-    rentals = db.session.query(Rental)
+    rentals = db.session.query(Rental).filter_by(deleted=False)
 
     if 'rental:read' not in c_user.scopes:
         rentals = rentals.filter_by(user=c_user)

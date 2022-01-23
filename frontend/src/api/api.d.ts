@@ -74,6 +74,10 @@ declare namespace Components {
             safe: /* SafeModelShort */ SafeModelShort;
             active_rental?: /* RentalModelShort */ RentalModelShort;
             location: /* LocationModelShort */ LocationModelShort;
+            /**
+             * Deleted
+             */
+            deleted: boolean;
         }
         /**
          * KeyModelCreate
@@ -184,6 +188,10 @@ declare namespace Components {
              * Amount Safes
              */
             amount_safes: number;
+            /**
+             * Deleted
+             */
+            deleted: boolean;
         }
         /**
          * LocationModelCreate
@@ -277,6 +285,10 @@ declare namespace Components {
              * Amount Free Keys
              */
             amount_free_keys: number;
+            /**
+             * Deleted
+             */
+            deleted: boolean;
         }
         /**
          * LockModelCreate
@@ -386,6 +398,10 @@ declare namespace Components {
              * Active
              */
             active: boolean;
+            /**
+             * Deleted
+             */
+            deleted: boolean;
         }
         /**
          * RentalModelCreate
@@ -481,6 +497,10 @@ declare namespace Components {
              * Amount Keys
              */
             amount_keys: number;
+            /**
+             * Deleted
+             */
+            deleted: boolean;
         }
         /**
          * SafeModelCreate

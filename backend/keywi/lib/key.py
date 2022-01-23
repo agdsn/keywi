@@ -19,4 +19,5 @@ def edit_key(key: Key, processor: User, **kwargs):
 
 @with_transaction
 def delete_key(key: Key, processor: User):
-    return delete_object(key, processor, log_params={'safe': key.safe, 'lock': key.lock})
+    return delete_object(key, processor,
+                         log_params={'key': REFERENCED_OBJ, 'safe': key.safe, 'lock': key.lock},)

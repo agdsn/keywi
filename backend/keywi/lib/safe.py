@@ -20,4 +20,4 @@ def edit_safe(safe: Safe, processor: User, **kwargs):
 
 @with_transaction
 def delete_safe(safe: Safe, processor: User):
-    return delete_object(safe, processor)
+    return delete_object(safe, processor, log_params={'safe': REFERENCED_OBJ})

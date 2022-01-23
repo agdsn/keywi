@@ -7,6 +7,14 @@
         sort-by="begin"
         :sort-desc="true"
     >
+      <template v-slot:[`item.link`]="{ item }">
+        <router-link :to="`/rental/${item.id}`">
+          <v-icon small>
+            mdi-open-in-new
+          </v-icon>
+        </router-link>
+      </template>
+
       <template v-slot:[`item.begin`]="{ item }">
         {{ new Date(item.begin).toLocaleString('de') }}
       </template>
@@ -41,37 +49,30 @@
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
-        <router-link :to="`/rental/${item.id}`">
+        <div class="text-right">
           <v-icon
               class="mr-2"
               small
+              @click="editItem(item)"
           >
-            mdi-open-in-new
+            mdi-pencil
           </v-icon>
-        </router-link>
 
-        <v-icon
-            class="mr-2"
-            small
-            @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
+          <v-tooltip top v-if="item.active">
+            <template v-slot:activator="{on}">
+              <v-icon
+                  class="mr-2"
+                  small
+                  @click="openReturnPrompt(item)"
+                  v-on="on"
+              >
+                mdi-arrow-u-left-bottom
+              </v-icon>
+            </template>
 
-        <v-tooltip top v-if="item.active">
-          <template v-slot:activator="{on}">
-            <v-icon
-                class="mr-2"
-                small
-                @click="openReturnPrompt(item)"
-                v-on="on"
-            >
-              mdi-arrow-u-left-bottom
-            </v-icon>
-          </template>
-
-          <span>Schlüssel zurückgeben</span>
-        </v-tooltip>
+            <span>Schlüssel zurückgeben</span>
+          </v-tooltip>
+        </div>
       </template>
     </DataTable>
 
@@ -100,8 +101,12 @@ export default {
   components: {DataTable},
   data: () => ({
     dialog: false,
-    loading: true,
     headers: [
+      {
+        width: '5%',
+        text: 'Link',
+        value: "link"
+      },
       {
         text: 'Ort',
         value: "key.lock.location"
@@ -133,8 +138,10 @@ export default {
       {
         text: "Aktionen",
         value: "actions",
-        sortable: false
-      }
+        width: '200px',
+        sortable: false,
+        align: 'right',
+      },
     ],
     tableData: null,
     rentalInDialog: {key:{}},

@@ -16,7 +16,7 @@ router = APIRouter(prefix="/location", tags=["location"])
 @router.get("/", response_model=List[LocationModel],
             dependencies=[Security(CurrentUser(), scopes=['location:read'])])
 def get_locations():
-    return db.session.query(Location).all()
+    return db.session.query(Location).filter_by(deleted=False).all()
 
 
 @router.get("/{uuid}", response_model=LocationModel,

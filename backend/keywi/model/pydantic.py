@@ -70,6 +70,7 @@ class LocationModel(LocationModelBase):
     id: UUID
     amount_locks: int
     amount_safes: int
+    deleted: bool
 
 
 class LocationModelCreate(LocationModelBase):
@@ -99,6 +100,7 @@ class LockModel(LockModelBase):
     id: UUID
     amount_keys: int
     amount_free_keys: int
+    deleted: bool
 
 
 class LockModelCreate(LockModelBase):
@@ -121,6 +123,7 @@ class SafeModel(SafeModelBase):
     id: UUID
     location: LocationModelShort
     amount_keys: int
+    deleted: bool
 
 
 class SafeModelShort(PydModel):
@@ -153,6 +156,7 @@ class KeyModel(KeyModelBase):
     active_rental: Optional[RentalModelShort]
     checked: bool = False
     location: LocationModelShort
+    deleted: bool
 
 
 class KeyModelShort(PydModel):
@@ -189,7 +193,7 @@ class RentalModel(RentalModelBase):
     issuing_user: UserModelShort
     active: bool
     end: datetime = None
-
+    deleted: bool
 
 class RentalModelShort(PydModel):
     id: UUID

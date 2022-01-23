@@ -22,7 +22,6 @@ export default {
   name: "UserTable",
   components: {DataTable},
   data: () => ({
-    loading: true,
     headers: [
       {
         text: "Name",

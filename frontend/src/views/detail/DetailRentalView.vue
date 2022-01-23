@@ -1,6 +1,7 @@
 <template>
   <v-card class="home pb-5 pt-1">
     <div class="mx-8">
+      <v-alert color="error" v-if="rental.deleted">Gelöscht.</v-alert>
       <h2 class="my-2">Ausleihe Daten</h2>
       <v-simple-table>
         <template v-slot:default>
@@ -31,7 +32,7 @@
           </tr>
           <tr>
             <td>Aktiv</td>
-            <td class="font-weight-bold">
+            <td class="font-weight-bold" v-if="rental.active != null">
               <span class="green--text" v-if="rental.active">
                 Ja
               </span>
@@ -51,6 +52,26 @@
       <v-divider></v-divider>
 
       <div class="buttons">
+        <!--      DELETE BUTTON-->
+        <v-dialog v-model="deleteDialog" width="500px">
+          <template v-slot:activator="{ on: clickEvent }">
+              <v-btn color="secondary" class="mx-8 my-4" v-on="clickEvent">
+                <v-icon left size="24">mdi-delete</v-icon>
+                Löschen
+              </v-btn>
+          </template>
+          <v-card class="pb-1">
+            <v-card-title>Ausleihe wirklich löschen?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="secondary" @click="deleteItem">
+                <v-icon left size="24">mdi-delete</v-icon>
+                Bestätigen
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
         <form-popup
                     ref="rentalEditPopup"
                     form="edit-rental-form"
@@ -81,6 +102,7 @@
         </v-dialog>
       </div>
 
+      <detail-table-logs class="mt-10" ref="logTable"></detail-table-logs>
     </div>
   </v-card>
 </template>
@@ -90,11 +112,13 @@ import api from "@/api/api";
 import DetailTableRentals from "@/components/detail/DetailTableRentals";
 import AuthService from "@/services/AuthService";
 import FormPopup from "@/components/FormPopup";
+import DetailTableLogs from "@/components/detail/DetailTableLogs";
 
 export default {
   name: "DetailRentalView",
 
   components: {
+    DetailTableLogs,
     FormPopup
   },
 
@@ -102,12 +126,14 @@ export default {
     return {
       rental: {key:{}, user:{}, issuing_user:{}},
       rentalId: undefined,
-      returnDialog: false
+      returnDialog: false,
+      deleteDialog: false,
     }
   },
   mounted() {
     this.rentalId = this.$route.params.id;
     this.loadRental();
+    this.$refs.logTable.loadData({ rental_id: this.rentalId });
   },
   methods: {
     async loadRental() {
@@ -131,6 +157,14 @@ export default {
         this.returnDialog = false;
         this.loadRental();
       });
+    },
+
+    async deleteItem() {
+      const apiStub = await api;
+      const param = {uuid: this.rental.id};
+      apiStub.rental_deleteRental(param).then(() => {
+        this.$router.push('/rental');
+      });
     }
   },
 
@@ -139,7 +173,7 @@ export default {
       if (!this.rental.active) return false;
       let user = AuthService.getUser();
 
-      return user.id == this.rental.user.id;
+      return user.id === this.rental.user.id;
     }
   }
 }

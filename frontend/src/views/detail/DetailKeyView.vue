@@ -1,6 +1,7 @@
 <template>
   <v-card class="home pb-5 pt-1">
     <div class="mx-8">
+      <v-alert color="error" v-if="key.deleted">Gelöscht.</v-alert>
       <h2 class="my-2">Schlüssel Daten</h2>
       <v-simple-table>
         <template v-slot:default>
@@ -76,12 +77,10 @@
         <!--      DELETE BUTTON-->
         <v-dialog v-model="deleteDialog" width="500px">
           <template v-slot:activator="{ on: clickEvent }">
-            <div :title="tooltip" class="tooltip">
-              <v-btn :disabled="deleteDisabled" class="mx-8 my-4" color="secondary" v-on="clickEvent">
-                <v-icon left size="24">mdi-delete</v-icon>
-                Löschen
-              </v-btn>
-            </div>
+            <v-btn class="mx-8 my-4" color="secondary" v-on="clickEvent">
+              <v-icon left size="24">mdi-delete</v-icon>
+              Löschen
+            </v-btn>
           </template>
           <v-card class="pb-1">
             <v-card-title>Schlüssel {{ key.name }} wirklich löschen?</v-card-title>
@@ -95,10 +94,8 @@
           </v-card>
         </v-dialog>
       </div>
-
-      <h2 class="mb-2">Ausleihhistorie</h2>
-      <detail-table-rentals ref="rentalTable"></detail-table-rentals>
-
+      <detail-table-rentals class="mt-10" ref="rentalTable"></detail-table-rentals>
+      <detail-table-logs class="mt-10" ref="logTable"></detail-table-logs>
     </div>
   </v-card>
 </template>
@@ -108,10 +105,12 @@ import api from "@/api/api";
 import DetailTableRentals from "@/components/detail/DetailTableRentals";
 import FormPopup from "@/components/FormPopup";
 import AuthService from "@/services/AuthService";
+import DetailTableLogs from "@/components/detail/DetailTableLogs";
 
 export default {
   name: "DetailKeyView",
   components: {
+    DetailTableLogs,
     DetailTableRentals,
     FormPopup
   },
@@ -129,6 +128,7 @@ export default {
     this.keyId = this.$route.params.id;
     this.loadKey();
     this.loadRentals();
+    this.$refs.logTable.loadData({ key_id: this.keyId });
   },
   methods: {
     async loadKey() {

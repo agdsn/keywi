@@ -9,6 +9,13 @@
       loading-text="Lade Daten..."
       ref="table"
     >
+      <template v-slot:[`item.link`]="{ item }">
+        <router-link :to="`/rental/${item.id}`">
+          <v-icon small>
+            mdi-open-in-new
+          </v-icon>
+        </router-link>
+      </template>
       <template v-slot:[`item.location.name`] = "{ item }">
         <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
       </template>
@@ -20,19 +27,21 @@
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-          small
-          @click="openDeletePrompt(item)"
-        >
-          mdi-delete
-        </v-icon>
+        <div class="text-right">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="openDeletePrompt(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </div>
       </template>
     </DataTable>
 
@@ -61,8 +70,12 @@ export default {
   data: () => ({
     dialog: false,
     lockToDelete: undefined,
-    loading: true,
     headers: [
+      {
+        width: '5%',
+        text: 'Link',
+        value: "link"
+      },
       {
         text: "Ort",
         value: "location.name"
@@ -82,8 +95,10 @@ export default {
       {
         text: "Aktionen",
         value: "actions",
-        sortable: false
-      }
+        width: '200px',
+        sortable: false,
+        align: 'right',
+      },
     ],
     tableData: null
   }),

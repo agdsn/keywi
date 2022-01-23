@@ -81,13 +81,23 @@ def edit_object(obj: UUIDModel, processor: User, no_log: Optional[List[str]] = N
 
 
 @with_transaction
-def delete_object(obj: UUIDModel, processor: User, log_params: Optional[dict] = None,):
-    log_params = {} if log_params is None else log_params
-
+def delete_object(obj: UUIDModel, processor: User, log_params: Optional[dict] = None, childs: List[str] = None,
+                  log: bool = True):
     classname = type(obj).__name__
 
-    session.delete(obj)
+    obj.deleted = True
 
-    log_event(f'Deleted {classname} with id {obj.id}', processor, **log_params)
+    if childs is not None:
+        for child in childs:
+            if hasattr(obj, child):
+                clds = getattr(obj, child)
+
+                if isinstance(clds, list):
+                    for cld in clds:
+                        delete_object(cld, processor, log_params, childs, log=False)
+
+    if log:
+        log_params = {} if log_params is None else replace_ref_object(log_params, obj)
+        log_event(f'Deleted {classname} with id {obj.id}', processor, **log_params)
 
     return True
