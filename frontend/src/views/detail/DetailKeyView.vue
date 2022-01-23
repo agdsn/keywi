@@ -35,30 +35,50 @@
       <v-divider></v-divider>
 
       <div class="buttons">
-        <form-popup form="rent-key-form"
-                    text="Ausleihen"
-                    @save-form="loadKey(); loadRentals()"
-                    @mounted="rentalFormMountedEvent"
+        <!--      KEY RETURN BUTTON-->
+        <v-dialog v-if="rentedByUser" v-model="returnDialog" width="500px">
+          <template v-slot:activator="{ on: clickEvent }">
+            <v-btn class="mx-8 my-4" color="secondary" v-on="clickEvent">
+              <v-icon left size="24">mdi-key</v-icon>
+              Zurückgeben
+            </v-btn>
+          </template>
+          <v-card class="pb-1">
+            <v-card-title>Schlüssel {{ key.name }} wirklich zurückgeben?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="secondary" @click="returnItem">
+                <v-icon left size="24">mdi-content-save-outline</v-icon>
+                Speichern
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <form-popup v-if="rentalEnabled"
                     ref="rentalPopup"
-                    v-if="rentalEnabled"
+                    form="rent-key-form"
                     icon="mdi-key"
+                    text="Ausleihen"
+                    @mounted="rentalFormMountedEvent"
+                    @save-form="loadKey(); loadRentals()"
         />
 
         <form-popup ref="popup"
                     form="edit-key-form"
+                    icon="mdi-pencil"
                     text="Bearbeiten"
                     @mounted="mountedEvent"
                     @save-form="loadKey()"
                     @button-add-clicked="mountedEvent"
-                    icon="mdi-pencil"
         />
 
         <!--      DELETE BUTTON-->
         <v-dialog v-model="deleteDialog" width="500px">
           <template v-slot:activator="{ on: clickEvent }">
             <div :title="tooltip" class="tooltip">
-              <v-btn :disabled="deleteDisabled" class="primary-color mx-8 my-4" text v-on="clickEvent">
-                <v-icon>mdi-delete</v-icon>
+              <v-btn :disabled="deleteDisabled" class="mx-8 my-4" color="secondary" v-on="clickEvent">
+                <v-icon left size="24">mdi-delete</v-icon>
                 Löschen
               </v-btn>
             </div>
@@ -67,8 +87,8 @@
             <v-card-title>Schlüssel {{ key.name }} wirklich löschen?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn class="primary-color" @click="deleteItem">
-                <v-icon>mdi-delete</v-icon>
+              <v-btn color="secondary" @click="deleteItem">
+                <v-icon left size="24">mdi-delete</v-icon>
                 Bestätigen
               </v-btn>
             </v-card-actions>
@@ -101,7 +121,8 @@ export default {
       key: {location: {}, safe: {}, lock: {}},
       keyId: undefined,
       deleteDialog: false,
-      rentDialog: false
+      rentDialog: false,
+      returnDialog: false
     }
   },
   mounted() {
@@ -115,8 +136,9 @@ export default {
 
       const apiStub = await api;
       apiStub.key_getKey(this.keyId).then(response => {
-        this.key = response.data;
-      });
+            this.key = response.data;
+          }
+      );
     },
 
     async loadRentals() {
@@ -137,12 +159,24 @@ export default {
       apiStub.key_deleteKey(param).then(() => {
         this.$router.push('/key');
       });
+    },
+
+    async returnItem() {
+      const apiStub = await api;
+      const param = {uuid: this.key.active_rental.id};
+      apiStub.rental_endRental(param).then(() => {
+        this.returnDialog = false;
+        this.loadKey();
+        this.loadRentals();
+      });
     }
   },
   computed: {
     rentalStatus() {
       if (!this.key) return '';
-      if (this.key.active_rental) {
+      if(this.rentedByUser) {
+        return "Ausgeliehen (von dir)"
+      } else if (this.key.active_rental) {
         return "Ausgeliehen";
       } else if (!this.key.rentable) {
         return "Nicht ausleihbar";
@@ -171,6 +205,13 @@ export default {
       if (this.deleteDisabled) return "Schlüssel kann nur gelöscht werden, wenn er momentan nicht verliehen ist";
       return "";
     },
+
+    rentedByUser() {
+      if (!this.key.active_rental) return false;
+      let user = AuthService.getUser();
+
+      return user.id == this.key.active_rental.user_id;
+    }
   }
 }
 </script>

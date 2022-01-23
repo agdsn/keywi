@@ -11,6 +11,10 @@
     <template v-slot:[`item.available_keys`]="{ item }">
       {{ item.amount_free_keys }} / {{ item.amount_keys }}
     </template>
+
+    <template v-slot:[`item.name`]="{ item }">
+      <router-link :to="`/lock/${ item.id }`">{{ item.name }}</router-link>
+    </template>
   </v-data-table>
 </template>
 

@@ -34,6 +34,14 @@
         <v-divider></v-divider>
 
         <div class="buttons">
+          <form-popup ref="popup_add"
+                      form="edit-key-form"
+                      icon="mdi-plus"
+                      text="Schlüssel hinzufügen"
+                      @mounted="addMountedEvent"
+                      @save-form="keyAdded()"
+                      @button-add-clicked="addMountedEvent"/>
+
           <form-popup ref="popup"
                       form="edit-lock-form"
                       icon="mdi-pencil"
@@ -46,8 +54,8 @@
           <v-dialog v-model="deleteDialog" width="500px">
             <template v-slot:activator="{ on: clickEvent }">
               <div :title="tooltip" class="tooltip">
-                <v-btn :disabled="deleteDisabled" class="primary-color mx-8 my-4" text v-on="clickEvent">
-                  <v-icon>mdi-delete</v-icon>
+                <v-btn :disabled="deleteDisabled" color="secondary" class="mx-8 my-4" v-on="clickEvent">
+                  <v-icon left size="24">mdi-delete</v-icon>
                   Löschen
                 </v-btn>
               </div>
@@ -56,8 +64,8 @@
               <v-card-title>Schloss {{ lock.name }} wirklich löschen?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="primary-color" @click="deleteItem">
-                  <v-icon>mdi-delete</v-icon>
+                <v-btn color="secondary" @click="deleteItem">
+                  <v-icon left size="24">mdi-delete</v-icon>
                   Bestätigen
                 </v-btn>
               </v-card-actions>
@@ -115,6 +123,16 @@ export default {
 
     mountedEvent() {
       if (this.$refs.popup.$refs.form) this.$refs.popup.$refs.form.fillForm(this.lock);
+    },
+
+    addMountedEvent() {
+      let payload = { selectedLock: this.lock };
+      if (this.$refs.popup_add.$refs.form) this.$refs.popup_add.$refs.form.fillForm(payload);
+    },
+
+    keyAdded() {
+      let keyId = this.$refs.popup_add.$refs.form.keyId;
+      this.$router.push('/key/'+keyId);
     },
 
     async deleteItem() {

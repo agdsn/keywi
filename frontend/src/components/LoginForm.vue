@@ -29,9 +29,12 @@
           <v-text-field v-model="username" :rules="nameRules" label="Nutzername" prepend-icon="mdi-account" required/>
           <v-text-field v-model="password" :rules="passwordRules" label="Passwort" prepend-icon="mdi-key" required
                         @keydown.enter="login" type="password"/>
-          <v-btn @click="login" class="mt-3" color="success">
+          <v-row>
+            <v-spacer/>
+          <v-btn class="mt-3" color="secondary" @click="login">
             Login
           </v-btn>
+            </v-row>
         </v-form>
       </v-col>
     </v-row>

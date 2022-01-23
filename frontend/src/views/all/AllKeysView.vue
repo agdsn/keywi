@@ -7,7 +7,8 @@
                 @save-form="$refs.keyTable.loadData();"
                 ref="popup"
                 @mounted="mountedEvent"
-                @button-add-clicked="buttonAddClicked"/>
+                @button-add-clicked="buttonAddClicked"
+                icon="mdi-plus"/>
   </div>
 </template>
 
@@ -59,7 +60,7 @@ export default Vue.extend({
     position: relative;
   }
 
-  .home >>> .v-btn.primary-color {
+  .home >>> .v-btn.secondary {
     position: absolute;
     right: 0;
   }

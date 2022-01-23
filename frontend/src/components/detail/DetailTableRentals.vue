@@ -38,6 +38,17 @@
     <template v-slot:[`item.user.name`]="{ item }">
       <router-link :to="`/user/${ item.user.id }`">{{ item.user.name }}</router-link>
     </template>
+
+    <template v-slot:[`item.actions`]="{ item }">
+      <router-link :to="`/rental/${item.id}`">
+        <v-icon
+            class="mr-2"
+            small
+        >
+          mdi-open-in-new
+        </v-icon>
+      </router-link>
+    </template>
   </v-data-table>
 </template>
 
@@ -72,6 +83,11 @@ export default {
       {
         text: 'Ende',
         value: "end"
+      },
+      {
+        text: "Aktionen",
+        value: "actions",
+        sortable: false
       }
     ],
     tableData: []

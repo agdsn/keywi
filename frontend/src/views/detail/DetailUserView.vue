@@ -6,11 +6,11 @@
         <template v-slot:default>
           <tbody>
           <tr>
-            <td style="width: 20%;">name</td>
+            <td style="width: 20%;">Name</td>
             <td><b>{{ user.name }}</b></td>
           </tr>
           <tr>
-            <td>Nutzername</td>
+            <td>Loginname</td>
             <td>
               {{ user.login }}
             </td>

@@ -31,6 +31,12 @@
           Benutzer
         </router-link>
       </li>
+      <li>
+        <router-link to="/rental">
+          <v-icon color="white" left>mdi-key</v-icon>
+          Ausleihen
+        </router-link>
+      </li>
     </ul>
     <ul class="list">
       <li v-if="loggedIn">
@@ -39,18 +45,18 @@
           {{ user.login }}
         </router-link>
         <a @click="logout">
-          <v-icon color="white">mdi-logout</v-icon>
+          <v-icon color="white" left>mdi-logout</v-icon>
           Logout
         </a>
       </li>
       <li v-else><a @click="$refs.loginDialog.openDialog()">
-        <v-icon color="white">mdi-login</v-icon>
+        <v-icon color="white" left>mdi-login</v-icon>
         Login
       </a></li>
     </ul>
     <form-popup
         ref="loginDialog"
-        :render-btn="false"
+        hide-btn
         form="login-form"
         text="Login"
         @save-form="checkLogin">

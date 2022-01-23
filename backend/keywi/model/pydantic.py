@@ -195,6 +195,7 @@ class RentalModelShort(PydModel):
     id: UUID
     begin: datetime
     end: datetime = None
+    user_id: UUID
 
 
 class RentalModelCreate(RentalModelBase):

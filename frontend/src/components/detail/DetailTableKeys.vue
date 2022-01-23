@@ -27,7 +27,7 @@
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
-        <v-tooltip v-if="rentable(item)" top>
+        <v-tooltip v-if="rentable(item) || rentedByUser(item)" top>
           <template v-slot:activator="{on}">
             <v-icon
                 :color="getKeyColor(item)"
@@ -40,10 +40,23 @@
             </v-icon>
           </template>
 
-          <span>Schlüssel ausleihen</span>
+          <span>{{ getTooltip(item) }}</span>
         </v-tooltip>
       </template>
     </v-data-table>
+
+    <v-dialog v-model="returnDialog" width="500px">
+      <v-card class="pb-1">
+        <v-card-title>Schlüssel {{ keyInDialogNumber }} wirklich zurückgeben?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="secondary" @click="returnItem">
+            <v-icon left size="24">mdi-content-save-outline</v-icon>
+            Bestätigen
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="rentDialog" width="500px">
       <v-card class="pb-1">
@@ -53,12 +66,14 @@
             <v-autocomplete v-model="pickedUser" :item-text="item => item.name" :items="users"
                             :rules="userRules" label="Ausleihender Nutzer"
                             prepend-icon="mdi-account" return-object></v-autocomplete>
-            </v-form>
+            <v-text-field v-model="grantingDocument" label="Dokument" prepend-icon="mdi-file-document"/>
+            <v-textarea v-model="note" label="Notiz" prepend-icon="mdi-note-text-outline" rows="1"></v-textarea>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="primary-color" color="validate" @click="rentKey">
-            <v-icon>mdi-content-save-outline</v-icon>
+          <v-btn color="secondary" @click="rentKey">
+            <v-icon left size="24">mdi-content-save-outline</v-icon>
             Speichern
           </v-btn>
         </v-card-actions>
@@ -77,6 +92,9 @@ export default {
     loading: true,
     keyInDialog: undefined,
     rentDialog: false,
+    returnDialog: false,
+    grantingDocument: '',
+    note: '',
     headers: [
       {
         text: 'Schlüsselnummer',
@@ -151,8 +169,11 @@ export default {
         if (this.tableData.length == 0) this.$emit('empty');
       });
     },
+
     getRentalStatus(key) {
-      if (key.active_rental) {
+      if (this.rentedByUser(key)) {
+        return "Ausgeliehen (von dir)"
+      } else if (key.active_rental) {
         return "Ausgeliehen";
       } else if (!key.rentable) {
         return "Nicht ausleihbar";
@@ -174,9 +195,26 @@ export default {
     },
 
     openRentPrompt(keyInDialog) {
-      this.loadUsers();
       this.keyInDialog = keyInDialog;
-      this.rentDialog = true;
+
+      if (this.rentedByUser(keyInDialog)) {
+        this.returnDialog = true;
+      } else {
+        this.loadUsers();
+        this.rentDialog = true;
+      }
+    },
+
+    getTooltip(key) {
+      if (this.rentedByUser(key)) return "Schlüssel zurückgeben";
+      else return "Schlüssel ausleihen";
+    },
+
+    rentedByUser(key) {
+      if (!key.active_rental) return false;
+      let user = AuthService.getUser();
+
+      return user.id == key.active_rental.user_id;
     },
 
     async loadUsers() {
@@ -190,21 +228,34 @@ export default {
       })
     },
 
+    async returnItem() {
+      const apiStub = await api;
+      const param = {uuid: this.keyInDialog.active_rental.id};
+      apiStub.rental_endRental(param).then(() => {
+        this.returnDialog = false;
+        this.$emit('rented');
+      });
+    },
+
     async rentKey() {
       if (this.$refs.form.validate()) {
         const apiStub = await api;
 
         const rental = {
           key_id: this.keyInDialog.id,
-          user_id: this.pickedUser.id
+          user_id: this.pickedUser.id,
+          allowed_by: this.grantingDocument,
+          note: this.note
         };
 
         apiStub.rental_createRental(null, rental).then(() => {
           this.rentDialog = false;
           this.$emit('rented');
+          this.$refs.form.resetValidation();
+          this.pickedUser = undefined;
         })
       }
-      },
+    },
 
     rentable(key) {
       return this.getRentalStatus(key) == "Ausleihbar";
