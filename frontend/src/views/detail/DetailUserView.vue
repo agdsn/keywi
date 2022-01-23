@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     loadLogs() {
-      this.$refs.logTable.loadData({ lock_id: this.lockId });
+      this.$refs.logTable.loadData({ user_id: this.userId });
     },
     async loadUser() {
       if (!this.userId) return;
