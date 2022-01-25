@@ -323,7 +323,7 @@ export default {
     },
 
     dateToDatetime(date) {
-      return date + 'T12:00';
+      return date + 'T12:37';
     },
 
     async rentKey() {
