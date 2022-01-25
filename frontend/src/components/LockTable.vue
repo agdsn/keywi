@@ -1,14 +1,25 @@
 <template>
   <div>
-    <v-data-table
+    <DataTable
       :headers="headers"
       :items="tableData"
-      :items-per-page="25"
       class="elevation-1"
-      :loading="loading"
+      multi-sort
+      :sort-by="['location.name', 'name']"
       loading-text="Lade Daten..."
       ref="table"
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Schlösser</h2>
+      </template>
+
+      <template v-slot:[`item.link`]="{ item }">
+        <router-link :to="`/lock/${item.id}`">
+          <v-icon small>
+            mdi-open-in-new
+          </v-icon>
+        </router-link>
+      </template>
       <template v-slot:[`item.location.name`] = "{ item }">
         <router-link :to="`/location/${ item.location.id }`">{{ item.location.name }}</router-link>
       </template>
@@ -20,21 +31,23 @@
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-          small
-          @click="openDeletePrompt(item)"
-        >
-          mdi-delete
-        </v-icon>
+        <div class="text-right">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="openDeletePrompt(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </div>
       </template>
-    </v-data-table>
+    </DataTable>
 
     <v-dialog v-model="dialog" width="500px">
       <v-card class="pb-1">
@@ -53,21 +66,27 @@
 
 <script>
 import api from "@/api/api";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "LockTable",
+  components: {DataTable},
   data: () => ({
     dialog: false,
     lockToDelete: undefined,
-    loading: true,
     headers: [
       {
-        text: 'Schloss',
-        value: "name"
+        width: '5%',
+        text: 'Link',
+        value: "link"
       },
       {
         text: "Ort",
         value: "location.name"
+      },
+      {
+        text: 'Schloss',
+        value: "name"
       },
       {
         text: "Besitzer",
@@ -80,10 +99,12 @@ export default {
       {
         text: "Aktionen",
         value: "actions",
-        sortable: false
-      }
+        width: '200px',
+        sortable: false,
+        align: 'right',
+      },
     ],
-    tableData: []
+    tableData: null
   }),
   computed: {
     lockToDeleteName() {
@@ -101,16 +122,10 @@ export default {
       if(paramId) {
         apiStub.lock_getLock(paramId).then(response => {
           this.tableData = [response.data];
-        }).finally(() => {
-          this.loading = false;
         });
       } else {
         apiStub.lock_getLocks().then(response => {
           this.tableData = response.data;
-
-          this.loading = false;
-        }).finally(() => {
-          this.loading = false;
         });
       }
     },

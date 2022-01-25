@@ -1,15 +1,15 @@
 <template>
-  <v-data-table
+  <DataTable
       ref="table"
       :headers="headers"
       :items="tableData"
-      :items-per-page="25"
-      :loading="loading"
-      :sort-by="['begin']"
+      sort-by="begin"
       :sort-desc="true"
-      class="elevation-1"
-      loading-text="Lade Daten..."
   >
+    <template v-slot:header>
+      <h2 class="ml-4">Ausleihen</h2>
+    </template>
+
     <template v-slot:[`item.begin`]="{ item }">
       {{ new Date(item.begin).toLocaleString('de') }}
     </template>
@@ -49,17 +49,24 @@
         </v-icon>
       </router-link>
     </template>
-  </v-data-table>
+  </DataTable>
 </template>
 
 <script>
 import api from "@/api/api";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "DetailTableKeys",
+  components: {DataTable},
   data: () => ({
-    loading: true,
     headers: [
+      {
+        text: "Links",
+        value: "actions",
+        width: '5%',
+        sortable: false,
+      },
       {
         text: 'Ort',
         value: "key.lock.location"
@@ -84,13 +91,8 @@ export default {
         text: 'Ende',
         value: "end"
       },
-      {
-        text: "Aktionen",
-        value: "actions",
-        sortable: false
-      }
     ],
-    tableData: []
+    tableData: null
   }),
   methods: {
     async loadDataByKeyId(keyId) {
@@ -106,8 +108,6 @@ export default {
 
       apiStub.rental_getRentals(params).then(response => {
         this.tableData = response.data;
-      }).finally(() => {
-        this.loading = false;
       });
     },
 
@@ -122,8 +122,6 @@ export default {
 
       apiStub.rental_getRentals(params).then(response => {
         this.tableData = response.data;
-      }).finally(() => {
-        this.loading = false;
       });
     },
 

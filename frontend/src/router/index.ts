@@ -14,6 +14,7 @@ import StartView from "@/views/StartView.vue";
 import AuthService from "@/services/AuthService";
 import DetailRentalView from "@/views/detail/DetailRentalView.vue";
 import AllRentalsView from "@/views/all/AllRentalsView.vue";
+import AllLogsView from "@/views/all/AllLogsView.vue";
 
 Vue.use(VueRouter)
 
@@ -95,6 +96,12 @@ const routes: Array<RouteConfig> = [
     name: 'rental',
     component: DetailRentalView,
     meta: { title: "Ausleihe Details" }
+  },
+  {
+    path: '/log',
+    name: 'logs',
+    component: AllLogsView,
+    meta: { title: "Alle Logs" }
   },
 ]
 

@@ -1,10 +1,10 @@
 from typing import List
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Body, Query
+from fastapi import APIRouter, Depends, Body, Query, Security
 from fastapi_sqlalchemy import db
 
-from api.auth import get_current_user
+from api.auth import get_current_user, CurrentUser
 from api.helpers import PathModelGetter, get_or_404, SuccessModel
 from model import Lock, User, Location
 from model.pydantic import LockModel, LockModelCreate, LockModelPatch
@@ -14,9 +14,10 @@ import lib.lock
 router = APIRouter(prefix="/lock", tags=["lock"])
 
 
-@router.get("/", response_model=List[LockModel])
+@router.get("/", response_model=List[LockModel],
+            dependencies=[Security(CurrentUser(), scopes=['lock:read'])])
 def get_locks(location_id: UUID = Query(None)):
-    locks = db.session.query(Lock)
+    locks = db.session.query(Lock).filter_by(deleted=False)
 
     if location_id is not None:
         locks = locks.filter_by(location_id=location_id)
@@ -24,14 +25,15 @@ def get_locks(location_id: UUID = Query(None)):
     return locks.all()
 
 
-@router.get("/{uuid}", response_model=LockModel)
+@router.get("/{uuid}", response_model=LockModel,
+            dependencies=[Security(CurrentUser(), scopes=['lock:read'])])
 def get_lock(lock: Lock = Depends(PathModelGetter(Lock))):
     return lock
 
 
 @router.post("/", response_model=LockModel)
 def create_lock(lock_create: LockModelCreate,
-                c_user: User = Depends(get_current_user)):
+                c_user: User = Security(CurrentUser(), scopes=['lock:write'])):
     args = lock_create.dict()
 
     args['location'] = get_or_404(Location, args.pop('location_id'))
@@ -44,7 +46,7 @@ def create_lock(lock_create: LockModelCreate,
 @router.patch("/{uuid}", response_model=LockModel)
 def edit_lock(lock: Lock = Depends(PathModelGetter(Lock)),
               lock_patch: LockModelPatch = Body(...),
-              c_user: User = Depends(get_current_user)):
+              c_user: User = Security(CurrentUser(), scopes=['lock:write'])):
     args = lock_patch.dict(exclude_unset=True)
 
     if 'location_id' in args:
@@ -57,7 +59,7 @@ def edit_lock(lock: Lock = Depends(PathModelGetter(Lock)),
 
 @router.delete("/{uuid}", response_model=SuccessModel)
 def delete_lock(lock: Lock = Depends(PathModelGetter(Lock)),
-                c_user: User = Depends(get_current_user)):
+                c_user: User = Security(CurrentUser(), scopes=['lock:write'])):
     lib.lock.delete_lock(lock, processor=c_user, _commit=True)
 
     return SuccessModel

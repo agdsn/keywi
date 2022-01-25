@@ -1,15 +1,16 @@
 <template>
   <div>
-    <v-data-table
+    <DataTable
         ref="table"
         :headers="headers"
         :item-class="row_classes"
         :items="tableData"
-        :items-per-page="25"
-        :loading="loading"
-        class="elevation-1"
-        loading-text="Lade Daten..."
+        sort-by="number"
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Schlüssel</h2>
+      </template>
+
       <template v-slot:[`item.number`]="{ item }">
         <router-link :to="`/key/${ item.id }`">{{ item.number }}</router-link>
       </template>
@@ -27,23 +28,25 @@
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
-        <v-tooltip v-if="rentable(item) || rentedByUser(item)" top>
-          <template v-slot:activator="{on}">
-            <v-icon
-                :color="getKeyColor(item)"
-                class="ml-2"
-                small
-                @click="openRentPrompt(item)"
-                v-on="on"
-            >
-              mdi-key
-            </v-icon>
-          </template>
+        <div class="text-right">
+          <v-tooltip v-if="rentable(item) || rentedByUser(item)" top>
+            <template v-slot:activator="{on}">
+              <v-icon
+                  :color="getKeyColor(item)"
+                  class="ml-2"
+                  small
+                  @click="openRentPrompt(item)"
+                  v-on="on"
+              >
+                mdi-hand-coin
+              </v-icon>
+            </template>
 
-          <span>{{ getTooltip(item) }}</span>
-        </v-tooltip>
+            <span>{{ getTooltip(item) }}</span>
+          </v-tooltip>
+        </div>
       </template>
-    </v-data-table>
+    </DataTable>
 
     <v-dialog v-model="returnDialog" width="500px">
       <v-card class="pb-1">
@@ -64,7 +67,7 @@
         <v-card-text>
           <v-form ref="form">
             <v-autocomplete v-model="pickedUser" :item-text="item => item.name" :items="users"
-                            :rules="userRules" label="Ausleihender Nutzer"
+                            :rules="userRules" label="Vergeben an"
                             prepend-icon="mdi-account" return-object></v-autocomplete>
             <v-text-field v-model="grantingDocument" label="Dokument" prepend-icon="mdi-file-document"/>
             <v-textarea v-model="note" label="Notiz" prepend-icon="mdi-note-text-outline" rows="1"></v-textarea>
@@ -85,11 +88,12 @@
 <script>
 import api from "@/api/api";
 import AuthService from "@/services/AuthService";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "DetailTableKeys",
+  components: {DataTable},
   data: () => ({
-    loading: true,
     keyInDialog: undefined,
     rentDialog: false,
     returnDialog: false,
@@ -115,10 +119,12 @@ export default {
       {
         text: "Aktionen",
         value: "actions",
-        sortable: false
-      }
+        width: '200px',
+        sortable: false,
+        align: 'right',
+      },
     ],
-    tableData: [],
+    tableData: null,
     usersLoaded: false,
     users: [],
     pickedUser: undefined,
@@ -143,8 +149,6 @@ export default {
       apiStub.key_getKeys(params).then(response => {
         this.tableData = response.data;
       }).finally(() => {
-        this.loading = false;
-
         if (this.tableData.length == 0) this.$emit('empty');
       });
     },
@@ -164,8 +168,6 @@ export default {
       apiStub.key_getKeys(params).then(response => {
         this.tableData = response.data;
       }).finally(() => {
-        this.loading = false;
-
         if (this.tableData.length == 0) this.$emit('empty');
       });
     },
@@ -184,7 +186,9 @@ export default {
 
     row_classes(item) {
       if (item.active_rental == null && item.rentable) {
-        return "green-cell"
+        return "green-cell";
+      } else if (!item.rentable) {
+        return "grey-cell";
       } else {
         return "red-cell";
       }
@@ -258,7 +262,7 @@ export default {
     },
 
     rentable(key) {
-      return this.getRentalStatus(key) == "Ausleihbar";
+      return this.getRentalStatus(key) === "Ausleihbar";
     }
   },
   computed: {
@@ -273,11 +277,13 @@ export default {
 <style scoped>
 .v-data-table >>> .red-cell td:nth-last-child(2) {
   background-color: #DDC1BB;
-  border-radius: 5px;
 }
 
 .v-data-table >>> .green-cell td:nth-last-child(2) {
   background-color: #ABCC9F;
-  border-radius: 5px;
+}
+
+.v-data-table >>> .grey-cell td:nth-last-child(2) {
+  background-color: #c9c9c9;
 }
 </style>

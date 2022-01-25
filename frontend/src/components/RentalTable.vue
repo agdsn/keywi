@@ -1,16 +1,24 @@
 <template>
   <div>
-    <v-data-table
+    <DataTable
         ref="table"
         :headers="headers"
         :items="tableData"
-        :items-per-page="25"
-        :loading="loading"
-        :sort-by="['begin']"
+        sort-by="begin"
         :sort-desc="true"
-        class="elevation-1"
-        loading-text="Lade Daten..."
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Ausleihen</h2>
+      </template>
+
+      <template v-slot:[`item.link`]="{ item }">
+        <router-link :to="`/rental/${item.id}`">
+          <v-icon small>
+            mdi-open-in-new
+          </v-icon>
+        </router-link>
+      </template>
+
       <template v-slot:[`item.begin`]="{ item }">
         {{ new Date(item.begin).toLocaleString('de') }}
       </template>
@@ -45,39 +53,32 @@
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
-        <router-link :to="`/rental/${item.id}`">
+        <div class="text-right">
           <v-icon
               class="mr-2"
               small
+              @click="editItem(item)"
           >
-            mdi-open-in-new
+            mdi-pencil
           </v-icon>
-        </router-link>
 
-        <v-icon
-            class="mr-2"
-            small
-            @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
+          <v-tooltip top v-if="item.active">
+            <template v-slot:activator="{on}">
+              <v-icon
+                  class="mr-2"
+                  small
+                  @click="openReturnPrompt(item)"
+                  v-on="on"
+              >
+                mdi-arrow-u-left-bottom
+              </v-icon>
+            </template>
 
-        <v-tooltip v-if="rentedByUser(item)" top>
-          <template v-slot:activator="{on}">
-            <v-icon
-                class="mr-2"
-                small
-                @click="openReturnPrompt(item)"
-                v-on="on"
-            >
-              mdi-key
-            </v-icon>
-          </template>
-
-          <span>Schlüssel zurückgeben</span>
-        </v-tooltip>
+            <span>Schlüssel zurückgeben</span>
+          </v-tooltip>
+        </div>
       </template>
-    </v-data-table>
+    </DataTable>
 
     <v-dialog v-model="returnDialog" width="500px">
       <v-card class="pb-1">
@@ -85,7 +86,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="secondary" @click="returnItem">
-            <v-icon left size="24">mdi-content-save-outline</v-icon>
+            <v-icon left size="24">mdi-check</v-icon>
             Bestätigen
           </v-btn>
         </v-card-actions>
@@ -97,13 +98,19 @@
 <script>
 import api from "@/api/api";
 import AuthService from "@/services/AuthService";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "RentalTable",
+  components: {DataTable},
   data: () => ({
     dialog: false,
-    loading: true,
     headers: [
+      {
+        width: '5%',
+        text: 'Link',
+        value: "link"
+      },
       {
         text: 'Ort',
         value: "key.lock.location"
@@ -121,7 +128,7 @@ export default {
         value: "user.name"
       },
       {
-        text: 'Auftraggeber',
+        text: 'Ausgegeben von',
         value: "issuing_user.name"
       },
       {
@@ -135,10 +142,12 @@ export default {
       {
         text: "Aktionen",
         value: "actions",
-        sortable: false
-      }
+        width: '200px',
+        sortable: false,
+        align: 'right',
+      },
     ],
-    tableData: [],
+    tableData: null,
     rentalInDialog: {key:{}},
     returnDialog: false
   }),
@@ -156,14 +165,10 @@ export default {
       if (paramId) {
         apiStub.rental_getRental(paramId).then(response => {
           this.tableData = [response.data];
-        }).finally(() => {
-          this.loading = false;
         });
       } else {
         apiStub.rental_getRentals().then(response => {
           this.tableData = response.data;
-        }).finally(() => {
-          this.loading = false;
         });
       }
     },

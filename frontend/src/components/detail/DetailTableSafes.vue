@@ -1,26 +1,28 @@
 <template>
-  <v-data-table
+  <DataTable
       :headers="headers"
       :items="tableData"
-      :items-per-page="25"
-      class="elevation-1"
-      :loading="loading"
-      loading-text="Lade Daten..."
+      sort-by="name"
       ref="table"
   >
+    <template v-slot:header>
+      <h2 class="ml-4">Tresore</h2>
+    </template>
+
     <template v-slot:[`item.name`]="{ item }">
       <router-link :to="`/safe/${ item.id }`">{{ item.name }}</router-link>
     </template>
-  </v-data-table>
+  </DataTable>
 </template>
 
 <script>
 import api from "@/api/api";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "DetailTableSafes",
+  components: {DataTable},
   data: () => ({
-    loading: true,
     headers: [
       {
         text: 'Tresor',
@@ -31,7 +33,7 @@ export default {
         value: "amount_keys"
       }
     ],
-    tableData: []
+    tableData: null
   }),
   methods: {
     async loadDataByLocationId(locationId) {
@@ -44,7 +46,6 @@ export default {
       apiStub.safe_getSafes(params).then(response => {
         this.tableData = response.data;
       }).finally(() => {
-        this.loading = false;
         if(this.tableData.length == 0) this.$emit('empty');
       });
     }

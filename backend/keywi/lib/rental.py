@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from psycopg2._range import DateTimeTZRange
-from sqlalchemy import func
+from sqlalchemy import func, not_
 
 from lib.crud import create_object, REFERENCED_OBJ, delete_object, edit_object
 from model import Rental, User, Location, Key, utcnow
@@ -22,6 +22,7 @@ def create_rental(key: Key, user: User, issuing_user: User, processor: User, beg
 
     other_rental = session.query(Rental).filter(
         Rental.key == key,
+        not_(Rental.deleted),
         func.tstzrange(Rental.begin, Rental.end, '[]').op('&&')(timerange)
     ).first()
 
@@ -29,7 +30,7 @@ def create_rental(key: Key, user: User, issuing_user: User, processor: User, beg
         raise RentalRangeOverlapException("Key has an other rental in this timerange.")
 
     return create_object(Rental,
-                         log_keys=['key_id', 'user_id', 'issuing_user_id', 'begin', 'allowed_by'],
+                         log_keys=['issuing_user_id', 'allowed_by', 'note', 'begin'],
                          log_params={'rental': REFERENCED_OBJ,
                                      'key': key,
                                      'user': user},
@@ -46,6 +47,7 @@ def edit_rental(rental: Rental, processor: User, **kwargs):
 
     other_rental = session.query(Rental).filter(
         Rental.key == key,
+        not_(Rental.deleted),
         func.tstzrange(Rental.begin, Rental.end, '[]').op('&&')(timerange),
         Rental.id != rental.id,
     ).first()
@@ -60,4 +62,4 @@ def edit_rental(rental: Rental, processor: User, **kwargs):
 
 @with_transaction
 def delete_rental(rental: Rental, processor: User):
-    return delete_object(rental, processor)
+    return delete_object(rental, processor, log_params={'rental': REFERENCED_OBJ})

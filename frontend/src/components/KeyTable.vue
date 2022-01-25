@@ -1,15 +1,27 @@
 <template>
   <div>
-    <v-data-table
+    <DataTable
         ref="table"
         :headers="headers"
         :item-class="row_classes"
         :items="tableData"
-        :items-per-page="25"
-        :loading="loading"
+        multi-sort
+        :sort-by="['location.name', 'lock.name', 'number']"
         class="elevation-1"
         loading-text="Lade Daten..."
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Schlüssel</h2>
+      </template>
+
+      <template v-slot:[`item.link`]="{ item }">
+        <router-link :to="`/key/${item.id}`">
+          <v-icon small>
+            mdi-open-in-new
+          </v-icon>
+        </router-link>
+      </template>
+
       <template v-slot:[`item.number`]="{ item }">
         <router-link :to="`/key/${ item.id }`">{{ item.number }}</router-link>
       </template>
@@ -31,37 +43,39 @@
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-            class="mr-2"
-            small
-            @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-            small
-            @click="openDeletePrompt(item)"
-        >
-          mdi-delete
-        </v-icon>
+        <div class="text-right">
+          <v-icon
+              class="mr-2"
+              small
+              @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+              small
+              @click="openDeletePrompt(item)"
+          >
+            mdi-delete
+          </v-icon>
 
-        <v-tooltip v-if="rentable(item) || rentedByUser(item)" top>
-          <template v-slot:activator="{on}">
-            <v-icon
-                :color="getKeyColor(item)"
-                class="ml-2"
-                small
-                @click="openRentPrompt(item)"
-                v-on="on"
-            >
-              mdi-key
-            </v-icon>
-          </template>
+          <v-tooltip v-if="rentable(item) || rentedByUser(item)" top>
+            <template v-slot:activator="{on}">
+              <v-icon
+                  :color="getKeyColor(item)"
+                  class="ml-2"
+                  small
+                  @click="openRentPrompt(item)"
+                  v-on="on"
+              >
+                mdi-hand-coin
+              </v-icon>
+            </template>
 
-          <span>{{ getTooltip(item) }}</span>
-        </v-tooltip>
+            <span>{{ getTooltip(item) }}</span>
+          </v-tooltip>
+        </div>
       </template>
-    </v-data-table>
+    </DataTable>
 
     <v-dialog v-model="deleteDialog" width="500px">
       <v-card class="pb-1">
@@ -95,7 +109,7 @@
         <v-card-text>
           <v-form ref="form">
             <v-autocomplete v-model="pickedUser" :item-text="item => item.name" :items="users"
-                            :rules="userRules" label="Ausleihender Nutzer"
+                            :rules="userRules" label="Vergeben an"
                             prepend-icon="mdi-account" return-object></v-autocomplete>
             <v-text-field v-model="grantingDocument" label="Dokument" prepend-icon="mdi-file-document"/>
             <v-textarea v-model="note" label="Notiz" prepend-icon="mdi-note-text-outline" rows="1"></v-textarea>
@@ -116,18 +130,24 @@
 <script>
 import api from "@/api/api";
 import AuthService from "@/services/AuthService";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "KeyTable",
+  components: {DataTable},
   data: () => ({
     keyInDialog: undefined,
     deleteDialog: false,
     rentDialog: false,
     returnDialog: false,
-    loading: true,
     grantingDocument: '',
     note: '',
     headers: [
+      {
+        width: '5%',
+        text: 'Link',
+        value: "link"
+      },
       {
         text: "Ort",
         value: "location.name"
@@ -151,10 +171,12 @@ export default {
       {
         text: "Aktionen",
         value: "actions",
-        sortable: false
-      }
+        width: '200px',
+        sortable: false,
+        align: 'right',
+      },
     ],
-    tableData: [],
+    tableData: null,
     usersLoaded: false,
     users: [],
     pickedUser: undefined,
@@ -176,17 +198,11 @@ export default {
       if (paramId) {
         apiStub.key_getKey(paramId).then(response => {
           this.tableData = [response.data];
-
-          this.loading = false;
-        }).finally(() => {
-          this.loading = false
         });
       } else {
         apiStub.key_getKeys().then(response => {
           this.tableData = response.data;
-        }).finally(() => {
-          this.loading = false;
-        })
+        });
       }
     },
 
@@ -277,7 +293,9 @@ export default {
 
     row_classes(item) {
       if (item.active_rental == null && item.rentable) {
-        return "green-cell"
+        return "green-cell";
+      } else if (!item.rentable) {
+        return "grey-cell";
       } else {
         return "red-cell";
       }
@@ -313,11 +331,14 @@ export default {
 <style scoped>
 div >>> .red-cell td:nth-last-child(2) {
   background-color: #DDC1BB;
-  border-radius: 5px;
 }
 
 div >>> .green-cell td:nth-last-child(2) {
   background-color: #ABCC9F;
-  border-radius: 5px;
 }
+
+div >>> .grey-cell td:nth-last-child(2) {
+  background-color: #c9c9c9;
+}
+
 </style>

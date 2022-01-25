@@ -1,7 +1,7 @@
 <template>
   <v-form ref="form">
     <v-autocomplete v-model="pickedUser" :item-text="item => item.name + ' (' + item.email + ')'"  return-object
-                    :items="users" label="Ausleihender Nutzer"
+                    :items="users" label="Vergeben an"
                     prepend-icon="mdi-account" :rules="userRules"></v-autocomplete>
 
     <v-text-field prepend-icon="mdi-file-document" label="Dokument" v-model="grantingDocument"/>

@@ -1,13 +1,14 @@
 <template>
-  <v-data-table
+  <DataTable
       :headers="headers"
       :items="tableData"
-      :items-per-page="25"
-      class="elevation-1"
-      :loading="loading"
-      loading-text="Lade Daten..."
+      sort-by="name"
       ref="table"
   >
+    <template v-slot:header>
+      <h2 class="ml-4">Schlösser</h2>
+    </template>
+
     <template v-slot:[`item.available_keys`]="{ item }">
       {{ item.amount_free_keys }} / {{ item.amount_keys }}
     </template>
@@ -15,16 +16,17 @@
     <template v-slot:[`item.name`]="{ item }">
       <router-link :to="`/lock/${ item.id }`">{{ item.name }}</router-link>
     </template>
-  </v-data-table>
+  </DataTable>
 </template>
 
 <script>
 import api from "@/api/api";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "DetailTableLocks",
+  components: {DataTable},
   data: () => ({
-    loading: true,
     headers: [
       {
         text: 'Schloss',
@@ -39,7 +41,7 @@ export default {
         value: "available_keys"
       }
     ],
-    tableData: []
+    tableData: null
   }),
   methods: {
     async loadDataByLocationId(locationId) {
@@ -56,8 +58,6 @@ export default {
       apiStub.lock_getLocks(params).then(response => {
         this.tableData = response.data;
       }).finally(() => {
-        this.loading = false;
-
         if(this.tableData.length == 0) this.$emit('empty');
       });
     }

@@ -2,7 +2,8 @@
   <v-card class="home pb-5 pt-1">
     <div class="home pb-5">
       <div class="mx-8">
-        <h2 class="my-2">Daten</h2>
+        <v-alert color="error" v-if="location.deleted">Gelöscht.</v-alert>
+        <h2 class="my-2">Ort Daten</h2>
         <v-simple-table>
           <template v-slot:default>
             <tbody>
@@ -47,7 +48,7 @@
                       icon="mdi-pencil"
                       text="Bearbeiten"
                       @mounted="mountedEvent"
-                      @save-form="loadLocation()"
+                      @save-form="loadLocation(); loadLogs();"
                       @button-add-clicked="mountedEvent"/>
 
           <!--      DELETE BUTTON-->
@@ -73,11 +74,11 @@
           </v-dialog>
         </div>
 
-        <h2 class="mb-2">Schlösser</h2>
-        <detail-table-locks ref="lockTable" @empty="locksEmpty=true"></detail-table-locks>
+        <detail-table-locks class="mt-10" ref="lockTable" @empty="locksEmpty=true"></detail-table-locks>
 
-        <h2 class="mt-3 mb-2">Tresore</h2>
-        <detail-table-safes ref="safeTable" @empty="safesEmpty=true"></detail-table-safes>
+        <detail-table-safes class="mt-10" ref="safeTable" @empty="safesEmpty=true"></detail-table-safes>
+
+        <detail-table-logs class="mt-10" ref="logTable"></detail-table-logs>
       </div>
     </div>
   </v-card>
@@ -88,10 +89,12 @@ import api from "@/api/api";
 import DetailTableLocks from "@/components/detail/DetailTableLocks";
 import DetailTableSafes from "@/components/detail/DetailTableSafes";
 import FormPopup from "@/components/FormPopup";
+import DetailTableLogs from "@/components/detail/DetailTableLogs";
 
 export default {
   name: "LocationView",
   components: {
+    DetailTableLogs,
     DetailTableLocks,
     DetailTableSafes,
     FormPopup
@@ -111,8 +114,12 @@ export default {
     this.loadLocation();
     this.loadLocks();
     this.loadSafes();
+    this.loadLogs();
   },
   methods: {
+    loadLogs() {
+      this.$refs.logTable.loadData({ location_id: this.locationId });
+    },
     async loadLocation() {
       if (!this.locationId) return;
 
@@ -140,10 +147,10 @@ export default {
   },
   computed: {
     deleteDisabled() {
-      return !this.safesEmpty || !this.locksEmpty;
+      return !this.safesEmpty;
     },
     tooltip() {
-      if (this.deleteDisabled) return "Ort kann nur gelöscht werden, wenn ihm keine Schlösser oder Ort zugewiesen sind";
+      if (this.deleteDisabled) return "Ort kann nur gelöscht werden, wenn ihm keine Tresore zugewiesen sind";
       return "";
     }
   }

@@ -7,7 +7,7 @@ from model.session import with_transaction
 def create_key(number: str, lock: Lock, safe: Safe, processor: User, rentable: bool = False, checked: bool = False,
                note: str = None):
     return create_object(Key,
-                         log_keys=['number', 'lock_id', 'safe_id'],
+                         log_keys=['note'],
                          log_params={'key': REFERENCED_OBJ, 'safe': safe},
                          **locals())
 
@@ -19,4 +19,5 @@ def edit_key(key: Key, processor: User, **kwargs):
 
 @with_transaction
 def delete_key(key: Key, processor: User):
-    return delete_object(key, processor, log_params={'safe': key.safe, 'lock': key.lock})
+    return delete_object(key, processor,
+                         log_params={'key': REFERENCED_OBJ, 'safe': key.safe, 'lock': key.lock},)

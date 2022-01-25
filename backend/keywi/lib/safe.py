@@ -6,7 +6,7 @@ from model.session import with_transaction
 @with_transaction
 def create_safe(name: str, location: Location, processor: User, note: str = None):
     return create_object(Safe,
-                         log_keys=['name', 'location_id'],
+                         log_keys=['note'],
                          log_params={'safe': REFERENCED_OBJ,
                                      'location': location},
                          **locals())
@@ -20,4 +20,4 @@ def edit_safe(safe: Safe, processor: User, **kwargs):
 
 @with_transaction
 def delete_safe(safe: Safe, processor: User):
-    return delete_object(safe, processor)
+    return delete_object(safe, processor, log_params={'safe': REFERENCED_OBJ})

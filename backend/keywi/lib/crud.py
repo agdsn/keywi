@@ -2,11 +2,19 @@ from collections.abc import Iterable
 from typing import Type, Optional, List
 
 from lib.log import log_event
-from model import User
+from model import User, Key, Rental, Lock
 from model.base import UUIDModel, ModelBase
 from model.session import with_transaction, session
 
 REFERENCED_OBJ = 'REFERENCED_OBJ'
+
+obj_name = {
+    Key: lambda k: f'({k.lock.location.name}, {k.lock.name}, {k.number})',
+    Rental: lambda r: f'({r.key.lock.location.name}, {r.key.lock.name}, {r.key.number}, {r.user.name})',
+    Lock: lambda l: f'({l.location.name}, {l.name})',
+    User: lambda u: f'({u.name}, {u.login})',
+    'default': lambda x: x.name,
+}
 
 
 def replace_ref_object(log_params, obj):
@@ -36,7 +44,9 @@ def create_object(model: Type[UUIDModel],
 
     log_params = {} if log_params is None else replace_ref_object(log_params, obj)
 
-    log_event(f"Created {classname} with ID {obj.id}: {log_data}", creator=processor, **log_params)
+    name = obj_name.get(model, obj_name['default'])(obj)
+
+    log_event(f"Created {classname} {name}: {log_data}", creator=processor, **log_params)
 
     return obj
 
@@ -57,6 +67,8 @@ def edit_object(obj: UUIDModel, processor: User, no_log: Optional[List[str]] = N
 
     classname = type(obj).__name__
 
+    name = obj_name.get(type(obj), obj_name['default'])(obj)
+
     for key, value in kwargs.items():
         if key in forbidden_edit_keys:
             continue
@@ -74,20 +86,32 @@ def edit_object(obj: UUIDModel, processor: User, no_log: Optional[List[str]] = N
                 log_value = value
 
             if no_log is None or key not in no_log:
-                log_event(f'Edited {classname} with ID {obj.id}, set {key} = {log_value}',
+                log_event(f'Edited {classname} {name}, set {key} = {log_value}',
                           creator=processor, **log_params)
 
     return obj
 
 
 @with_transaction
-def delete_object(obj: UUIDModel, processor: User, log_params: Optional[dict] = None,):
-    log_params = {} if log_params is None else log_params
-
+def delete_object(obj: UUIDModel, processor: User, log_params: Optional[dict] = None, childs: List[str] = None,
+                  log: bool = True):
     classname = type(obj).__name__
 
-    session.delete(obj)
+    obj.deleted = True
 
-    log_event(f'Deleted {classname} with id {obj.id}', processor, **log_params)
+    if childs is not None:
+        for child in childs:
+            if hasattr(obj, child):
+                clds = getattr(obj, child)
+
+                if isinstance(clds, list):
+                    for cld in clds:
+                        delete_object(cld, processor, log_params, childs, log=False)
+
+    if log:
+        name = obj_name.get(type(obj), obj_name['default'])(obj)
+
+        log_params = {} if log_params is None else replace_ref_object(log_params, obj)
+        log_event(f'Deleted {classname} {name}', processor, **log_params)
 
     return True

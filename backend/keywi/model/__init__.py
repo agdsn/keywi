@@ -15,9 +15,14 @@ class User(UUIDModel):
     email = Column(EmailType, nullable=False)
     password = Column(PasswordType(schemes=['pbkdf2_sha512']))
     note = Column(String, nullable=True)
+    group = Column(String, nullable=False, server_default='user')
 
     active_rentals = relationship("Rental", primaryjoin="and_(Rental.user_id == User.id,"
-                                                        "     Rental.active)",)
+                                                        "     Rental.active, not_(Rental.deleted))",)
+
+    deleted = None
+
+    scopes = []
 
 
 class Location(UUIDModel):
@@ -31,11 +36,11 @@ class Location(UUIDModel):
 
     @property
     def amount_locks(self):
-        return len(self.locks)
+        return len([l for l in self.locks if not l.deleted])
 
     @property
     def amount_safes(self):
-        return len(self.safes)
+        return len([s for s in self.safes if not s.deleted])
 
 
 class Lock(UUIDModel):
@@ -49,11 +54,11 @@ class Lock(UUIDModel):
     location = relationship("Location", backref=backref("locks"))
 
     free_keys = relationship("Key", primaryjoin="and_(Key.lock_id == Lock.id,"
-                                                "     Key.free)", overlaps="keys")
+                                                "     Key.free, not_(Key.deleted))", overlaps="keys")
 
     @property
     def amount_keys(self):
-        return len(self.keys)
+        return len([k for k in self.keys if not k.deleted])
 
     @property
     def amount_free_keys(self):
@@ -71,7 +76,7 @@ class Safe(UUIDModel):
 
     @property
     def amount_keys(self):
-        return len(self.keys)
+        return len([k for k in self.keys if not k.deleted])
 
 
 class Key(UUIDModel):
@@ -89,7 +94,7 @@ class Key(UUIDModel):
     safe = relationship("Safe", backref=backref("keys"))
 
     active_rental = relationship("Rental", uselist=False,
-                                 primaryjoin="and_(Rental.key_id == Key.id, Rental.active)")
+                                 primaryjoin="and_(Rental.key_id == Key.id, Rental.active, not_(Rental.deleted))")
 
     @hybrid_property
     def free(self):
@@ -138,6 +143,7 @@ class LogEntry(UUIDModel):
     timestamp = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     message = Column(String, nullable=False)
     creator_id = Column(ForeignKey("user.id", ondelete="SET NULL"), nullable=True)
+    deleted = None
 
     location_id = Column(ForeignKey("location.id", ondelete="CASCADE"))
     key_id = Column(ForeignKey("key.id", ondelete="CASCADE"))

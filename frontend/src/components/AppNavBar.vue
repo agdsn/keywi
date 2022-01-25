@@ -33,8 +33,14 @@
       </li>
       <li>
         <router-link to="/rental">
-          <v-icon color="white" left>mdi-key</v-icon>
+          <v-icon color="white" left>mdi-hand-coin</v-icon>
           Ausleihen
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/log">
+          <v-icon color="white" left>mdi-format-list-bulleted-type</v-icon>
+          Logs
         </router-link>
       </li>
     </ul>

@@ -1,33 +1,37 @@
 <template>
   <div>
-    <v-data-table
+    <DataTable
       :headers="headers"
       :items="tableData"
-      :items-per-page="25"
       class="elevation-1"
-      :loading="loading"
-      loading-text="Lade Daten..."
+      sort-by="name"
       ref="table"
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Orte</h2>
+      </template>
+
       <template v-slot:[`item.name`] = "{ item }">
         <router-link :to="`/location/${ item.id }`">{{ item.name }}</router-link>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-          small
-          @click="openDeletePrompt(item)"
-        >
-          mdi-delete
-        </v-icon>
+        <div class="text-right">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="openDeletePrompt(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </div>
       </template>
-    </v-data-table>
+    </DataTable>
 
     <v-dialog v-model="dialog" width="500px">
       <v-card class="pb-1">
@@ -46,12 +50,13 @@
 
 <script>
 import api from "@/api/api";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "LocationTable",
+  components: {DataTable},
   data: () => ({
     dialog: false,
-    loading: true,
     locationToDelete: undefined,
     headers: [
       {
@@ -73,10 +78,12 @@ export default {
       {
         text: "Aktionen",
         value: "actions",
-        sortable: false
-      }
+        width: '200px',
+        sortable: false,
+        align: 'right',
+      },
     ],
-    tableData: []
+    tableData: null
   }),
   mounted() { this.loadData(); },
   computed: {
@@ -95,16 +102,10 @@ export default {
       if(paramId) {
         apiStub.location_getLocation(paramId).then(response => {
           this.tableData = [response.data];
-        }).finally(() => {
-          this.loading = false;
         });
       } else {
         apiStub.location_getLocations().then(response => {
-          this.tableData = response.data;
-
-          this.loading = false;
-        }).finally(() => {
-          this.loading = false;
+          this.tableData = response.data
         });
       }
     },

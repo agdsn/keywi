@@ -1,29 +1,31 @@
 <template>
   <div>
-    <v-data-table
+    <DataTable
         ref="table"
         :headers="headers"
         :items="tableData"
-        :items-per-page="25"
-        :loading="loading"
-        class="elevation-1"
-        loading-text="Lade Daten..."
+        sort-by="name"
     >
+      <template v-slot:header>
+        <h2 class="ml-4">Benutzer</h2>
+      </template>
+
       <template v-slot:[`item.name`]="{ item }">
         <router-link :to="`/user/${ item.id }`">{{ item.name }}</router-link>
       </template>
-    </v-data-table>
+    </DataTable>
   </div>
 </template>
 
 <script>
 import api from "@/api/api";
 import AuthService from "@/services/AuthService";
+import DataTable from "@/components/DataTable";
 
 export default {
   name: "UserTable",
+  components: {DataTable},
   data: () => ({
-    loading: true,
     headers: [
       {
         text: "Name",
@@ -38,7 +40,7 @@ export default {
         value: "email"
       }
     ],
-    tableData: []
+    tableData: null
   }),
   mounted() {
     this.loadData();
@@ -53,13 +55,10 @@ export default {
       if (paramId) {
         apiStub.user_getUser(paramId).then(response => {
           this.tableData = [response.data];
-
-          this.loading = false;
         });
       } else {
         apiStub.user_getUsers().then(response => {
           this.tableData = response.data;
-          this.loading = false;
         })
       }
     }

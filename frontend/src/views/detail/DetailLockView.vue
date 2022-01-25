@@ -2,7 +2,8 @@
   <v-card class="home pb-5 pt-1">
     <div class="home pb-5">
       <div class="mx-8">
-        <h2 class="my-2">Daten</h2>
+        <v-alert color="error" v-if="lock.deleted">Gelöscht.</v-alert>
+        <h2 class="my-2">Schloss Daten</h2>
         <v-simple-table>
           <template v-slot:default>
             <tbody>
@@ -47,18 +48,16 @@
                       icon="mdi-pencil"
                       text="Bearbeiten"
                       @mounted="mountedEvent"
-                      @save-form="loadLock()"
+                      @save-form="loadLock(); loadLogs();"
                       @button-add-clicked="mountedEvent"/>
 
           <!--      DELETE BUTTON-->
           <v-dialog v-model="deleteDialog" width="500px">
             <template v-slot:activator="{ on: clickEvent }">
-              <div :title="tooltip" class="tooltip">
-                <v-btn :disabled="deleteDisabled" color="secondary" class="mx-8 my-4" v-on="clickEvent">
-                  <v-icon left size="24">mdi-delete</v-icon>
-                  Löschen
-                </v-btn>
-              </div>
+              <v-btn color="secondary" class="mx-8 my-4" v-on="clickEvent">
+                <v-icon left size="24">mdi-delete</v-icon>
+                Löschen
+              </v-btn>
             </template>
             <v-card class="pb-1">
               <v-card-title>Schloss {{ lock.name }} wirklich löschen?</v-card-title>
@@ -73,10 +72,10 @@
           </v-dialog>
         </div>
 
-        <h2 class="mb-2">Schlüssel</h2>
-        <detail-table-keys ref="keyTable" @empty="keysEmpty=true"
+        <detail-table-keys ref="keyTable" @empty="keysEmpty=true" class="mt-10"
                            @rented="$refs.keyTable.loadDataByLockId(lock.id)"></detail-table-keys>
 
+        <detail-table-logs class="mt-10" ref="logTable"></detail-table-logs>
       </div>
     </div>
   </v-card>
@@ -86,10 +85,12 @@
 import api from "@/api/api";
 import DetailTableKeys from "@/components/detail/DetailTableKeys";
 import FormPopup from "@/components/FormPopup";
+import DetailTableLogs from "@/components/detail/DetailTableLogs";
 
 export default {
   name: "DetailLockView",
   components: {
+    DetailTableLogs,
     DetailTableKeys,
     FormPopup
   },
@@ -106,8 +107,12 @@ export default {
     this.lockId = this.$route.params.id;
     this.loadLock();
     this.loadKeys();
+    this.loadLogs();
   },
   methods: {
+    loadLogs() {
+      this.$refs.logTable.loadData({ lock_id: this.lockId });
+    },
     async loadLock() {
       if (!this.lockId) return;
 

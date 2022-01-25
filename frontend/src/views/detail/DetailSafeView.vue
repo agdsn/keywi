@@ -2,7 +2,8 @@
   <v-card class="home pb-5 pt-1">
     <div class="home pb-5">
       <div class="mx-8">
-        <h2 class="my-2">Daten</h2>
+        <v-alert color="error" v-if="safe.deleted">Gelöscht.</v-alert>
+        <h2 class="my-2">Tresor Daten</h2>
         <v-simple-table>
           <template v-slot:default>
             <tbody>
@@ -43,7 +44,7 @@
                       icon="mdi-pencil"
                       text="Bearbeiten"
                       @mounted="mountedEvent"
-                      @save-form="loadSafe()"
+                      @save-form="loadSafe(); loadLogs();"
                       @button-add-clicked="mountedEvent"/>
 
           <!--      DELETE BUTTON-->
@@ -69,9 +70,10 @@
           </v-dialog>
         </div>
 
-        <h2 class="mb-2">Schlüssel</h2>
-        <detail-table-keys ref="keyTable" @empty="keysEmpty=true"
+        <detail-table-keys ref="keyTable" @empty="keysEmpty=true" class="mt-10"
                            @rented="$refs.keyTable.loadDataBySafeId(safe.id)"></detail-table-keys>
+
+        <detail-table-logs class="mt-10" ref="logTable"></detail-table-logs>
 
       </div>
     </div>
@@ -82,10 +84,12 @@
 import api from "@/api/api";
 import DetailTableKeys from "@/components/detail/DetailTableKeys";
 import FormPopup from "@/components/FormPopup";
+import DetailTableLogs from "@/components/detail/DetailTableLogs";
 
 export default {
   name: "DetailSafeView",
   components: {
+    DetailTableLogs,
     DetailTableKeys,
     FormPopup
   },
@@ -102,8 +106,12 @@ export default {
     this.safeId = this.$route.params.id;
     this.loadSafe();
     this.loadKeys();
+    this.loadLogs();
   },
   methods: {
+    loadLogs() {
+      this.$refs.logTable.loadData({ safe_id: this.safeId });
+    },
     async loadSafe() {
       if (!this.safeId) return;
 
