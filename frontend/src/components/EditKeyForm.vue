@@ -54,8 +54,6 @@ export default {
         this.selectedSafe = keyTemplate.safe;
         this.selectedLock = keyTemplate.lock;
         this.note = keyTemplate.note;
-        this.selectedLock = keyTemplate.selectedLock;
-        this.selectedSafe = keyTemplate.selectedSafe;
       } else {
         this.keyId = undefined;
         this.number = '';

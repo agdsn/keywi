@@ -122,7 +122,7 @@ export default {
     },
 
     addMountedEvent() {
-      let payload = { selectedSafe: this.safe };
+      let payload = { safe: this.safe };
       if (this.$refs.popup_add.$refs.form) this.$refs.popup_add.$refs.form.fillForm(payload);
     },
 

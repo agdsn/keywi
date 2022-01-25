@@ -126,7 +126,7 @@ export default {
     },
 
     addMountedEvent() {
-      let payload = { selectedLock: this.lock };
+      let payload = { lock: this.lock };
       if (this.$refs.popup_add.$refs.form) this.$refs.popup_add.$refs.form.fillForm(payload);
     },
 
