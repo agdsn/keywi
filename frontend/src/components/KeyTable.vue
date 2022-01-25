@@ -103,7 +103,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="rentDialog" width="500px">
+    <v-dialog ref="rentForm" v-model="rentDialog" width="500px">
       <v-card class="pb-1">
         <v-card-title>Schlüssel {{ keyInDialogNumber }} wirklich ausleihen?</v-card-title>
         <v-card-text>
@@ -113,6 +113,61 @@
                             prepend-icon="mdi-account" return-object></v-autocomplete>
             <v-text-field v-model="grantingDocument" label="Dokument" prepend-icon="mdi-file-document"/>
             <v-textarea v-model="note" label="Notiz" prepend-icon="mdi-note-text-outline" rows="1"></v-textarea>
+
+            <v-checkbox v-model="editStartDate" label="Startdatum bearbeiten"/>
+
+      <v-menu
+        v-model="menuStartDate"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        min-width="auto"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+              :disabled="!editStartDate"
+              style="margin-top:-10px"
+            v-model="dateStart"
+            label="Startdatum"
+            prepend-icon="mdi-calendar"
+            readonly
+            v-bind="attrs"
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker
+          v-model="dateStart"
+          @input="menuStartDate = false"
+        ></v-date-picker>
+      </v-menu>
+
+      <v-checkbox v-model="editEndDate" label="Enddatum bearbeiten"/>
+      <v-menu
+        v-model="menuEndDate"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        min-width="auto"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+              :disabled="!editEndDate"
+              style="margin-top:-10px"
+            v-model="dateEnd"
+            label="Enddatum"
+            prepend-icon="mdi-calendar"
+            readonly
+            v-bind="attrs"
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker
+          v-model="dateEnd"
+          @input="menuEndDate = false"
+        ></v-date-picker>
+      </v-menu>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -142,6 +197,12 @@ export default {
     returnDialog: false,
     grantingDocument: '',
     note: '',
+    menuStartDate: false,
+    editStartDate: false,
+    dateStart: undefined,
+    menuEndDate: false,
+    editEndDate: false,
+    dateEnd: undefined,
     headers: [
       {
         width: '5%',
@@ -223,6 +284,12 @@ export default {
       } else {
         this.loadUsers();
         this.rentDialog = true;
+
+        this.grantingDocument = '';
+        this.note = '';
+        this.dateStart = '';
+        this.dateEnd = '';
+        this.pickedUser = undefined;
       }
     },
 
@@ -255,6 +322,10 @@ export default {
       });
     },
 
+    dateToDatetime(date) {
+      return date + 'T12:00';
+    },
+
     async rentKey() {
       if (this.$refs.form.validate()) {
         const apiStub = await api;
@@ -265,6 +336,9 @@ export default {
           allowed_by: this.grantingDocument,
           note: this.note
         };
+
+        if(this.editStartDate && this.dateStart) rental.begin = this.dateToDatetime(this.dateStart);
+        if(this.editEndDate && this.dateEnd) rental.end = this.dateToDatetime(this.dateEnd);
 
         apiStub.rental_createRental(null, rental).then(() => {
           this.rentDialog = false;
