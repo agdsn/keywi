@@ -1,4 +1,5 @@
-from sqlalchemy import String, Column, ForeignKey, Boolean, DateTime, CheckConstraint, func, Float, or_, select, and_
+from sqlalchemy import String, Column, ForeignKey, Boolean, DateTime, CheckConstraint, func, Float, or_, select, and_, \
+    not_
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy_utils import EmailType, PasswordType
@@ -102,7 +103,7 @@ class Key(UUIDModel):
 
     @free.expression
     def free(self):
-        return select(Rental.id).select_from(Rental).where(and_(Rental.active, Rental.key_id == self.id)).scalar_subquery().is_(None)
+        return select(Rental.id).select_from(Rental).where(and_(Rental.active, Rental.key_id == self.id, not_(Rental.deleted))).scalar_subquery().is_(None)
 
     @property
     def location(self):
