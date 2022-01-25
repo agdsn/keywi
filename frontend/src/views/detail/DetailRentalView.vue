@@ -28,7 +28,7 @@
           </tr>
           <tr>
             <td>Ende</td>
-            <td v-if="rental.end">{{ new Date(rental.end).toLocaleString('de') }}</td>
+            <td><span v-if="rental.end">{{ new Date(rental.end).toLocaleString('de') }}</span></td>
           </tr>
           <tr>
             <td>Aktiv</td>

@@ -87,6 +87,9 @@ export default {
   },
   methods: {
     fillForm(rentalTemplate) {
+      this.editStartDate = false;
+      this.editEndDate = false;
+
       if(rentalTemplate){
         this.rentalId = rentalTemplate.id;
         this.grantingDocument = rentalTemplate.allowed_by;

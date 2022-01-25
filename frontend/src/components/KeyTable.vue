@@ -278,6 +278,8 @@ export default {
 
     openRentPrompt(keyInDialog) {
       this.keyInDialog = keyInDialog;
+      this.editStartDate = false;
+        this.editEndDate = false;
 
       if (this.rentedByUser(keyInDialog)) {
         this.returnDialog = true;
@@ -290,6 +292,7 @@ export default {
         this.dateStart = '';
         this.dateEnd = '';
         this.pickedUser = undefined;
+
       }
     },
 
