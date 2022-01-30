@@ -19,7 +19,7 @@ Folgende Objekte sollen verwaltet werden können:
 
 Zur Nachvollziehbarkeit der Aktionen, sollen alle Vorgänge protokolliert werden.
 
-Außerdem soll (zusätzlich zu einem lokalen Konto) eine Authentifizierung über einen externen OAuth2/OpenIDConnect 
+Außerdem soll (zusätzlich zu einem lokalen Konto) eine Authentifizierung über einen externen OAuth2/OpenID Connect 
 Provider möglich sein. Zur Verwaltung der Benutzungsrechte (wer darf einen Schlüssel ausleihen oder Daten bearbeiten), 
 soll es verschiedene Benutzergruppen mit individuellen Berechtigungen geben.
 
@@ -145,3 +145,7 @@ unter `/api/` (also bspw. `https://keywi.agdsn.de/api/`) das Backend erreichbar 
 In der Konfigurationsdatei des Frontends muss dann nur noch die korrekte Backend-URL hinterlegt werden.
 
 Für ein gültiges HTTPS-Zertifikat wird Certbot bzw. Letsencrypt verwendet.
+
+
+## Projektverlauf
+Bei Projektgruppentreffen wurden Protokolle verfasst. Diese sind im Repository im Ordner `/protocols` auffindbar.
