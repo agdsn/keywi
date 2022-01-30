@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.key</OriginalElement>
+  <nodes>
+    <node x="60.16666666666663" y="790.0">1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.rental</node>
+    <node x="66.10532687651357" y="262.0">1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.lock</node>
+    <node x="248.62772397094412" y="501.0">1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.key</node>
+    <node x="159.98305084745766" y="1160.2262262262263">1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.log_entry</node>
+    <node x="459.7303268765136" y="-25.531531531531527">1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.location</node>
+    <node x="76.62772397094415" y="513.5">1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.user</node>
+    <node x="492.7303268765136" y="274.5">1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.safe</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.log_entry" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.user" relationship="REFERENCES">
+      <point x="-76.28571428571428" y="-142.5" />
+      <point x="217.19733656174338" y="1081.0" />
+      <point x="11.0" y="1081.0" />
+      <point x="11.0" y="758.0" />
+      <point x="101.96105730427749" y="758.0" />
+      <point x="-50.66666666666666" y="105.0" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.key" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.lock" relationship="REFERENCES">
+      <point x="-122.24999999999994" y="-117.5" />
+      <point x="370.8777239709442" y="474.0" />
+      <point x="261.6053268765136" y="474.0" />
+      <point x="0.0" y="92.5" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.log_entry" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.location" relationship="REFERENCES">
+      <point x="114.42857142857144" y="-142.5" />
+      <point x="407.9116222760291" y="1105.1131131131133" />
+      <point x="789.1053268765136" y="1105.1131131131133" />
+      <point x="789.1053268765136" y="236.0" />
+      <point x="560.7303268765136" y="236.0" />
+      <point x="0.0" y="105.0" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.safe" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.location" relationship="REFERENCES">
+      <point x="0.0" y="-80.0" />
+      <point x="0.0" y="105.0" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.log_entry" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.safe" relationship="REFERENCES">
+      <point x="76.28571428571428" y="-142.5" />
+      <point x="369.76876513317194" y="1091.0" />
+      <point x="748.1277239709441" y="1091.0" />
+      <point x="748.1277239709441" y="474.0" />
+      <point x="560.7303268765136" y="474.0" />
+      <point x="0.0" y="80.0" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.key" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.safe" relationship="REFERENCES">
+      <point x="122.25000000000006" y="-117.5" />
+      <point x="615.3777239709442" y="474.0" />
+      <point x="560.7303268765136" y="474.0" />
+      <point x="0.0" y="80.0" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.rental" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.user" relationship="REFERENCES">
+      <point x="-165.66666666666663" y="-130.0" />
+      <point x="143.0" y="758.0" />
+      <point x="152.62772397094415" y="758.0" />
+      <point x="0.0" y="105.0" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.lock" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.location" relationship="REFERENCES">
+      <point x="0.0" y="-92.5" />
+      <point x="261.6053268765136" y="236.0" />
+      <point x="560.7303268765136" y="236.0" />
+      <point x="0.0" y="105.0" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.rental" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.key" relationship="REFERENCES">
+      <point x="165.66666666666663" y="-130.0" />
+      <point x="474.33333333333326" y="768.0" />
+      <point x="493.1277239709441" y="768.0" />
+      <point x="0.0" y="117.5" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.log_entry" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.key" relationship="REFERENCES">
+      <point x="38.14285714285717" y="-142.5" />
+      <point x="331.62590799031483" y="1071.0" />
+      <point x="567.8997175141244" y="1071.0" />
+      <point x="567.8997175141244" y="768.0" />
+      <point x="493.1277239709441" y="768.0" />
+      <point x="0.0" y="117.5" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.log_entry" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.lock" relationship="REFERENCES">
+      <point x="-114.42857142857142" y="-142.5" />
+      <point x="179.05447941888625" y="1105.1131131131133" />
+      <point x="0.0" y="1105.1131131131133" />
+      <point x="0.0" y="474.0" />
+      <point x="261.6053268765136" y="474.0" />
+      <point x="0.0" y="92.5" />
+    </edge>
+    <edge source="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.log_entry" target="1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.rental" relationship="REFERENCES">
+      <point x="0.0" y="-142.5" />
+      <point x="293.48305084745766" y="1091.0" />
+      <point x="308.66666666666663" y="1091.0" />
+      <point x="0.0" y="130.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.7050105857445308" showDependencies="false" x="395.0" y="698.4999999999999" />
+  <SelectedNodes>
+    <node>1d014fd4-c1f3-4513-b62d-819acedebe04.TABLE:keywi.public.location</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Comments</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+
