@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+</head>
 <style>
     .with-border {
       border: 1px solid black;
@@ -83,12 +88,25 @@
     <tbody>
     <tr>
     <td style="width: 446.5px;">
-    <p>________________________________<br />{{ processor.name }} (Vorstand)</p>
+        <div>
+            ________________________________
+        </div>
+        <div style="padding-top: 5px;">
+            {{ user.name }}
+        </div>
     </td>
-    <td style="width: 446.5px;">________________________________<br />{{ user.name }}</td>
+    <td style="width: 446.5px;">
+        <div>
+            ________________________________
+        </div>
+        <div style="padding-top: 5px;">
+            {{ processor.name }} (Vorstand)
+        </div>
+    </td>
     </tr>
     </tbody>
     </table>
 </div>
 
 </body>
+</html>
