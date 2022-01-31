@@ -59,6 +59,7 @@ group_scopes = {
     ],
 }
 
+
 def url_add_parameters(url, params):
     """Adds parameters to URL, parameter will be repeated if already present"""
     if params:
@@ -69,6 +70,7 @@ def url_add_parameters(url, params):
         url = urlunparse(fragments)
     return url
 
+
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
@@ -78,8 +80,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
-
 
 
 async def get_current_user(security_scopes: SecurityScopes,
@@ -133,6 +133,7 @@ class CurrentUser:
     async def __call__(self, security_scopes: SecurityScopes, token: str = Depends(oauth2_scheme)):
         return await get_current_user(security_scopes, token, self.ignore_scope_error)
 
+
 @router.post("/token")
 async def get_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = db.session.query(User).filter_by(login=form_data.username).scalar()
@@ -158,6 +159,7 @@ oauth.register(
         'scope': 'openid email profile roles'
     }
 )
+
 
 def roles_to_groups(roles):
     groups = []
