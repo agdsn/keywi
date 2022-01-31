@@ -2,9 +2,11 @@ from typing import List
 
 from fastapi import APIRouter, Depends, Security
 from fastapi_sqlalchemy import db
+from starlette.responses import Response
 
 from api.auth import get_current_user, CurrentUser
 from api.helpers import PathModelGetter, raise_permission_error
+from lib.rental import create_user_pdf
 from model import User
 from model.pydantic import UserModel
 
@@ -33,3 +35,11 @@ def get_user(user: User = Depends(PathModelGetter(User)),
         raise_permission_error()
 
     return user
+
+
+@router.get("/{uuid}/pdf", response_model=UserModel)
+def get_user_protocol(user: User = Depends(PathModelGetter(User)),
+                      c_user: User = Security(CurrentUser(), scopes=['user:write'])):
+    pdf = create_user_pdf(user, c_user)
+
+    return Response(content=pdf, media_type="application/pdf")

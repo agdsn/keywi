@@ -7,6 +7,8 @@ ENV LANG=C.UTF-8 DEBIAN_FRONTEND=noninteractive
 RUN groupadd --force --gid $GID app \
     && useradd --non-unique --home-dir /opt/app --create-home --uid $UID --gid $GID --comment "Application" app
 
+RUN apt-get update && apt-get install -y wkhtmltopdf
+
 WORKDIR /opt/app
 
 COPY --chown=app:app ./keywi/ ./

@@ -29,7 +29,14 @@
         </template>
       </v-simple-table>
 
-      <v-divider class="mb-8"></v-divider>
+      <v-divider></v-divider>
+
+      <div class="buttons">
+        <v-btn color="secondary" class="mx-8 my-4" @click="downloadProtocol">
+          <v-icon left size="24">mdi-file-download</v-icon>
+          Protokoll
+        </v-btn>
+      </div>
 
       <detail-table-rentals class="mt-10" ref="rentalTable"></detail-table-rentals>
       <detail-table-logs class="mt-10" ref="logTable"></detail-table-logs>
@@ -75,14 +82,61 @@ export default {
         this.user = response.data;
       });
     },
-
     async loadRentals() {
       this.$refs.rentalTable.loadDataByUserId(this.userId);
-    }
+    },
+    showFile(blob, name, mediaType = 'application/pdf') {
+      // It is necessary to create a new blob object with mime-type explicitly set
+      // otherwise only Chrome works like it should
+      const newBlob = new Blob([blob], { type: mediaType });
+
+      // For other browsers:
+      // Create a link pointing to the ObjectURL containing the blob.
+      const data = window.URL.createObjectURL(newBlob);
+      const link = document.createElement('a');
+      link.href = data;
+      link.download = name;
+      link.click();
+      setTimeout(() => {
+        // For Firefox it is necessary to delay revoking the ObjectURL
+        window.URL.revokeObjectURL(data);
+      }, 100);
+    },
+    async downloadProtocol() {
+      const apiStub = await api;
+      apiStub.user_getUserProtocol(
+          { uuid: this.user.id },
+          null,
+          { responseType: 'blob' },
+      ).then((rsp) => {
+        const date = new Date();
+        const isoDate = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+
+        this.showFile(rsp.data, `${this.user.login}-${isoDate}.pdf`);
+      });
+    },
   }
 }
 </script>
 
 <style scoped>
+.buttons {
+  text-align: end;
+}
 
+.buttons >>> .v-btn {
+  margin-right: 0 !important;
+  margin-left: 16px !important;
+  margin-bottom: 0 !important;
+}
+
+.buttons .tooltip {
+  display: inline-block;
+}
+
+.buttons .tooltip .v-btn {
+  margin-right: 0 !important;
+  margin-left: 16px !important;
+  margin-bottom: 0 !important;
+}
 </style>

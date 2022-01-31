@@ -919,11 +919,46 @@ declare namespace Paths {
         }
     }
     namespace LogGetLogs {
+        namespace Parameters {
+            /**
+             * Key Id
+             */
+            export type KeyId = string; // uuid
+            /**
+             * Location Id
+             */
+            export type LocationId = string; // uuid
+            /**
+             * Lock Id
+             */
+            export type LockId = string; // uuid
+            /**
+             * Rental Id
+             */
+            export type RentalId = string; // uuid
+            /**
+             * Safe Id
+             */
+            export type SafeId = string; // uuid
+            /**
+             * User Id
+             */
+            export type UserId = string; // uuid
+        }
+        export interface QueryParameters {
+            location_id?: /* Location Id */ Parameters.LocationId /* uuid */;
+            key_id?: /* Key Id */ Parameters.KeyId /* uuid */;
+            user_id?: /* User Id */ Parameters.UserId /* uuid */;
+            lock_id?: /* Lock Id */ Parameters.LockId /* uuid */;
+            safe_id?: /* Safe Id */ Parameters.SafeId /* uuid */;
+            rental_id?: /* Rental Id */ Parameters.RentalId /* uuid */;
+        }
         namespace Responses {
             /**
              * Response Get Logs Log  Get
              */
             export type $200 = /* LogEntryModel */ Components.Schemas.LogEntryModel[];
+            export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
         }
     }
     namespace RentalCreateRental {
@@ -1153,6 +1188,26 @@ declare namespace Paths {
             export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
         }
     }
+    namespace UserGetUserProtocol {
+        namespace Parameters {
+            /**
+             * Uuid
+             * The UUID of the referenced object.
+             */
+            export type Uuid = any;
+        }
+        export interface PathParameters {
+            uuid: /**
+             * Uuid
+             * The UUID of the referenced object.
+             */
+            Parameters.Uuid;
+        }
+        namespace Responses {
+            export type $200 = /* UserModel */ Components.Schemas.UserModel;
+            export type $422 = /* HTTPValidationError */ Components.Schemas.HTTPValidationError;
+        }
+    }
     namespace UserGetUsers {
         namespace Responses {
             /**
@@ -1288,7 +1343,7 @@ export interface OperationMethods {
    * log_getLogs - Get Logs
    */
   'log_getLogs'(
-    parameters?: Parameters<UnknownParamsObject> | null,
+    parameters?: Parameters<Paths.LogGetLogs.QueryParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.LogGetLogs.Responses.$200>
@@ -1404,6 +1459,14 @@ export interface OperationMethods {
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.UserGetUser.Responses.$200>
+  /**
+   * user_getUserProtocol - Get User Protocol
+   */
+  'user_getUserProtocol'(
+    parameters?: Parameters<Paths.UserGetUserProtocol.PathParameters> | null,
+    data?: any,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.UserGetUserProtocol.Responses.$200>
   /**
    * auth_getToken - Get Token
    */
@@ -1568,7 +1631,7 @@ export interface PathsDictionary {
      * log_getLogs - Get Logs
      */
     'get'(
-      parameters?: Parameters<UnknownParamsObject> | null,
+      parameters?: Parameters<Paths.LogGetLogs.QueryParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.LogGetLogs.Responses.$200>
@@ -1700,6 +1763,16 @@ export interface PathsDictionary {
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.UserGetUser.Responses.$200>
+  }
+  ['/user/{uuid}/pdf']: {
+    /**
+     * user_getUserProtocol - Get User Protocol
+     */
+    'get'(
+      parameters?: Parameters<Paths.UserGetUserProtocol.PathParameters> | null,
+      data?: any,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.UserGetUserProtocol.Responses.$200>
   }
   ['/auth/token']: {
     /**

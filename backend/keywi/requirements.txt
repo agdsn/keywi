@@ -13,3 +13,5 @@ python-jose[cryptography]~=3.3.0
 authlib~=0.15.5
 httpx~=0.21.3
 itsdangerous
+pdfkit~=1.0.0
+jinja2
