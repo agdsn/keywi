@@ -1,7 +1,4 @@
-# This is an example Starter pipeline configuration
-# Use a skeleton to build, test and deploy using manual and parallel steps
-# -----
-# You can specify a custom docker image from Docker Hub as your build environment.
+# Build docker image
 
 image: atlassian/default-image:3
 
@@ -13,3 +10,5 @@ pipelines:
           script:
             - cd backend
             - docker-compose -f docker-compose.prod.yml build
+          services:
+            - docker
