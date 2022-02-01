@@ -75,7 +75,7 @@ def create_user_pdf(user: User, processor: User):
 
     user_template = env.get_template('user.html')
 
-    rentals = session.query(Rental).filter_by(user=user).order_by(Rental.begin).all()
+    rentals = session.query(Rental).filter_by(user=user, deleted=False).order_by(Rental.begin).all()
 
     html = user_template.render(
         now=utcnow().strftime("%Y-%m-%d %H:%M"),
