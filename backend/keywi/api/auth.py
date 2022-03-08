@@ -29,7 +29,7 @@ class TokenData(BaseModel):
     login: Optional[str] = None
 
 
-group_scopes = {
+role_scopes = {
     'rw-admin': [
         'user:read', 'user:write',
         'location:read', 'location:write',
@@ -140,7 +140,7 @@ async def get_token(form_data: OAuth2PasswordRequestForm = Depends()):
     if not user or user.password is None or user.password != form_data.password:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    scopes = groups_to_scopes([user.group])
+    scopes = role_to_scopes([user.role])
 
     access_token = create_access_token(
         data={"sub": user.login, 'scp': list_to_scope(scopes)}, expires_delta=access_token_expires
@@ -156,35 +156,30 @@ oauth.register(
     client_id=app_config.get('auth', 'client_id'),
     client_secret=app_config.get('auth', 'client_secret'),
     client_kwargs={
-        'scope': 'openid email profile roles'
+        'scope': 'openid email profile groups'
     }
 )
 
 
-def roles_to_groups(roles):
-    groups = []
-
+def oauth_to_role(oauth_roles):
     rw_admin_roles = app_config.get('auth', 'rw_admin_roles').replace(" ", "").split(',')
     ro_admin_roles = app_config.get('auth', 'ro_admin_roles').replace(" ", "").split(',')
     user_roles = app_config.get('auth', 'user_roles').replace(" ", "").split(',')
 
-    if any(r in roles for r in rw_admin_roles):
-        groups += ['rw-admin']
+    if any(r in oauth_roles for r in rw_admin_roles):
+        return 'rw-admin'
 
-    if any(r in roles for r in ro_admin_roles):
-        groups += ['ro-admin']
+    if any(r in oauth_roles for r in ro_admin_roles):
+        return 'ro-admin'
 
-    if any(r in roles for r in user_roles):
-        groups += ['user']
+    if any(r in oauth_roles for r in user_roles):
+        return 'user'
 
-    return groups
+    return None
 
 
-def groups_to_scopes(groups):
-    scopes = []
-
-    for group in groups:
-        scopes += group_scopes.get(group, [])
+def role_to_scopes(role):
+    scopes = role_scopes.get(role, [])
 
     return list(set(scopes))
 
@@ -206,21 +201,23 @@ async def finish(request: Request, return_url: str = Query(...)):
 
     user = session.query(User).filter_by(login=auth_user['preferred_username']).scalar()
 
+    role = oauth_to_role(auth_user['groups'])
+    scopes = role_to_scopes(role)
+
     if user is None:
         user = User(
             login=auth_user['preferred_username'],
             name=auth_user['name'],
             email=auth_user['email'],
+            role=role,
         )
         session.add(user)
     else:
         user.name = auth_user['name']
         user.email = auth_user['email']
+        user.role = role
 
     session.commit()
-
-    groups = roles_to_groups(auth_user['roles'])
-    scopes = groups_to_scopes(groups)
 
     access_token = create_access_token(
         data={"sub": user.login, 'scp': list_to_scope(scopes)}, expires_delta=access_token_expires

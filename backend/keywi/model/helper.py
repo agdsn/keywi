@@ -8,7 +8,7 @@ def init_data():
         login='admin',
         name="Admin",
         email="root@lists.agdsn.de",
-        group="rw-admin",
+        role="rw-admin",
         password='admin',
     )
     session.add(admin)
@@ -17,7 +17,7 @@ def init_data():
         login='user',
         name="User",
         email="user@test.de",
-        group="user",
+        role="user",
         password='user',
     )
     session.add(user)

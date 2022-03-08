@@ -5,11 +5,13 @@ from starlette.middleware.sessions import SessionMiddleware
 
 import model, model.base
 from api import user, safe, rental, log, lock, location, key, auth
-from api.helpers import use_route_names_as_operation_ids
+from api.helpers import use_route_names_as_operation_ids, SpaStaticFiles
 
 from lib.app_config import app_config
 from model.helper import init_data
 from model.session import session
+
+root_app = FastAPI(root_path=app_config.get('general', 'root_path', fallback=''))
 
 app = FastAPI(title="Keywi", version="0.0.1", root_path=app_config.get('general', 'root_path', fallback=''),
               servers=[{"url": app_config.get('general', 'url'),
@@ -43,3 +45,6 @@ app.include_router(user.router)
 app.include_router(auth.router)
 
 use_route_names_as_operation_ids(app)
+
+root_app.mount('/api', app)
+root_app.mount('/', SpaStaticFiles(directory="web", html=False), name="web")

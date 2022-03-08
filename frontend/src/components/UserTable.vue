@@ -38,7 +38,11 @@ export default {
       {
         text: "Mail-Adresse",
         value: "email"
-      }
+      },
+      {
+        text: "Rolle",
+        value: "role"
+      },
     ],
     tableData: null
   }),

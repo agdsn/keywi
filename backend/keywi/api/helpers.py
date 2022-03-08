@@ -3,6 +3,10 @@ from uuid import UUID
 
 from fastapi import FastAPI, Path, HTTPException
 from fastapi.routing import APIRoute
+from starlette.datastructures import URL
+from starlette.responses import Response, RedirectResponse
+from starlette.staticfiles import StaticFiles
+from starlette.types import Scope
 
 from model import UUIDModel
 from model.base import ModelBase, PydModel
@@ -66,5 +70,19 @@ def get_or_404(model: Type[ModelBase], ident: any):
 class SuccessModel(PydModel):
     success: bool = True
 
+
 def raise_permission_error():
     raise HTTPException(403, "No access to this resource.")
+
+
+class SpaStaticFiles(StaticFiles):
+    """
+    Staticfiles for single-page-apps
+    """
+
+    async def lookup_path(self, path):
+        full_path, stat_result = await super().lookup_path(path)
+        if stat_result is None:
+            return await super().lookup_path("./index.html")
+
+        return full_path, stat_result

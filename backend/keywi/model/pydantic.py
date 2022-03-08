@@ -29,6 +29,7 @@ class UserModelBase(PydModel):
     login: constr(max_length=30, min_length=2)
     name: str
     note: Optional[str]
+    role: str
 
 
 class UserModelShort(UserModelBase):

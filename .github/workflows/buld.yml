@@ -1,0 +1,40 @@
+name: VyHub Build
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install web dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build web
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Login to AG DSN Registry
+        uses: docker/login-action@v1
+        with:
+          registry: registry.agdsn.de
+          username: "github-actions"
+          password: ${{ secrets.GITLAB_REGISTRY_PASSWORD }}
+
+      - name: Copy web files to ./backend/web
+        working-directory: ./frontend
+        run: cp -r dist/* ../backend/keywi/web
+
+      - name: Set correct permissions
+        working-directory: ./backend
+        run: sudo chmod -R a+rw .
+
+      - name: Build the Docker image
+        working-directory: ./backend
+        run: docker build -f docker/prod-app.Dockerfile -t registry.agdsn.de/agdsn/:${GITHUB_REF_NAME} .
+
+      - name: Push to AG DSN registry
+        run: docker push registry.agdsn.de/agdsn/:${GITHUB_REF_NAME}

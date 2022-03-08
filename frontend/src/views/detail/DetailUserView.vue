@@ -22,6 +22,12 @@
             </td>
           </tr>
           <tr>
+            <td>Rolle</td>
+            <td>
+              {{ user.role }}
+            </td>
+          </tr>
+          <tr>
             <td>Notiz</td>
             <td>{{ user.note }}</td>
           </tr>
