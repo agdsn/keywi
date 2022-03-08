@@ -17,12 +17,12 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
-      - name: Login to AG DSN Registry
+      - name: Login to GitHub Packages
         uses: docker/login-action@v1
         with:
-          registry: registry.agdsn.de
-          username: "github-actions"
-          password: ${{ secrets.GITLAB_REGISTRY_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
 
       - name: Copy web files to ./backend/web
         working-directory: ./frontend
@@ -34,7 +34,7 @@ jobs:
 
       - name: Build the Docker image
         working-directory: ./backend
-        run: docker build -f docker/prod-app.Dockerfile -t registry.agdsn.de/agdsn/keywi:${GITHUB_REF_NAME} .
+        run: docker build -f docker/prod-app.Dockerfile -t ghcr.io/agdsn/keywi:${GITHUB_REF_NAME} .
 
       - name: Push to AG DSN registry
-        run: docker push registry.agdsn.de/agdsn/keywi:${GITHUB_REF_NAME}
+        run: docker push ghcr.io/agdsn/keywi:${GITHUB_REF_NAME}
