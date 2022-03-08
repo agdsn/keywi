@@ -47,4 +47,4 @@ app.include_router(auth.router)
 use_route_names_as_operation_ids(app)
 
 root_app.mount('/api', app)
-root_app.mount('/', SpaStaticFiles(directory="web", html=False), name="web")
+root_app.mount('/', SpaStaticFiles(directory="web", html=True), name="web")
