@@ -34,7 +34,7 @@ jobs:
 
       - name: Build the Docker image
         working-directory: ./backend
-        run: docker build -f docker/prod-app.Dockerfile -t registry.agdsn.de/agdsn/${GITHUB_REF_NAME} .
+        run: docker build -f docker/prod-app.Dockerfile -t registry.agdsn.de/agdsn/keywi:${GITHUB_REF_NAME} .
 
       - name: Push to AG DSN registry
-        run: docker push registry.agdsn.de/agdsn/${GITHUB_REF_NAME}
+        run: docker push registry.agdsn.de/agdsn/keywi:${GITHUB_REF_NAME}
