@@ -24,5 +24,5 @@ jobs:
         working-directory: ./backend
         run: docker build -f docker/prod-app.Dockerfile -t ghcr.io/agdsn/keywi:${GITHUB_REF_NAME} .
 
-      - name: Push to AG DSN registry
+      - name: Push to Github registry
         run: docker push ghcr.io/agdsn/keywi:${GITHUB_REF_NAME}
