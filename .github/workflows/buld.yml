@@ -2,6 +2,9 @@ name: VyHub Build
 
 on: push
 
+env:
+  VUE_APP_KEYWI_API_URL: "https://keywi.agdsn.de/api"
+
 jobs:
   build:
     runs-on: ubuntu-latest
