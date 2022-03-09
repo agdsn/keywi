@@ -2,6 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 const { ProvidePlugin } = require('webpack');
 
 module.exports = defineConfig({
+  outputDir: "../backend/web",
   transpileDependencies: [
     'vuetify'
   ],
