@@ -140,7 +140,7 @@ async def get_token(form_data: OAuth2PasswordRequestForm = Depends()):
     if not user or user.password is None or user.password != form_data.password:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    scopes = role_to_scopes([user.role])
+    scopes = role_to_scopes(user.role)
 
     access_token = create_access_token(
         data={"sub": user.login, 'scp': list_to_scope(scopes)}, expires_delta=access_token_expires
