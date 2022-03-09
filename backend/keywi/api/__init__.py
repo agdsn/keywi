@@ -1,3 +1,5 @@
+from urllib.parse import urljoin
+
 from fastapi import FastAPI
 from fastapi_sqlalchemy import DBSessionMiddleware, db
 from starlette.middleware.cors import CORSMiddleware
@@ -13,9 +15,7 @@ from model.session import session
 
 root_app = FastAPI(root_path=app_config.get('general', 'root_path', fallback=''))
 
-app = FastAPI(title="Keywi", version="0.0.1", root_path=app_config.get('general', 'root_path', fallback=''),
-              servers=[{"url": app_config.get('general', 'url'),
-                        "description": "main"}])
+app = FastAPI(title="Keywi", version="0.0.1", root_path=app_config.get('general', 'root_path', fallback=''))
 app.add_middleware(DBSessionMiddleware, db_url=app_config.get('database', 'url'))
 
 # add cors specification

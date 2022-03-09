@@ -14,6 +14,7 @@ function api() {
         definition: `${process.env.VUE_APP_KEYWI_API_URL}/openapi.json`,
         withServer: 'main',
         axiosConfigDefaults: {
+            baseURL: process.env.VUE_APP_KEYWI_API_URL,
             headers,
         },
     }).init<Client>();
