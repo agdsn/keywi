@@ -1,112 +1,170 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="utf-8"/>
+    <meta charset="utf-8" />
 </head>
 <style>
     .with-border {
-      border: 1px solid black;
-      border-collapse: collapse;
-      font-size: 80%;
+        border: 1px solid black;
+        border-collapse: collapse;
+        font-size: 80%;
     }
 
     .with-border tr {
-      border: 1px solid black;
-      border-collapse: collapse;
+        border: 1px solid black;
+        border-collapse: collapse;
     }
 
     .with-border td {
-      border: 1px solid black;
-      border-collapse: collapse;
-      padding-left: 5px;
-      padding-right: 5px;
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding-left: 5px;
+        padding-right: 5px;
     }
+
+    li {
+        padding: 4px 0;
+    }
+
+
 </style>
+
 <body style="padding-left: 50px;">
-<table style="height: 58px;" width="909">
-<tbody>
-<tr>
-<td>
-<p><h1 style="text-align: left;">Keywi Schl&uuml;sselprotokoll</h1></p>
-</td>
-<td><p style="text-align: right;"><strong>{{ user.name }}</strong></p></td>
-</tr>
-</tbody>
-</table>
-<table style="height: 78px; width: 504px;" class="with-border">
-<tbody>
-<tr>
-<td style="width: 112px;"><strong>Name</strong></td>
-<td><strong>{{ user.name }}</strong></td>
-</tr>
-<tr>
-<td style="width: 112px;">Datum</td>
-<td>{{ now }}</td>
-</tr>
-<tr>
-<td style="width: 112px;">ID</td>
-<td>{{ user.id }}</td>
-</tr>
-</tbody>
-</table>
-<h2>Ausleihen</h2>
-<table style="height: 26px;" width="937" class="with-border">
-<tbody>
-<tr style="height: 13.5px;">
-<td><strong>Ort</strong></td>
-<td><strong>Schloss</strong></td>
-<td><strong>Nummer</strong></td>
-<td style="min-width: 100px;"><strong>Ausgeg. von</strong></td>
-<td><strong>Dokument</strong></td>
-<td style="width: 80px;"><strong>Von</strong></td>
-<td style="width: 80px;"><strong>Bis</strong></td>
-</tr>
-{% for rental in rentals %}
-<tr style="height: 22px;">
-<td>{{ rental.key.lock.location.name }}</td>
-<td>{{ rental.key.lock.name }}</td>
-<td>{{ rental.key.number }}</td>
-<td>{{ rental.issuing_user.name }}</td>
-<td>{{ rental.allowed_by }}</td>
-<td>{{ rental.begin.strftime("%Y-%m-%d") }}</td>
-{% if rental.end %}
-    <td>{{ rental.end.strftime("%Y-%m-%d") }}</td>
-{%  else %}
-   <td>-</td>
-{%  endif %}
-</tr>
-{% endfor %}
-</tbody>
-</table>
-<br />
-<div>
-    <h2>Best&auml;tigung</h2>
-
-    <br />
-
     <table style="height: 58px;" width="909">
-    <tbody>
-    <tr>
-    <td style="width: 446.5px;">
-        <div>
-            ________________________________
-        </div>
-        <div style="padding-top: 5px;">
-            {{ user.name }}
-        </div>
-    </td>
-    <td style="width: 446.5px;">
-        <div>
-            ________________________________
-        </div>
-        <div style="padding-top: 5px;">
-            {{ processor.name }} (Vorstand)
-        </div>
-    </td>
-    </tr>
-    </tbody>
+        <tbody>
+            <tr>
+                <td>
+                    <p>
+                    <h1 style="text-align: left;">Keywi Schl&uuml;sselprotokoll</h1>
+                    </p>
+                </td>
+                <td>
+                    <p style="text-align: right;"><strong>{{ user.name }}</strong></p>
+                </td>
+            </tr>
+        </tbody>
     </table>
-</div>
+    <table style="height: 78px; width: 504px;" class="with-border">
+        <tbody>
+            <tr>
+                <td style="width: 112px;"><strong>Name</strong></td>
+                <td><strong>{{ user.name }}</strong></td>
+            </tr>
+            <tr>
+                <td style="width: 112px;">Datum</td>
+                <td>{{ now }}</td>
+            </tr>
+            <tr>
+                <td style="width: 112px;">ID</td>
+                <td>{{ user.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Ausleihen</h2>
+    <table style="height: 26px;" width="937" class="with-border">
+        <tbody>
+            <tr style="height: 13.5px;">
+                <td><strong>Ort</strong></td>
+                <td><strong>Schloss</strong></td>
+                <td><strong>Nummer</strong></td>
+                <td style="min-width: 100px;"><strong>Ausgeg. von</strong></td>
+                <td><strong>Dokument</strong></td>
+                <td style="width: 80px;"><strong>Von</strong></td>
+                <td style="width: 80px;"><strong>Bis</strong></td>
+            </tr>
+            {% for rental in rentals %}
+            <tr style="height: 22px;">
+                <td>{{ rental.key.lock.location.name }}</td>
+                <td>{{ rental.key.lock.name }}</td>
+                <td>{{ rental.key.number }}</td>
+                <td>{{ rental.issuing_user.name }}</td>
+                <td>{{ rental.allowed_by }}</td>
+                <td>{{ rental.begin.strftime("%Y-%m-%d") }}</td>
+                {% if rental.end %}
+                <td>{{ rental.end.strftime("%Y-%m-%d") }}</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        <h2>Schlüsselvereinbarung</h2>
+
+        <div>
+            <p>Allgemeine Vereinbarung zwischen <b>{{ user.name }}</b>
+                nachfolgend Empfänger genannt, und der Arbeitsgemeinschaft Dresdner
+                Studentennetz, nachfolgend AGDSN genannt.</p>
+            <ol>
+                <li>Der Empfänger von Schlüsseln ist für eine sichere Aufbewahrung
+                    verantwortlich. Er übernimmt die Haftung für den Gebrauch der erhaltenen
+                    Schlüssel und trägt die Folgen, die sich aus einem Verlust oder Missbrauch
+                    der Schlüssel ergeben.</li>
+                <li>Durch das Nutzen der Schlüssel wird die jeweilige Hausordnung
+                    anerkannt.</li>
+                <li>Das Weitergeben von Schlüsseln darf nur in
+                    Ausnahmefällen und nur an aktive Mitglieder oder
+                    Aufragnehmer der AGDSN erfolgen. Diese Weitergabe erfolgt
+                    in eigener Verantwortung.</li>
+                <li>Die Herstellung von Duplikaten ist untersagt.</li>
+                <li>Der Empfänger verpflichtet sich den Verlust von
+                    Schlüsseln unverzüglich den Vorstandsmitgliedern der
+                    AGDSN anzuzeigen. Der Vorstand der AGDSN kann von dem
+                    Empfänger eine schriftliche Stellungnahme verlangen, aus der
+                    die näheren Umstände des Verlustes hervorgehen. Dazu zählen
+                    unter anderem Datum, Ort, Grund, Nachforschungsergebnisse
+                    und polizeiliche Anzeige.</li>
+                <li>Werden als verloren gemeldete Schlüssel wiedergefunden,
+                    müssen diese an den Vorstand der AGDSN zurückgegeben
+                    werden. Verauslagte Kosten werden nicht erstattet.</li>
+                <li>Bei Beendigung der aktiven Mitgliedschaft in der
+                    AGDSN oder auf Beschluss des Vorstands sind alle
+                    erhaltenen Schlüssel unverzüglich an den Vorstand
+                    zurückzugeben. Die Rückgabe wird auf Verlangen durch
+                    Ausstellung einer Quittung bestätigt. Sollten Schlüssel
+                    nicht zurückgegeben werden, werden die entstandenen Kosten
+                    zur Wiederherstellung der Sicherheit dem Empfänger in
+                    Rechnung gestellt.</li>
+                <li>Nicht funktionsfähige Schlüssel sind unverzüglich an die
+                    Vorstandsmitglieder zurückzugeben.</li>
+                <li>Liefert der Besitz eines Schlüssels den Zugang zu
+                    weiteren Schlüsseln so gelten für alle betroffenen
+                    Schlüssel die genannten Grundsätze mit Ausnahme
+                    von 3 (Weitergabe). Diese herausgegebenen
+                    Schlüssel sind von der Weitergabe ausgeschlossen.</li>
+            </ol>
+        </div>
+
+
+        <p>Bestätigung Kenntnisnahme:</p><br>
+
+
+        <table style="height: 58px;" width="909">
+            <tbody>
+                <tr>
+                    <td style="width: 446.5px;">
+                        <div>
+                            ________________________________
+                        </div>
+                        <div style="padding-top: 5px;">
+                            {{ user.name }}
+                        </div>
+                    </td>
+                    <td style="width: 446.5px;">
+                        <div>
+                            ________________________________
+                        </div>
+                        <div style="padding-top: 5px;">
+                            {{ processor.name }} (Vorstand)
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 </body>
+
 </html>
