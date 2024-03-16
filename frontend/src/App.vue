@@ -12,6 +12,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import AppHeader from "@/components/AppHeader.vue";
+import AuthService from "@/services/AuthService";
 
 export default Vue.extend({
   name: 'App',
@@ -21,6 +22,10 @@ export default Vue.extend({
   }),
   mounted() {
     this.$vuetify.theme.currentTheme.secondary = '#41A6A0';
+
+    if (AuthService.isLoggedIn()) {
+      AuthService.refreshUser();
+    }
   }
 });
 </script>

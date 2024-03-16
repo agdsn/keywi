@@ -65,6 +65,15 @@ export default {
     isLoggedIn() {
         return localStorage.getItem('access_token') != null;
     },
+    async refreshUser() {
+        const apiClient = await api;
+
+        apiClient.user_getCurrent().then((response) => {
+            localStorage.setItem('user', JSON.stringify(response.data));
+        }).catch(() => {
+            this.logout();
+        });
+    },
     getUser() {
         const userData = localStorage.getItem('user');
 

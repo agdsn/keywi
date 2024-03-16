@@ -27,10 +27,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - name: Set correct permissions
-        working-directory: ./backend
-        run: sudo chmod -R a+rw .
-
       - name: Build the Docker image
         working-directory: ./backend
         run: docker build -f docker/prod-app.Dockerfile -t ghcr.io/agdsn/keywi:${GITHUB_REF_NAME} .
