@@ -75,7 +75,7 @@ export default {
       type: Object,
       default() {
         return {
-          'items-per-page-options': [5, 10, 15, 25, 50],
+          'items-per-page-options': [5, 10, 15, 25, 50, 100, 250, 500],
         };
       },
     },
