@@ -16,7 +16,15 @@ from model.session import session
 root_app = FastAPI(root_path=app_config.get('general', 'root_path', fallback=''))
 
 app = FastAPI(title="Keywi", version="0.0.1", root_path=app_config.get('general', 'root_path', fallback=''))
-app.add_middleware(DBSessionMiddleware, db_url=app_config.get('database', 'url'))
+app.add_middleware(
+    DBSessionMiddleware,
+    db_url=app_config.get('database', 'url'),
+    # test connections on checkout and transparently replace ones closed and before timeout
+    engine_args={
+        "pool_pre_ping": True,
+        "pool_recycle": 1800,
+    },
+)
 
 # add cors specification
 app.add_middleware(
