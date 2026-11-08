@@ -1,3 +1,8 @@
 .git
-.cache
-.local
+**/.cache
+**/.local
+**/__pycache__
+**/*.py[cod]
+keywi/config.ini
+config.ini
+venv

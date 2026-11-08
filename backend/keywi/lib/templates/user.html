@@ -5,6 +5,36 @@
     <meta charset="utf-8" />
 </head>
 <style>
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+
+    body {
+        font-family: "TeX Gyre Pagella", serif;
+        font-size: 11pt;
+    }
+
+    h1 {
+        font-size: 18pt;
+    }
+
+    h2 {
+        font-size: 13pt;
+    }
+
+    .full-width {
+        width: 100%;
+    }
+
+    .keep-together {
+        break-inside: avoid;
+    }
+
+    tr {
+        break-inside: avoid;
+    }
+
     .with-border {
         border: 1px solid black;
         border-collapse: collapse;
@@ -30,8 +60,8 @@
 
 </style>
 
-<body style="padding-left: 50px;">
-    <table style="height: 58px;" width="909">
+<body>
+    <table class="full-width">
         <tbody>
             <tr>
                 <td>
@@ -45,7 +75,7 @@
             </tr>
         </tbody>
     </table>
-    <table style="height: 78px; width: 504px;" class="with-border">
+    <table style="width: 55%;" class="with-border">
         <tbody>
             <tr>
                 <td style="width: 112px;"><strong>Name</strong></td>
@@ -62,17 +92,19 @@
         </tbody>
     </table>
     <h2>Ausleihen</h2>
-    <table style="height: 26px;" width="937" class="with-border">
-        <tbody>
+    <table class="with-border full-width">
+        <thead>
             <tr style="height: 13.5px;">
                 <td><strong>Ort</strong></td>
                 <td><strong>Schloss</strong></td>
                 <td><strong>Nummer</strong></td>
                 <td style="min-width: 100px;"><strong>Ausgeg. von</strong></td>
                 <td><strong>Dokument</strong></td>
-                <td style="width: 80px;"><strong>Von</strong></td>
-                <td style="width: 80px;"><strong>Bis</strong></td>
+                <td style="width: 70px;"><strong>Von</strong></td>
+                <td style="width: 70px;"><strong>Bis</strong></td>
             </tr>
+        </thead>
+        <tbody>
             {% for rental in rentals %}
             <tr style="height: 22px;">
                 <td>{{ rental.key.lock.location.name }}</td>
@@ -93,7 +125,7 @@
     <div>
         <h2>Schlüsselvereinbarung</h2>
 
-        <div style="font-size: 11px;">
+        <div style="font-size: 9.5pt;">
             <p>Allgemeine Vereinbarung zwischen <b>{{ user.name }}</b>
                 nachfolgend Empfänger genannt, und der Arbeitsgemeinschaft Dresdner
                 Studentennetz, nachfolgend AGDSN genannt.</p>
@@ -138,13 +170,13 @@
         </div>
 
 
+        <div class="keep-together">
         <p>Bestätigung Kenntnisnahme:</p><br>
 
-
-        <table style="height: 58px;" width="909">
+        <table class="full-width">
             <tbody>
                 <tr>
-                    <td style="width: 446.5px;">
+                    <td style="width: 50%;">
                         <div>
                             ________________________________
                         </div>
@@ -152,7 +184,7 @@
                             {{ user.name }}
                         </div>
                     </td>
-                    <td style="width: 446.5px;">
+                    <td style="width: 50%;">
                         <div>
                             ________________________________
                         </div>
@@ -163,6 +195,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
     </div>
 
 </body>

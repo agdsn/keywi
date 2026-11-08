@@ -1,6 +1,5 @@
 from datetime import datetime
 
-import pdfkit
 from psycopg2._range import DateTimeTZRange
 from sqlalchemy import func, not_
 
@@ -8,6 +7,7 @@ from lib.crud import create_object, REFERENCED_OBJ, delete_object, edit_object
 from model import Rental, User, Location, Key, utcnow
 from model.session import with_transaction, session
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from weasyprint import HTML
 
 
 class RentalRangeOverlapException(Exception):
@@ -84,6 +84,6 @@ def create_user_pdf(user: User, processor: User):
         rentals=rentals
     )
 
-    pdf = pdfkit.from_string(html, False)
+    pdf = HTML(string=html).write_pdf()
 
     return pdf

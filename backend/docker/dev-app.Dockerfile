@@ -7,14 +7,17 @@ ENV LANG=C.UTF-8 DEBIAN_FRONTEND=noninteractive
 RUN groupadd --force --gid $GID app \
     && useradd --non-unique --home-dir /opt/app --create-home --uid $UID --gid $GID --comment "Application" app
 
-RUN apt-get update && apt-get install -y wkhtmltopdf
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0 fonts-texgyre \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/app
 
 COPY keywi/requirements*.txt ./
 
-RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir -r requirements.dev.txt
+RUN pip install --no-cache-dir -r requirements.txt -r requirements.dev.txt
 
 USER app
 
